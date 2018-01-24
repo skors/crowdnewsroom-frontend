@@ -6,6 +6,7 @@
     "bootstrap": "^4.0.0",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
+    "node-polyglot": "^2.2.2",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-jsonschema-form": "^1.0.0",

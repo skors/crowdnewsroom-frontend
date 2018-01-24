@@ -1,8 +1,9 @@
 import React from "react";
-
-import Form from "react-jsonschema-form";
 import "bootstrap/dist/css/bootstrap.css";
+import Form from "react-jsonschema-form";
+
 import SignatureWidget from "./SignatureField";
+import { t } from "./i18n";
 
 const log = type => console.log.bind(console, type);
 const BASE_URL = process.env.REACT_APP_BACKEND_URL;
@@ -12,7 +13,9 @@ class CNRForm extends React.Component {
     super(props);
     this.state = {
       schema: {},
-      uiSchema: {}
+      uiSchema: {},
+      error: false,
+      loading: true
     };
   }
 
@@ -28,7 +31,9 @@ class CNRForm extends React.Component {
   }
 
   componentDidMount() {
-    this.loadData().catch(console.error)
+    this.loadData().catch(() => {
+      this.setState({ error: true, loading: false });
+    });
   }
 
   send(data) {
@@ -36,7 +41,7 @@ class CNRForm extends React.Component {
       method: "POST",
       body: JSON.stringify(data),
       headers: new Headers({
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json"
       })
     })
       .then(console.log)
@@ -44,7 +49,15 @@ class CNRForm extends React.Component {
   }
 
   render() {
-    const { schema, uiSchema } = this.state;
+    const { schema, uiSchema, loading, error } = this.state;
+
+    if (loading) {
+      return <div>{t("form.loading")}</div>;
+    }
+
+    if (error) {
+      return <div className="error"> {t("form.error")} </div>;
+    }
 
     return (
       <Form

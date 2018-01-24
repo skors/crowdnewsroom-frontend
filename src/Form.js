@@ -17,7 +17,7 @@ class CNRForm extends React.Component {
   }
 
   loadData() {
-    fetch(`${BASE_URL}/forms/investigations/1/forms/2`)
+    return fetch(`${BASE_URL}/forms/investigations/1/forms/2`)
       .then(response => response.json())
       .then(formData => {
         this.setState({

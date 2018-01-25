@@ -20,10 +20,11 @@ class CNRForm extends React.Component {
   }
 
   loadData() {
-    return fetch(`${BASE_URL}/forms/investigations/1/forms/2`)
+    return fetch(`${BASE_URL}/forms/investigations/1/forms/1`)
       .then(response => response.json())
       .then(formData => {
         this.setState({
+          loading: false,
           schema: formData.form_json,
           uiSchema: formData.ui_schema_json
         });
@@ -37,7 +38,7 @@ class CNRForm extends React.Component {
   }
 
   send(data) {
-    fetch(`${BASE_URL}/forms/investigations/1/forms/2/responses`, {
+    fetch(`${BASE_URL}/forms/investigations/1/forms/1/responses`, {
       method: "POST",
       body: JSON.stringify(data),
       headers: new Headers({

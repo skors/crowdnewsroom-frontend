@@ -4,6 +4,7 @@ import Form from "react-jsonschema-form";
 
 import SignatureWidget from "./SignatureField";
 import { t } from "./i18n";
+import { Redirect } from "react-router-dom";
 
 const log = type => console.log.bind(console, type);
 const BASE_URL = process.env.REACT_APP_BACKEND_URL;
@@ -15,8 +16,11 @@ class CNRForm extends React.Component {
       schema: {},
       uiSchema: {},
       error: false,
-      loading: true
+      loading: true,
+      submitted: false
     };
+
+    this.send = this.send.bind(this);
   }
 
   loadData() {
@@ -45,7 +49,9 @@ class CNRForm extends React.Component {
         "Content-Type": "application/json"
       })
     })
-      .then(console.log)
+      .then(response => {
+        this.setState({ submitted: true });
+      })
       .catch(console.error);
   }
 
@@ -58,6 +64,10 @@ class CNRForm extends React.Component {
 
     if (error) {
       return <div className="error"> {t("form.error")} </div>;
+    }
+
+    if (this.state.submitted) {
+      return <Redirect push to="/thank-you" />;
     }
 
     return (

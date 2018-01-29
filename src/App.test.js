@@ -3,13 +3,13 @@ import { configure, shallow } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 
 import App from "./App";
-import Form from "./Form";
+import { Route } from "react-router-dom";
 
 configure({ adapter: new Adapter() });
 
 describe("App", () => {
   it("renders without crashing", () => {
     const wrapper = shallow(<App />);
-    expect(wrapper.find(Form)).toHaveLength(1);
+    expect(wrapper.find(Route)).toHaveLength(2);
   });
 });

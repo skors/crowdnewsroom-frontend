@@ -4,6 +4,12 @@ import SignaturePad from "react-signature-pad-wrapper";
 class SignatureComponent extends Component {
   signaturePad = undefined;
 
+  componentDidMount() {
+    if (this.signaturePad && this.props.value) {
+      this.signaturePad.fromDataURL(this.props.value);
+    }
+  }
+
   render() {
     const props = this.props;
     const options = {

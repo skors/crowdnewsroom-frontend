@@ -5,9 +5,9 @@ import Form from "react-jsonschema-form";
 import SignatureWidget from "./SignatureField";
 import { t } from "./i18n";
 import { Redirect } from "react-router-dom";
+import * as api from "./api";
 
 const log = type => console.log.bind(console, type);
-const BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
 class CNRForm extends React.Component {
   constructor(props) {
@@ -27,8 +27,8 @@ class CNRForm extends React.Component {
   loadData() {
     const { token } = this.props.match.params;
     if (token) {
-      return fetch(`${BASE_URL}/forms/responses/${token}`)
-        .then(response => response.json())
+      return api
+        .getResponse(token)
         .then(formResponse => formResponse.json)
         .then(json => {
           this.setState({
@@ -40,15 +40,13 @@ class CNRForm extends React.Component {
         });
     }
 
-    return fetch(`${BASE_URL}/forms/investigations/1/forms/1`)
-      .then(response => response.json())
-      .then(formData => {
-        this.setState({
-          loading: false,
-          schema: formData.form_json,
-          uiSchema: formData.ui_schema_json
-        });
+    return api.getForm().then(formData => {
+      this.setState({
+        loading: false,
+        schema: formData.form_json,
+        uiSchema: formData.ui_schema_json
       });
+    });
   }
 
   componentDidMount() {
@@ -58,13 +56,8 @@ class CNRForm extends React.Component {
   }
 
   send(data) {
-    fetch(`${BASE_URL}/forms/investigations/1/forms/1/responses`, {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: new Headers({
-        "Content-Type": "application/json"
-      })
-    })
+    api
+      .postResponse(data)
       .then(response => {
         this.setState({ submitted: true });
       })

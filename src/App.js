@@ -14,6 +14,7 @@ class App extends Component {
         <main className="App-content">
           <Route exact path="/" component={Form} />
           <Route path="/thank-you" component={ThankYou} />
+          <Route path="/edit/:token" component={Form} />
         </main>
       </div>
     );

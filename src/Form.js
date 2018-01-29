@@ -15,6 +15,7 @@ class CNRForm extends React.Component {
     this.state = {
       schema: {},
       uiSchema: {},
+      formData: {},
       error: false,
       loading: true,
       submitted: false
@@ -24,6 +25,21 @@ class CNRForm extends React.Component {
   }
 
   loadData() {
+    const { token } = this.props.match.params;
+    if (token) {
+      return fetch(`${BASE_URL}/forms/responses/${token}`)
+        .then(response => response.json())
+        .then(formResponse => formResponse.json)
+        .then(json => {
+          this.setState({
+            loading: false,
+            schema: json.schema,
+            uiSchema: json.uiSchema,
+            formData: json.formData
+          });
+        });
+    }
+
     return fetch(`${BASE_URL}/forms/investigations/1/forms/1`)
       .then(response => response.json())
       .then(formData => {
@@ -74,6 +90,7 @@ class CNRForm extends React.Component {
       <Form
         schema={schema}
         uiSchema={uiSchema}
+        formData={this.state.formData}
         widgets={{ signatureWidget: SignatureWidget }}
         onChange={log("changed")}
         onSubmit={this.send}

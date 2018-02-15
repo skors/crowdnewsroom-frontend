@@ -25,7 +25,7 @@ class CNRForm extends React.Component {
   }
 
   loadData() {
-    const { token } = this.props.match.params;
+    const { token, investigation, form } = this.props.match.params;
     if (token) {
       return api
         .getResponse(token)
@@ -40,7 +40,7 @@ class CNRForm extends React.Component {
         });
     }
 
-    return api.getForm().then(formData => {
+    return api.getForm(investigation, form).then(formData => {
       this.setState({
         loading: false,
         schema: formData.form_json,

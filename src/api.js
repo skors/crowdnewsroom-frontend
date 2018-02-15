@@ -5,8 +5,10 @@ function fetchJson(url) {
   return fetch(url).then(response => response.json());
 }
 
-export function getForm() {
-  return fetchJson(`${API_URL}/investigations/1/forms/1`);
+export function getForm(investigationId = 1, formId = 1) {
+  return fetchJson(
+    `${API_URL}/investigations/${investigationId}/forms/${formId}`
+  );
 }
 
 export function postResponse(data) {

@@ -18,7 +18,8 @@ class CNRForm extends React.Component {
       formData: {},
       error: false,
       loading: true,
-      submitted: false
+      submitted: false,
+      token: null
     };
 
     this.send = this.send.bind(this);
@@ -59,7 +60,11 @@ class CNRForm extends React.Component {
     api
       .postResponse(data)
       .then(response => {
-        this.setState({ submitted: true });
+        console.log(response);
+        this.setState({
+            submitted: true,
+            token: response.token,
+        });
       })
       .catch(console.error);
   }
@@ -76,7 +81,11 @@ class CNRForm extends React.Component {
     }
 
     if (this.state.submitted) {
-      return <Redirect push to="/thank-you" />;
+      console.log("token", this.state.token);
+      return <Redirect push to={{
+          pathname: '/thank-you',
+          state: { token: this.state.token }
+      }} />;
     }
 
     return (

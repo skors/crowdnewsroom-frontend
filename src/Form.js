@@ -98,7 +98,7 @@ class CNRForm extends React.Component {
   }
 
   render() {
-    const { schema, uiSchema, loading, error, status } = this.state;
+    const { schema, uiSchema, loading, error } = this.state;
     let message;
 
     if (loading) {

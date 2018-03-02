@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./Checker.css";
+import "./Checker.css";
 
 const Checker = ({ text }) => {
   return (

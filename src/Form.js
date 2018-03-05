@@ -24,14 +24,13 @@ class CNRForm extends React.Component {
       token: null,
       email: null,
       data: {},
-      isUpdate: false,
+      isUpdate: false
     };
 
     this.send = this.send.bind(this);
     this.updateEmail = this.updateEmail.bind(this);
     this.submitForm = this.submitForm.bind(this);
     this.submitData = this.submitData.bind(this);
-
   }
 
   get isDisabled() {
@@ -83,7 +82,11 @@ class CNRForm extends React.Component {
   }
 
   send() {
-    const payload = { email: this.state.email, json: this.state.data, token: this.state.token };
+    const payload = {
+      email: this.state.email,
+      json: this.state.data,
+      token: this.state.token
+    };
     api
       .postResponse(payload)
       .then(response => {
@@ -95,9 +98,9 @@ class CNRForm extends React.Component {
       .catch(console.error);
   }
 
-  submitData(event){
-   event.preventDefault();
-   this.send()
+  submitData(event) {
+    event.preventDefault();
+    this.send();
   }
 
   submitForm(data) {
@@ -124,7 +127,11 @@ class CNRForm extends React.Component {
       message = t("form.verified_message");
     }
 
-    if (this.state.formSubmitted && !this.state.submitted && !this.state.isUpdate) {
+    if (
+      this.state.formSubmitted &&
+      !this.state.submitted &&
+      !this.state.isUpdate
+    ) {
       return (
         <div>
           <Checker text="Almost done!" />

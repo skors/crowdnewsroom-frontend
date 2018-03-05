@@ -6,7 +6,6 @@ import SignatureWidget from "./SignatureField";
 import { t } from "./i18n";
 import { Redirect } from "react-router-dom";
 import * as api from "./api";
-import * as _ from "lodash";
 import Checker from "./Checker";
 
 const log = type => console.log.bind(console, type);
@@ -24,12 +23,15 @@ class CNRForm extends React.Component {
       submitted: false,
       token: null,
       email: null,
-      data: {}
+      data: {},
+      isUpdate: false,
     };
 
     this.send = this.send.bind(this);
     this.updateEmail = this.updateEmail.bind(this);
     this.submitForm = this.submitForm.bind(this);
+    this.submitData = this.submitData.bind(this);
+
   }
 
   get isDisabled() {
@@ -46,7 +48,12 @@ class CNRForm extends React.Component {
       return api
         .getResponse(token)
         .then(formResponse => {
-          this.setState({ status: formResponse.status });
+          this.setState({
+            status: formResponse.status,
+            email: formResponse.email,
+            token: formResponse.token,
+            isUpdate: true
+          });
           return formResponse;
         })
         .then(formResponse => formResponse.json)
@@ -75,13 +82,8 @@ class CNRForm extends React.Component {
     });
   }
 
-  updateOnServer = _.debounce(() => {
-    console.log("debounced");
-  }, 1000);
-
-  send(event) {
-    event.preventDefault();
-    const payload = { email: this.state.email, json: this.state.data };
+  send() {
+    const payload = { email: this.state.email, json: this.state.data, token: this.state.token };
     api
       .postResponse(payload)
       .then(response => {
@@ -93,8 +95,17 @@ class CNRForm extends React.Component {
       .catch(console.error);
   }
 
+  submitData(event){
+   event.preventDefault();
+   this.send()
+  }
+
   submitForm(data) {
-    this.setState({ formSubmitted: true, data });
+    this.setState({ formSubmitted: true, data }, () => {
+      if (this.state.email) {
+        this.send();
+      }
+    });
   }
 
   render() {
@@ -113,20 +124,19 @@ class CNRForm extends React.Component {
       message = t("form.verified_message");
     }
 
-    if (this.state.formSubmitted && !this.state.submitted) {
+    if (this.state.formSubmitted && !this.state.submitted && !this.state.isUpdate) {
       return (
         <div>
           <Checker text="Almost done!" />
 
           <p>
-            {" "}
             This looks really good. Thank you so much! <br />
             Now there is just one more thing that we need from you: Please put
             in your e-mail address so that we can contact you if we have
             questions. This will also allow you to come back and edit your
             response later.
           </p>
-          <form onSubmit={this.send}>
+          <form onSubmit={this.submitData}>
             <label htmlFor="email">E-Mail</label>
             <input
               name="email"
@@ -161,7 +171,6 @@ class CNRForm extends React.Component {
           uiSchema={uiSchema}
           formData={this.state.formData}
           widgets={{ signatureWidget: SignatureWidget }}
-          onChange={this.updateOnServer}
           onSubmit={this.submitForm}
           onError={log("errors")}
         />

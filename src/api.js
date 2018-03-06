@@ -33,19 +33,22 @@ export function getForm(investigationId = 1, formId = 1) {
   );
 }
 
-function createResponse(data) {
-  return postJSON("/investigations/1/forms/1/responses", data);
+function createResponse(data, investigationId, formId) {
+  return postJSON(
+    `/investigations/${investigationId}/forms/${formId}/responses`,
+    data
+  );
 }
 
 function updateResponse(data) {
   return putJSON(`/responses/${data.token}`, data);
 }
 
-export function postResponse(data) {
+export function postResponse(data, investigationId, formId) {
   if (data.token) {
     return updateResponse(data);
   }
-  return createResponse(data);
+  return createResponse(data, investigationId, formId);
 }
 
 export function getResponse(token) {

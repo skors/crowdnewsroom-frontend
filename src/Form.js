@@ -24,7 +24,8 @@ class CNRForm extends React.Component {
       token: null,
       email: null,
       data: {},
-      isUpdate: false
+      isUpdate: false,
+      formInstanceId: null
     };
 
     this.send = this.send.bind(this);
@@ -51,7 +52,8 @@ class CNRForm extends React.Component {
             status: formResponse.status,
             email: formResponse.email,
             token: formResponse.token,
-            isUpdate: true
+            isUpdate: true,
+            formInstanceId: formResponse.id
           });
           return formResponse;
         })
@@ -70,7 +72,8 @@ class CNRForm extends React.Component {
       this.setState({
         loading: false,
         schema: formData.form_json,
-        uiSchema: formData.ui_schema_json
+        uiSchema: formData.ui_schema_json,
+        formInstanceId: formData.id
       });
     });
   }
@@ -82,13 +85,15 @@ class CNRForm extends React.Component {
   }
 
   send() {
+    const { investigation, form } = this.props.match.params;
     const payload = {
       email: this.state.email,
       json: this.state.data,
-      token: this.state.token
+      token: this.state.token,
+      form_instance: this.state.formInstanceId
     };
     api
-      .postResponse(payload)
+      .postResponse(payload, investigation, form)
       .then(response => {
         this.setState({
           submitted: true,

@@ -45,6 +45,14 @@ class FormWizard extends Component {
     });
   }
 
+  componentWillMount() {
+    const currentSchema = _.find(this.props.steps, step => {
+      return _.kebabCase(step.schema.title) === this.props.currentStep;
+    });
+
+    this.setState({ schema: currentSchema.schema });
+  }
+
   onSubmit = ({ formData }) => {
     if (this.state.schema.final) {
       this.props.submitCallback(

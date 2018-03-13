@@ -14,7 +14,7 @@ class App extends Component {
         <main className="App-content">
           <Route exact path="/" component={Form} />
           <Route
-            path="/investigations/:investigation/forms/:form"
+            path="/investigations/:investigation/forms/:form/:step?"
             component={Form}
           />
           <Route path="/thank-you" component={ThankYou} />

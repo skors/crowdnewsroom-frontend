@@ -178,6 +178,7 @@ class CNRForm extends React.Component {
 
         <FormWizard
           steps={this.state.steps}
+          currentStep={this.props.match.params.step}
           formData={this.state.formData}
           uiSchema={this.state.uiSchema}
           submitCallback={data => alert(data)}

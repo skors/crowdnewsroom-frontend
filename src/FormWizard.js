@@ -46,6 +46,8 @@ class FormWizard extends Component {
   }
 
   componentWillMount() {
+    if (!this.props.currentStep) return;
+
     const currentSchema = _.find(this.props.steps, step => {
       return _.kebabCase(step.schema.title) === this.props.currentStep;
     });

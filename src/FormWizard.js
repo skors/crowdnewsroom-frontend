@@ -2,8 +2,11 @@ import React, { Component } from "react";
 import Form from "react-jsonschema-form";
 import * as _ from "lodash";
 import Engine from "json-rules-engine-simplified";
+import { CSSTransitionGroup } from "react-transition-group";
 
-class StepForm extends Component {
+import "./FormWizard.css";
+
+class FormWizard extends Component {
   constructor(props) {
     super(props);
     const { steps } = props;
@@ -54,13 +57,22 @@ class StepForm extends Component {
 
   render() {
     return (
-      <Form
-        schema={this.state.schema}
-        uiSchema={this.props.uiSchema}
-        onSubmit={this.onSubmit}
-        formData={this.state.formData}
-      />
+      <div className="form-transition-container">
+        <CSSTransitionGroup
+          transitionName="form-transition"
+          transitionEnterTimeout={300}
+          transitionLeaveTimeout={300}
+        >
+          <Form
+            key={this.state.schema.title}
+            schema={this.state.schema}
+            uiSchema={this.props.uiSchema}
+            onSubmit={this.onSubmit}
+            formData={this.state.formData}
+          />
+        </CSSTransitionGroup>
+      </div>
     );
   }
 }
-export default StepForm;
+export default FormWizard;

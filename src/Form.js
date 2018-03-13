@@ -1,15 +1,12 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.css";
-import Form from "react-jsonschema-form";
 
 import SignatureWidget from "./SignatureField";
 import { t } from "./i18n";
 import { Redirect } from "react-router-dom";
 import * as api from "./api";
 import Checker from "./Checker";
-import StepForm from "./StepForm";
-
-const log = type => console.log.bind(console, type);
+import FormWizard from "./FormWizard";
 
 class CNRForm extends React.Component {
   constructor(props) {
@@ -179,7 +176,7 @@ class CNRForm extends React.Component {
       <div>
         <p className="message">{message}</p>
 
-        <StepForm
+        <FormWizard
           steps={this.state.steps}
           formData={this.state.formData}
           uiSchema={this.state.uiSchema}

@@ -4257,9 +4257,9 @@ json-loader@^0.5.4:
   version "0.5.7"
   resolved "https://registry.yarnpkg.com/json-loader/-/json-loader-0.5.7.tgz#dca14a70235ff82f0ac9a3abeb60d337a365185d"
 
-json-rules-engine-simplified@^0.1.15:
-  version "0.1.15"
-  resolved "https://registry.yarnpkg.com/json-rules-engine-simplified/-/json-rules-engine-simplified-0.1.15.tgz#bd70d322c08ed183f63c331a48f2c7752a223d5b"
+json-rules-engine-simplified@correctiv/json-rules-engine-simplified#ship-lib:
+  version "0.1.16"
+  resolved "https://codeload.github.com/correctiv/json-rules-engine-simplified/tar.gz/3270cd2b77d4c6993a20083d8ce523e56f5fb5e3"
   dependencies:
     deep-equal "1.0.1"
     predicate "1.2.0"

@@ -6,6 +6,8 @@
     "bootstrap": "^4.0.0",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
+    "json-rules-engine-simplified": "^0.1.15",
+    "lodash": "^4.17.5",
     "node-polyglot": "^2.2.2",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",

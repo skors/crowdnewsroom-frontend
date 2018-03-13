@@ -7,6 +7,7 @@ import { t } from "./i18n";
 import { Redirect } from "react-router-dom";
 import * as api from "./api";
 import Checker from "./Checker";
+import StepForm from "./StepForm";
 
 const log = type => console.log.bind(console, type);
 
@@ -71,7 +72,7 @@ class CNRForm extends React.Component {
     return api.getForm(investigation, form).then(formData => {
       this.setState({
         loading: false,
-        schema: formData.form_json,
+        steps: formData.form_json,
         uiSchema: formData.ui_schema_json,
         formInstanceId: formData.id
       });
@@ -178,13 +179,11 @@ class CNRForm extends React.Component {
       <div>
         <p className="message">{message}</p>
 
-        <Form
-          schema={schema}
-          uiSchema={uiSchema}
+        <StepForm
+          steps={this.state.steps}
           formData={this.state.formData}
-          widgets={{ signatureWidget: SignatureWidget }}
-          onSubmit={this.submitForm}
-          onError={log("errors")}
+          uiSchema={this.state.uiSchema}
+          submitCallback={data => alert(data)}
         />
       </div>
     );

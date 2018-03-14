@@ -6,6 +6,8 @@ import { CSSTransitionGroup } from "react-transition-group";
 
 import "./FormWizard.css";
 
+const getSlugForSchema = ({ title }) => _.kebabCase(title);
+
 class FormWizard extends Component {
   constructor(props) {
     super(props);
@@ -33,7 +35,10 @@ class FormWizard extends Component {
   }
 
   advance(formData) {
-    this.getNextStep(formData).then(this.setNextStep);
+    this.getNextStep(formData).then(nextSchema => {
+      this.setNextStep(nextSchema);
+      this.props.history.push(`./${getSlugForSchema(nextSchema)}`);
+    });
     this.updateFormData(formData);
   }
 
@@ -57,7 +62,17 @@ class FormWizard extends Component {
     if (!this.props.currentStep) return;
 
     const currentSchema = _.find(this.props.steps, step => {
-      return _.kebabCase(step.schema.title) === this.props.currentStep;
+      return getSlugForSchema(step.schema) === this.props.currentStep;
+    });
+
+    this.setNextStep(currentSchema.schema);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.currentStep === this.props.currentStep) return;
+
+    const currentSchema = _.find(nextProps.steps, step => {
+      return getSlugForSchema(step.schema) === nextProps.currentStep;
     });
 
     this.setNextStep(currentSchema.schema);

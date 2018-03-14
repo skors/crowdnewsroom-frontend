@@ -155,6 +155,7 @@ class CNRForm extends React.Component {
             currentStep={this.props.match.params.step}
             formData={this.state.formData}
             uiSchema={this.state.uiSchema}
+            history={this.props.history}
             submitCallback={data => alert(data)}
           />
         </div>

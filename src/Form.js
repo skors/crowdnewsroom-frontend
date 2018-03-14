@@ -1,7 +1,6 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.css";
 
-import SignatureWidget from "./SignatureField";
 import { t } from "./i18n";
 import { Redirect } from "react-router-dom";
 import * as api from "./api";
@@ -115,7 +114,7 @@ class CNRForm extends React.Component {
   }
 
   render() {
-    const { schema, uiSchema, loading, error } = this.state;
+    const { loading, error } = this.state;
     let message;
 
     if (loading) {

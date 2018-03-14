@@ -1,8 +1,9 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import Form from "react-jsonschema-form";
+import { CSSTransitionGroup } from "react-transition-group";
 import * as _ from "lodash";
 import Engine from "json-rules-engine-simplified";
-import { CSSTransitionGroup } from "react-transition-group";
 
 import "./FormWizard.css";
 
@@ -15,7 +16,7 @@ class FormWizard extends Component {
     this.state = {
       formData: {},
       schema: steps[0].schema,
-      stepsTaken: [steps[0].schema]
+      stepsTaken: new Set([steps[0].schema])
     };
     const rules = steps.map(step => {
       return { conditions: step.conditions, event: { schema: step.schema } };
@@ -24,20 +25,26 @@ class FormWizard extends Component {
     this.setNextStep = this.setNextStep.bind(this);
   }
 
-  getNextStep(formData) {
+  updateRoute(schema) {
+    this.props.history.push(`./${getSlugForSchema(schema)}`);
+  }
+
+  getValidSteps(formData) {
     return this.engine.run(formData).then(events => {
-      const validSteps = events.map(event => event.schema);
-      return _.find(
-        validSteps,
-        step => !_.includes(this.state.stepsTaken, step)
-      );
+      return events.map(event => event.schema);
     });
+  }
+
+  getNextStep(formData) {
+    return this.getValidSteps(formData).then(validSteps =>
+      _.find(validSteps, step => !this.state.stepsTaken.has(step))
+    );
   }
 
   advance(formData) {
     this.getNextStep(formData).then(nextSchema => {
       this.setNextStep(nextSchema);
-      this.props.history.push(`./${getSlugForSchema(nextSchema)}`);
+      this.updateRoute(nextSchema);
     });
     this.updateFormData(formData);
   }
@@ -45,7 +52,7 @@ class FormWizard extends Component {
   setNextStep(nextSchema) {
     this.setState({
       schema: nextSchema,
-      stepsTaken: [...this.state.stepsTaken, nextSchema]
+      stepsTaken: this.state.stepsTaken.add(nextSchema)
     });
   }
 
@@ -61,11 +68,24 @@ class FormWizard extends Component {
   componentWillMount() {
     if (!this.props.currentStep) return;
 
-    const currentSchema = _.find(this.props.steps, step => {
-      return getSlugForSchema(step.schema) === this.props.currentStep;
-    });
+    this.getValidSteps(this.state.formData).then(validSteps => {
+      const isValidStep = _.some(
+        validSteps,
+        step => getSlugForSchema(step.title) === this.props.currentStep
+      );
 
-    this.setNextStep(currentSchema.schema);
+      if (isValidStep) {
+        const currentSchema = _.find(this.props.steps, step => {
+          return getSlugForSchema(step.schema) === this.props.currentStep;
+        });
+
+        this.setNextStep(currentSchema.schema);
+      } else {
+        const nextStep = this.props.steps[0].schema;
+        this.setNextStep(nextStep);
+        this.updateRoute(nextStep);
+      }
+    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -75,7 +95,13 @@ class FormWizard extends Component {
       return getSlugForSchema(step.schema) === nextProps.currentStep;
     });
 
-    this.setNextStep(currentSchema.schema);
+    const stepsTaken = [...this.state.stepsTaken];
+    const currentIndex = stepsTaken.indexOf(currentSchema.schema);
+
+    this.setState({
+      stepsTaken: new Set(stepsTaken.slice(0, currentIndex + 1)),
+      schema: currentSchema.schema
+    });
   }
 
   onSubmit = ({ formData }) => {
@@ -87,6 +113,12 @@ class FormWizard extends Component {
       this.advance(formData);
     }
   };
+
+  get backLink() {
+    const stepsTaken = [...this.state.stepsTaken];
+    const previousStep = stepsTaken[stepsTaken.length - 2];
+    return getSlugForSchema(previousStep);
+  }
 
   render() {
     return (
@@ -102,7 +134,12 @@ class FormWizard extends Component {
             uiSchema={this.props.uiSchema}
             onSubmit={this.onSubmit}
             formData={this.state.formData}
-          />
+          >
+            {this.state.stepsTaken.size > 1 && (
+              <Link to={`./${this.backLink}`}>Prev</Link>
+            )}
+            <input type="submit" />
+          </Form>
         </CSSTransitionGroup>
       </div>
     );

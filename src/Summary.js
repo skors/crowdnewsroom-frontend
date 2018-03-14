@@ -31,6 +31,12 @@ function Summary({ steps, formData, uiSchema }) {
   );
 }
 
+Summary.propTypes = {
+  steps: PropTypes.arrayOf(PropTypes.object),
+  formData: PropTypes.object,
+  uiSchema: PropTypes.object
+};
+
 function getValueText(property, formData, type) {
   if (type === "boolean") {
     return formData[property] ? "Yes" : "No";
@@ -65,11 +71,5 @@ function Step({ step, formData, uiSchema }) {
     </div>
   );
 }
-
-Summary.propTypes = {
-  steps: PropTypes.arrayOf(PropTypes.object),
-  formData: PropTypes.object,
-  uiSchema: PropTypes.object
-};
 
 export default Summary;

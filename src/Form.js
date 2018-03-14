@@ -7,6 +7,7 @@ import * as api from "./api";
 import FormWizard from "./FormWizard";
 import Login from "./Login";
 import SetPassword from "./SetPassword";
+import Summary from "./Summary";
 
 class CNRForm extends React.Component {
   constructor(props) {
@@ -153,6 +154,16 @@ class CNRForm extends React.Component {
 
     if (this.state.getPassword) {
       return <SetPassword callback={this.setPassword} />;
+    }
+
+    if (this.state.steps && this.state.formData){
+    return (
+      <Summary
+        steps={this.state.steps}
+        formData={this.state.formData}
+        uiSchema={this.state.uiSchema}
+      />
+    );
     }
 
     if (this.state.email && this.state.steps) {

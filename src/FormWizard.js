@@ -19,29 +19,37 @@ class FormWizard extends Component {
       return { conditions: step.conditions, event: { schema: step.schema } };
     });
     this.engine = new Engine(rules);
+    this.setNextStep = this.setNextStep.bind(this);
   }
 
   getNextStep(formData) {
     return this.engine.run(formData).then(events => {
       const validSteps = events.map(event => event.schema);
-      const nextStep = _.find(
+      return _.find(
         validSteps,
         step => !_.includes(this.state.stepsTaken, step)
       );
-      this.setState({ stepsTaken: [...this.state.stepsTaken, nextStep] });
-      return nextStep;
     });
   }
 
   advance(formData) {
-    this.getNextStep(formData).then(nextSchema => {
-      this.setState({
-        schema: nextSchema,
-        formData: {
-          ...this.state.formData,
-          ...formData
-        }
-      });
+    this.getNextStep(formData).then(this.setNextStep);
+    this.updateFormData(formData);
+  }
+
+  setNextStep(nextSchema) {
+    this.setState({
+      schema: nextSchema,
+      stepsTaken: [...this.state.stepsTaken, nextSchema]
+    });
+  }
+
+  updateFormData(formData) {
+    this.setState({
+      formData: {
+        ...this.state.formData,
+        ...formData
+      }
     });
   }
 
@@ -52,7 +60,7 @@ class FormWizard extends Component {
       return _.kebabCase(step.schema.title) === this.props.currentStep;
     });
 
-    this.setState({ schema: currentSchema.schema });
+    this.setNextStep(currentSchema.schema);
   }
 
   onSubmit = ({ formData }) => {

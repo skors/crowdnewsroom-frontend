@@ -4,19 +4,24 @@ import Form from "react-jsonschema-form";
 import { CSSTransitionGroup } from "react-transition-group";
 import * as _ from "lodash";
 import Engine from "json-rules-engine-simplified";
+import PropTypes from "prop-types";
 
 import "./FormWizard.css";
 
 const getSlugForSchema = ({ title }) => _.kebabCase(title);
 
 class FormWizard extends Component {
+  static propTypes = {
+    currentStep: PropTypes.string
+  };
+
   constructor(props) {
     super(props);
     const { steps } = props;
     this.state = {
       formData: {},
-      schema: steps[0].schema,
-      stepsTaken: new Set([steps[0].schema])
+      schema: {},
+      stepsTaken: new Set()
     };
     const rules = steps.map(step => {
       return { conditions: step.conditions, event: { schema: step.schema } };
@@ -65,9 +70,21 @@ class FormWizard extends Component {
     });
   }
 
-  componentWillMount() {
-    if (!this.props.currentStep) return;
+  resetToFirstStep() {
+    const nextStep = this.props.steps[0].schema;
+    this.setNextStep(nextStep);
+    this.updateRoute(nextStep);
+  }
 
+  setStepFromUrl() {
+    const currentSchema = _.find(this.props.steps, step => {
+      return getSlugForSchema(step.schema) === this.props.currentStep;
+    });
+
+    this.setNextStep(currentSchema.schema);
+  }
+
+  componentWillMount() {
     this.getValidSteps(this.state.formData).then(validSteps => {
       const isValidStep = _.some(
         validSteps,
@@ -75,15 +92,9 @@ class FormWizard extends Component {
       );
 
       if (isValidStep) {
-        const currentSchema = _.find(this.props.steps, step => {
-          return getSlugForSchema(step.schema) === this.props.currentStep;
-        });
-
-        this.setNextStep(currentSchema.schema);
+        this.setStepFromUrl();
       } else {
-        const nextStep = this.props.steps[0].schema;
-        this.setNextStep(nextStep);
-        this.updateRoute(nextStep);
+        this.resetToFirstStep();
       }
     });
   }

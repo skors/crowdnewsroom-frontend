@@ -3,15 +3,21 @@ import Form from "react-jsonschema-form";
 import * as _ from "lodash";
 import Engine from "json-rules-engine-simplified";
 import { CSSTransitionGroup } from "react-transition-group";
+import PropTypes from "prop-types";
 
 import "./FormWizard.css";
 
 class FormWizard extends Component {
+  static propTypes = {
+    currentStep: PropTypes.string,
+    submitCallback: PropTypes.func
+  };
+
   constructor(props) {
     super(props);
-    const { steps } = props;
+    const { steps, formData } = props;
     this.state = {
-      formData: {},
+      formData: formData,
       schema: steps[0].schema,
       stepsTaken: [steps[0].schema]
     };
@@ -65,9 +71,7 @@ class FormWizard extends Component {
 
   onSubmit = ({ formData }) => {
     if (this.state.schema.final) {
-      this.props.submitCallback(
-        "You submitted " + JSON.stringify(formData, null, 2)
-      );
+      this.props.submitCallback(formData);
     } else {
       this.advance(formData);
     }

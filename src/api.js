@@ -40,8 +40,20 @@ function createResponse(data, investigationId, formId) {
   );
 }
 
-function updateResponse(data) {
-  return putJSON(`/responses/${data.token}`, data);
+function updateResponse(data, investigationId, formId, token) {
+  return fetch(
+    `${API_URL}/investigations/${investigationId}/forms/${formId}/responses/${
+      data.id
+    }`,
+    {
+      method: "PUT",
+      body: JSON.stringify(data),
+      headers: new Headers({
+        "Content-Type": "application/json",
+        Authorization: `Token ${token}`
+      })
+    }
+  );
 }
 
 export function checkIfEmailExists(email) {
@@ -58,13 +70,20 @@ export function getToken(email, password) {
   });
 }
 
-export function postResponse(data, investigationId, formId) {
-  if (data.token) {
-    return updateResponse(data);
+export function postResponse(data, investigationId, formId, token) {
+  if (data.id) {
+    return updateResponse(data, investigationId, formId, token);
   }
   return createResponse(data, investigationId, formId);
 }
 
-export function getResponse(token) {
-  return fetchJson(`${API_URL}/responses/${token}`);
+export function getFormResponse(investigation_id, form_id, token) {
+  return fetch(
+    `${API_URL}/investigations/${investigation_id}/forms/${form_id}/responses`,
+    {
+      headers: {
+        Authorization: `Token ${token}`
+      }
+    }
+  ).then(response => response.json());
 }

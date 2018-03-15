@@ -4,9 +4,9 @@ import "bootstrap/dist/css/bootstrap.css";
 import { t } from "./i18n";
 import { Redirect } from "react-router-dom";
 import * as api from "./api";
-import Checker from "./Checker";
 import FormWizard from "./FormWizard";
 import Login from "./Login";
+import SetPassword from "./SetPassword";
 
 class CNRForm extends React.Component {
   constructor(props) {
@@ -17,9 +17,8 @@ class CNRForm extends React.Component {
       uiSchema: {},
       formData: {},
       error: false,
-      loading: true,
+      loading: false,
       submitted: false,
-      token: null,
       email: null,
       authToken: null,
       data: {},
@@ -29,10 +28,11 @@ class CNRForm extends React.Component {
 
     this.send = this.send.bind(this);
     this.updateEmail = this.updateEmail.bind(this);
-    this.submitForm = this.submitForm.bind(this);
+    this.finishForm = this.finishForm.bind(this);
     this.submitData = this.submitData.bind(this);
     this.loginCallback = this.loginCallback.bind(this);
     this.logout = this.logout.bind(this);
+    this.setPassword = this.setPassword.bind(this);
   }
 
   updateEmail(event) {
@@ -40,44 +40,26 @@ class CNRForm extends React.Component {
   }
 
   loadData() {
-    const { token, investigation, form } = this.props.match.params;
-    if (token) {
-      return api
-        .getResponse(token)
-        .then(formResponse => {
-          this.setState({
-            status: formResponse.status,
-            email: formResponse.email,
-            token: formResponse.token,
-            isUpdate: true,
-            formInstanceId: formResponse.id
-          });
-          return formResponse;
-        })
-        .then(formResponse => formResponse.json)
-        .then(json =>
-          this.setState({
-            loading: false,
-            schema: json.schema,
-            uiSchema: json.uiSchema,
-            formData: json.formData
-          })
-        );
+    const { investigation, form } = this.props.match.params;
+    const promises = [api.getForm(investigation, form)];
+
+    if (this.state.authToken) {
+      promises.push(
+        api.getFormResponse(investigation, form, this.state.authToken)
+      );
     }
 
-    return api.getForm(investigation, form).then(formData => {
+    return Promise.all(promises).then(([formData, responseData = []]) => {
+      const response = responseData.length ? responseData[0] : {};
+
       this.setState({
         loading: false,
         steps: formData.form_json,
         uiSchema: formData.ui_schema_json,
-        formInstanceId: formData.id
+        formInstanceId: formData.id,
+        formData: response.json,
+        responseId: response.id
       });
-    });
-  }
-
-  componentDidMount() {
-    this.loadData().catch(() => {
-      this.setState({ error: true, loading: false });
     });
   }
 
@@ -85,17 +67,24 @@ class CNRForm extends React.Component {
     const { investigation, form } = this.props.match.params;
     const payload = {
       email: this.state.email,
+      id: this.state.responseId,
+      form_instance: this.state.formInstanceId,
       json: this.state.data,
-      token: this.state.token,
-      form_instance: this.state.formInstanceId
+      password: this.state.password
     };
     api
-      .postResponse(payload, investigation, form)
-      .then(response => {
-        this.setState({
-          submitted: true,
-          token: response.token
-        });
+      .postResponse(payload, investigation, form, this.state.authToken)
+      .then(() => {
+        this.setState(
+          {
+            submitted: true
+          },
+          () => {
+            if (this.state.password) {
+              this.logout();
+            }
+          }
+        );
       })
       .catch(console.error);
   }
@@ -105,21 +94,38 @@ class CNRForm extends React.Component {
     this.send();
   }
 
-  submitForm(data) {
+  finishForm(data) {
     this.setState({ formSubmitted: true, data }, () => {
-      if (this.state.email) {
+      if (this.state.authToken) {
         this.send();
+      } else {
+        this.setState({ getPassword: true });
       }
     });
   }
 
   loginCallback({ email, token }) {
-    this.setState({ authToken: token, email });
+    this.setState({ authToken: token, email }, () => {
+      this.loadData().catch(() => {
+        this.setState({ error: true, loading: false });
+      });
+    });
   }
 
   logout() {
     localStorage.clear();
-    this.setState({ email: null, authToken: null });
+    this.setState({
+      email: null,
+      authToken: null,
+      formData: {},
+      isEdit: false
+    });
+  }
+
+  setPassword(password) {
+    this.setState({ password }, () => {
+      this.send();
+    });
   }
 
   render() {
@@ -145,7 +151,11 @@ class CNRForm extends React.Component {
       );
     }
 
-    if (this.state.email) {
+    if (this.state.getPassword) {
+      return <SetPassword callback={this.setPassword} />;
+    }
+
+    if (this.state.email && this.state.steps) {
       return (
         <div>
           {this.state.email}
@@ -155,7 +165,7 @@ class CNRForm extends React.Component {
             currentStep={this.props.match.params.step}
             formData={this.state.formData}
             uiSchema={this.state.uiSchema}
-            submitCallback={data => alert(data)}
+            submitCallback={this.finishForm}
           />
         </div>
       );

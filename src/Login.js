@@ -19,6 +19,16 @@ class Login extends Component {
     this.getToken = this.getToken.bind(this);
   }
 
+  componentDidMount() {
+    const email = localStorage.getItem("cnr_email");
+    const token = localStorage.getItem("cnr_token");
+    if (email && token) {
+      this.props.callback({ email, token });
+    } else if (email) {
+      this.props.callback({ email });
+    }
+  }
+
   login(event) {
     event.preventDefault();
 
@@ -29,6 +39,7 @@ class Login extends Component {
         if (response.exists) {
           this.setState({ accountExists: response.exists });
         } else {
+          localStorage.setItem("cnr_email", this.state.email);
           this.props.callback({ email: this.state.email });
         }
       });
@@ -55,6 +66,8 @@ class Login extends Component {
         return response.json();
       })
       .then(json => {
+        localStorage.setItem("cnr_email", this.state.email);
+        localStorage.setItem("cnr_token", json.token);
         this.props.callback({ email: this.state.email, token: json.token });
       })
       .catch(console.log);

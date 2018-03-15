@@ -32,6 +32,7 @@ class CNRForm extends React.Component {
     this.submitForm = this.submitForm.bind(this);
     this.submitData = this.submitData.bind(this);
     this.loginCallback = this.loginCallback.bind(this);
+    this.logout = this.logout.bind(this);
   }
 
   updateEmail(event) {
@@ -113,8 +114,12 @@ class CNRForm extends React.Component {
   }
 
   loginCallback({ email, token }) {
-    console.log(email, token);
     this.setState({ authToken: token, email });
+  }
+
+  logout() {
+    localStorage.clear();
+    this.setState({ email: null, authToken: null });
   }
 
   render() {
@@ -142,13 +147,17 @@ class CNRForm extends React.Component {
 
     if (this.state.email) {
       return (
-        <FormWizard
-          steps={this.state.steps}
-          currentStep={this.props.match.params.step}
-          formData={this.state.formData}
-          uiSchema={this.state.uiSchema}
-          submitCallback={data => alert(data)}
-        />
+        <div>
+          {this.state.email}
+          <button onClick={this.logout}>Logout</button>
+          <FormWizard
+            steps={this.state.steps}
+            currentStep={this.props.match.params.step}
+            formData={this.state.formData}
+            uiSchema={this.state.uiSchema}
+            submitCallback={data => alert(data)}
+          />
+        </div>
       );
     }
 

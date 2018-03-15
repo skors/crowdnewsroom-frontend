@@ -44,6 +44,20 @@ function updateResponse(data) {
   return putJSON(`/responses/${data.token}`, data);
 }
 
+export function checkIfEmailExists(email) {
+  return fetchJson(`${API_URL}/users/${email}`);
+}
+
+export function getToken(email, password) {
+  const data = new FormData();
+  data.set("username", email);
+  data.set("password", password);
+  return fetch(`${BASE_URL}/api-token-auth/`, {
+    method: "POST",
+    body: data
+  });
+}
+
 export function postResponse(data, investigationId, formId) {
   if (data.token) {
     return updateResponse(data);

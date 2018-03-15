@@ -6,6 +6,7 @@ import { Redirect } from "react-router-dom";
 import * as api from "./api";
 import Checker from "./Checker";
 import FormWizard from "./FormWizard";
+import Login from "./Login";
 
 class CNRForm extends React.Component {
   constructor(props) {
@@ -20,6 +21,7 @@ class CNRForm extends React.Component {
       submitted: false,
       token: null,
       email: null,
+      authToken: null,
       data: {},
       isUpdate: false,
       formInstanceId: null
@@ -29,10 +31,7 @@ class CNRForm extends React.Component {
     this.updateEmail = this.updateEmail.bind(this);
     this.submitForm = this.submitForm.bind(this);
     this.submitData = this.submitData.bind(this);
-  }
-
-  get isDisabled() {
-    return ["I", "V"].includes(this.state.status);
+    this.loginCallback = this.loginCallback.bind(this);
   }
 
   updateEmail(event) {
@@ -113,9 +112,13 @@ class CNRForm extends React.Component {
     });
   }
 
+  loginCallback({ email, token }) {
+    console.log(email, token);
+    this.setState({ authToken: token, email });
+  }
+
   render() {
     const { loading, error } = this.state;
-    let message;
 
     if (loading) {
       return <div>{t("form.loading")}</div>;
@@ -123,40 +126,6 @@ class CNRForm extends React.Component {
 
     if (error) {
       return <div className="error"> {t("form.error")} </div>;
-    }
-
-    if (this.isDisabled) {
-      message = t("form.verified_message");
-    }
-
-    if (
-      this.state.formSubmitted &&
-      !this.state.submitted &&
-      !this.state.isUpdate
-    ) {
-      return (
-        <div>
-          <Checker text="Almost done!" />
-
-          <p>
-            This looks really good. Thank you so much! <br />
-            Now there is just one more thing that we need from you: Please put
-            in your e-mail address so that we can contact you if we have
-            questions. This will also allow you to come back and edit your
-            response later.
-          </p>
-          <form onSubmit={this.submitData}>
-            <label htmlFor="email">E-Mail</label>
-            <input
-              name="email"
-              type="email"
-              onChange={this.updateEmail}
-              value={this.email}
-            />
-            <input type="submit" value="Submit!" />
-          </form>
-        </div>
-      );
     }
 
     if (this.state.submitted) {
@@ -171,10 +140,8 @@ class CNRForm extends React.Component {
       );
     }
 
-    return (
-      <div>
-        <p className="message">{message}</p>
-
+    if (this.state.email) {
+      return (
         <FormWizard
           steps={this.state.steps}
           currentStep={this.props.match.params.step}
@@ -182,8 +149,10 @@ class CNRForm extends React.Component {
           uiSchema={this.state.uiSchema}
           submitCallback={data => alert(data)}
         />
-      </div>
-    );
+      );
+    }
+
+    return <Login callback={this.loginCallback} />;
   }
 }
 

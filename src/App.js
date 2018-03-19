@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "./App.css";
-import Form from "./Form.js";
+import StateHolder from "./StateHolder.js";
 import { Route } from "react-router-dom";
 import ThankYou from "./ThankYou";
 
@@ -12,13 +12,13 @@ class App extends Component {
           <h1 className="App-title">Crowdnewsroom</h1>
         </header>
         <main className="App-content">
-          <Route exact path="/" component={Form} />
+          <Route exact path="/" component={StateHolder} />
           <Route
             path="/investigations/:investigation/forms/:form/:step?"
-            component={Form}
+            component={StateHolder}
           />
           <Route path="/thank-you" component={ThankYou} />
-          <Route path="/edit/:token" component={Form} />
+          <Route path="/edit/:token" component={StateHolder} />
         </main>
       </div>
     );

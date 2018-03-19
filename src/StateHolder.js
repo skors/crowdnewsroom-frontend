@@ -9,7 +9,7 @@ import Login from "./Login";
 import SetPassword from "./SetPassword";
 import Summary from "./Summary";
 
-class CNRForm extends React.Component {
+class StateHolder extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -156,14 +156,14 @@ class CNRForm extends React.Component {
       return <SetPassword callback={this.setPassword} />;
     }
 
-    if (this.state.steps && this.state.formData){
-    return (
-      <Summary
-        steps={this.state.steps}
-        formData={this.state.formData}
-        uiSchema={this.state.uiSchema}
-      />
-    );
+    if (this.state.steps && this.state.formData) {
+      return (
+        <Summary
+          steps={this.state.steps}
+          formData={this.state.formData}
+          uiSchema={this.state.uiSchema}
+        />
+      );
     }
 
     if (this.state.email && this.state.steps) {
@@ -186,4 +186,4 @@ class CNRForm extends React.Component {
   }
 }
 
-export default CNRForm;
+export default StateHolder;

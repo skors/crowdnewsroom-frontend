@@ -1,41 +1,49 @@
 import React from "react";
+import PropTypes from "prop-types";
+import Engine from "json-rules-engine-simplified";
 import * as _ from "lodash";
 
-import PropTypes from "prop-types";
-
-function Summary({ steps, formData, uiSchema }) {
-  const stepsByProperties = steps.reduce((agg, step) => {
-    const keys = _.keys(step.schema.properties);
-    keys.forEach(key => (agg[key] = step.schema.title));
-    return agg;
-  }, {});
-
-  const stepsTaken = _.uniq(
-    _.map(_.keys(formData), entry => stepsByProperties[entry])
-  );
-  const filteredSteps = steps.filter(step =>
-    stepsTaken.includes(step.schema.title)
-  );
-
-  return (
-    <div className="summary">
-      {filteredSteps.map(step => (
-        <Step
-          step={step}
-          key={step.schema.title}
-          formData={formData}
-          uiSchema={uiSchema}
-        />
-      ))}
-    </div>
-  );
+function filterSteps(steps, formData) {
+  const rules = steps.map(step => {
+    return { conditions: step.conditions, event: { schema: step.schema } };
+  });
+  const engine = new Engine(rules);
+  return engine.run(formData);
 }
 
-Summary.propTypes = {
-  steps: PropTypes.arrayOf(PropTypes.object),
-  formData: PropTypes.object,
-  uiSchema: PropTypes.object
-};
+class Summary extends React.Component {
+  static propTypes = {
+    steps: PropTypes.arrayOf(PropTypes.object),
+    formData: PropTypes.object,
+    uiSchema: PropTypes.object
+  };
+
+  state = {
+    stepsTaken: []
+  };
+
+  async componentDidMount() {
+    const { steps, formData } = this.props;
+    this.setState({
+      stepsTaken: await filterSteps(steps, formData)
+    });
+  }
+
+  render() {
+    return (
+      <div className="summary">
+        {this.state.stepsTaken.map(step => (
+          <Step
+            step={step}
+            key={step.schema.title}
+            formData={this.props.formData}
+            uiSchema={this.props.uiSchema}
+          />
+        ))}
+      </div>
+    );
+  }
+}
 
 function getValueText(property, formData, type) {
   if (type === "boolean") {

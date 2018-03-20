@@ -21,12 +21,6 @@ function postJSON(url, data) {
   );
 }
 
-function putJSON(url, data) {
-  return fetch(`${API_URL}${url}`, makeParams("PUT", data)).then(response =>
-    response.json()
-  );
-}
-
 export function getForm(investigationId = 1, formId = 1) {
   return fetchJson(
     `${API_URL}/investigations/${investigationId}/forms/${formId}`

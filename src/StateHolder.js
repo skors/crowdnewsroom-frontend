@@ -188,7 +188,10 @@ class StateHolder extends React.Component {
       return (
         <Redirect
           push
-          to={{ pathname: "/thank-you", state: { token: this.state.token } }}
+          to={{
+            pathname: "/thank-you",
+            state: { returnUrl: window.location.href }
+          }}
         />
       );
     }

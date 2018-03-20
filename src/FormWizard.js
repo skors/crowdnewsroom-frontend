@@ -20,8 +20,8 @@ class FormWizard extends Component {
     super(props);
     const { steps, formData } = props;
     this.state = {
-      formData: {},
-      schema: {},
+      formData,
+      schema: steps[0].schema,
       stepsTaken: new Set()
     };
     const rules = steps.map(step => {
@@ -85,19 +85,19 @@ class FormWizard extends Component {
     this.setNextStep(currentSchema.schema);
   }
 
-  componentWillMount() {
-    this.getValidSteps(this.state.formData).then(validSteps => {
-      const isValidStep = _.some(
-        validSteps,
-        step => getSlugForSchema(step.title) === this.props.currentStep
-      );
+  async componentDidMount() {
+    const validSteps = await this.getValidSteps(this.state.formData);
 
-      if (isValidStep) {
-        this.setStepFromUrl();
-      } else {
-        this.resetToFirstStep();
-      }
-    });
+    const isValidStep = _.some(
+      validSteps,
+      step => getSlugForSchema(step.title) === this.props.currentStep
+    );
+
+    if (isValidStep) {
+      this.setStepFromUrl();
+    } else {
+      this.resetToFirstStep();
+    }
   }
 
   componentWillReceiveProps(nextProps) {

@@ -12,7 +12,6 @@ class App extends Component {
           <h1 className="App-title">Crowdnewsroom</h1>
         </header>
         <main className="App-content">
-          <Route exact path="/" component={StateHolder} />
           <Route
             path="/investigations/:investigation/forms/:form/:step?"
             component={StateHolder}

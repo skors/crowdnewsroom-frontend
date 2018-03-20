@@ -61,7 +61,7 @@ class Login extends Component {
       .then(response => {
         if (response.status !== 200) {
           this.setState({ message: "Please check your password" });
-          throw "Wrong password";
+          throw new Error("Wrong password");
         }
         return response.json();
       })

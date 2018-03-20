@@ -199,7 +199,7 @@ class StateHolder extends React.Component {
           push
           to={{
             pathname: "/thank-you",
-            state: { returnUrl: window.location.href }
+            state: { returnUrl: window.location.pathname }
           }}
         />
       );

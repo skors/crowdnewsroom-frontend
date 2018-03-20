@@ -8,29 +8,26 @@ import Checker from "./Checker";
 import FormWizard from "./FormWizard";
 import Login from "./Login";
 import SetPassword from "./SetPassword";
+import Summary from "./Summary";
 
-class CNRForm extends React.Component {
+class StateHolder extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       schema: {},
-      status: "D",
       uiSchema: {},
       formData: {},
       error: false,
       loading: false,
-      submitted: false,
+      activeComponent: "login",
       email: null,
       authToken: null,
-      data: {},
-      isUpdate: false,
       formInstanceId: null
     };
 
     this.send = this.send.bind(this);
     this.updateEmail = this.updateEmail.bind(this);
     this.finishForm = this.finishForm.bind(this);
-    this.submitData = this.submitData.bind(this);
     this.loginCallback = this.loginCallback.bind(this);
     this.logout = this.logout.bind(this);
     this.setPassword = this.setPassword.bind(this);
@@ -78,7 +75,7 @@ class CNRForm extends React.Component {
       .then(() => {
         this.setState(
           {
-            submitted: true
+            activeComponent: "thank-you"
           },
           () => {
             if (this.state.password) {
@@ -90,26 +87,25 @@ class CNRForm extends React.Component {
       .catch(console.error);
   }
 
-  submitData(event) {
-    event.preventDefault();
-    this.send();
-  }
-
-  finishForm(data) {
-    this.setState({ formSubmitted: true, data }, () => {
+  finishForm(formData) {
+    this.setState({ formData }, () => {
       if (this.state.authToken) {
-        this.send();
+        this.setState({ activeComponent: "confirmation" });
       } else {
-        this.setState({ getPassword: true });
+        this.setState({ activeComponent: "password" });
       }
     });
   }
 
   loginCallback({ email, token }) {
     this.setState({ authToken: token, email }, () => {
-      this.loadData().catch(() => {
-        this.setState({ error: true, loading: false });
-      });
+      this.loadData()
+        .then(() => {
+          this.setState({ activeComponent: token ? "summary" : "wizard" });
+        })
+        .catch(() => {
+          this.setState({ error: true, loading: false });
+        });
     });
   }
 
@@ -124,13 +120,15 @@ class CNRForm extends React.Component {
   }
 
   setPassword(password) {
-    this.setState({ password }, () => {
-      this.send();
-    });
+    this.setState({ password, activeComponent: "confirmation" });
+  }
+
+  setActiveComponent(activeComponent) {
+    this.setState({ activeComponent });
   }
 
   render() {
-    const { loading, error } = this.state;
+    const { loading, error, activeComponent } = this.state;
 
     if (loading) {
       return <div>{t("form.loading")}</div>;
@@ -140,23 +138,27 @@ class CNRForm extends React.Component {
       return <div className="error"> {t("form.error")} </div>;
     }
 
-    if (this.state.submitted) {
+    if (activeComponent === "login") {
+      return <Login callback={this.loginCallback} />;
+    }
+
+    if (activeComponent === "summary") {
       return (
-        <Redirect
-          push
-          to={{
-            pathname: "/thank-you",
-            state: { token: this.state.token }
-          }}
-        />
+        <div>
+          <Summary
+            steps={this.state.steps}
+            formData={this.state.formData}
+            uiSchema={this.state.uiSchema}
+          />
+          <button onClick={this.logout}>Logout</button>
+          <button onClick={() => this.setActiveComponent("wizard")}>
+            Edit
+          </button>
+        </div>
       );
     }
 
-    if (this.state.getPassword) {
-      return <SetPassword callback={this.setPassword} />;
-    }
-
-    if (this.state.email && this.state.steps) {
+    if (activeComponent === "wizard") {
       return (
         <div>
           {this.state.email}
@@ -173,8 +175,38 @@ class CNRForm extends React.Component {
       );
     }
 
-    return <Login callback={this.loginCallback} />;
+    if (activeComponent === "password") {
+      return <SetPassword callback={this.setPassword} />;
+    }
+
+    if (activeComponent === "confirmation") {
+      return (
+        <div>
+          <Summary
+            steps={this.state.steps}
+            formData={this.state.formData}
+            uiSchema={this.state.uiSchema}
+          />
+          <button onClick={this.send}>Submit</button>
+          <button onClick={() => this.setActiveComponent("wizard")}>
+            Edit
+          </button>
+        </div>
+      );
+    }
+
+    if (activeComponent === "thank-you") {
+      return (
+        <Redirect
+          push
+          to={{
+            pathname: "/thank-you",
+            state: { returnUrl: window.location.pathname }
+          }}
+        />
+      );
+    }
   }
 }
 
-export default CNRForm;
+export default StateHolder;

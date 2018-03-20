@@ -10,6 +10,6 @@ configure({ adapter: new Adapter() });
 describe("App", () => {
   it("renders without crashing", () => {
     const wrapper = shallow(<App />);
-    expect(wrapper.find(Route)).toHaveLength(4);
+    expect(wrapper.find(Route)).toHaveLength(2);
   });
 });

@@ -19,7 +19,7 @@ class StateHolder extends React.Component {
       formData: {},
       error: false,
       loading: false,
-      submitted: false,
+      activeComponent: "email",
       email: null,
       authToken: null,
       data: {},
@@ -78,7 +78,7 @@ class StateHolder extends React.Component {
       .then(() => {
         this.setState(
           {
-            submitted: true
+            activeComponent: "thank-you"
           },
           () => {
             if (this.state.password) {
@@ -96,20 +96,26 @@ class StateHolder extends React.Component {
   }
 
   finishForm(data) {
-    this.setState({ formSubmitted: true, data }, () => {
+    this.setState({ data }, () => {
       if (this.state.authToken) {
-        this.send();
+        // this.send();
+
+        this.setState({ showSummary: true });
       } else {
-        this.setState({ getPassword: true });
+        this.setState({ activeComponent: "password" });
       }
     });
   }
 
   loginCallback({ email, token }) {
     this.setState({ authToken: token, email }, () => {
-      this.loadData().catch(() => {
-        this.setState({ error: true, loading: false });
-      });
+      this.loadData()
+        .then(() => {
+          this.setState({ activeComponent: token ? "summary" : "wizard" });
+        })
+        .catch(() => {
+          this.setState({ error: true, loading: false });
+        });
     });
   }
 
@@ -130,7 +136,7 @@ class StateHolder extends React.Component {
   }
 
   render() {
-    const { loading, error } = this.state;
+    const { loading, error, activeComponent } = this.state;
 
     if (loading) {
       return <div>{t("form.loading")}</div>;
@@ -140,7 +146,7 @@ class StateHolder extends React.Component {
       return <div className="error"> {t("form.error")} </div>;
     }
 
-    if (this.state.submitted) {
+    if (activeComponent === "thank-you") {
       return (
         <Redirect
           push
@@ -152,11 +158,11 @@ class StateHolder extends React.Component {
       );
     }
 
-    if (this.state.getPassword) {
+    if (activeComponent === "password") {
       return <SetPassword callback={this.setPassword} />;
     }
 
-    if (this.state.steps && this.state.formData) {
+    if (activeComponent === "summary") {
       return (
         <Summary
           steps={this.state.steps}
@@ -166,7 +172,7 @@ class StateHolder extends React.Component {
       );
     }
 
-    if (this.state.email && this.state.steps) {
+    if (activeComponent === "wizard") {
       return (
         <div>
           {this.state.email}

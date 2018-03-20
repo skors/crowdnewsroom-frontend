@@ -30,7 +30,6 @@ class StateHolder extends React.Component {
     this.send = this.send.bind(this);
     this.updateEmail = this.updateEmail.bind(this);
     this.finishForm = this.finishForm.bind(this);
-    this.submitData = this.submitData.bind(this);
     this.loginCallback = this.loginCallback.bind(this);
     this.logout = this.logout.bind(this);
     this.setPassword = this.setPassword.bind(this);
@@ -90,17 +89,10 @@ class StateHolder extends React.Component {
       .catch(console.error);
   }
 
-  submitData(event) {
-    event.preventDefault();
-    this.send();
-  }
-
   finishForm(data) {
     this.setState({ data }, () => {
       if (this.state.authToken) {
-        // this.send();
-
-        this.setState({ showSummary: true });
+        this.setState({ activeComponent: "confirmation" });
       } else {
         this.setState({ activeComponent: "password" });
       }
@@ -130,9 +122,7 @@ class StateHolder extends React.Component {
   }
 
   setPassword(password) {
-    this.setState({ password }, () => {
-      this.send();
-    });
+    this.setState({ password, activeComponent: "confirmation" });
   }
 
   render() {
@@ -164,11 +154,28 @@ class StateHolder extends React.Component {
 
     if (activeComponent === "summary") {
       return (
-        <Summary
-          steps={this.state.steps}
-          formData={this.state.formData}
-          uiSchema={this.state.uiSchema}
-        />
+        <div>
+          <Summary
+            steps={this.state.steps}
+            formData={this.state.formData}
+            uiSchema={this.state.uiSchema}
+          />
+          <button onClick={this.logout}>Logout</button>
+        </div>
+      );
+    }
+
+    if (activeComponent === "confirmation") {
+      return (
+        <div>
+          <Summary
+            steps={this.state.steps}
+            formData={this.state.data}
+            uiSchema={this.state.uiSchema}
+          />
+          <button onClick={this.send}>Submit</button>
+          <button onClick={this.logout}>Logout</button>
+        </div>
       );
     }
 

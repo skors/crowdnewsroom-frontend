@@ -150,6 +150,9 @@ class StateHolder extends React.Component {
             uiSchema={this.state.uiSchema}
           />
           <button onClick={this.logout}>Logout</button>
+          <button onClick={() => this.setActiveComponent("wizard")}>
+            Edit
+          </button>
         </div>
       );
     }

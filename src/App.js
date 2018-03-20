@@ -17,7 +17,6 @@ class App extends Component {
             component={StateHolder}
           />
           <Route path="/thank-you" component={ThankYou} />
-          <Route path="/edit/:token" component={StateHolder} />
         </main>
       </div>
     );

@@ -14,16 +14,13 @@ class StateHolder extends React.Component {
     super(props);
     this.state = {
       schema: {},
-      status: "D",
       uiSchema: {},
       formData: {},
       error: false,
       loading: false,
-      activeComponent: "email",
+      activeComponent: "login",
       email: null,
       authToken: null,
-      data: {},
-      isUpdate: false,
       formInstanceId: null
     };
 
@@ -89,8 +86,8 @@ class StateHolder extends React.Component {
       .catch(console.error);
   }
 
-  finishForm(data) {
-    this.setState({ data }, () => {
+  finishForm(formData) {
+    this.setState({ formData }, () => {
       if (this.state.authToken) {
         this.setState({ activeComponent: "confirmation" });
       } else {
@@ -136,20 +133,8 @@ class StateHolder extends React.Component {
       return <div className="error"> {t("form.error")} </div>;
     }
 
-    if (activeComponent === "thank-you") {
-      return (
-        <Redirect
-          push
-          to={{
-            pathname: "/thank-you",
-            state: { token: this.state.token }
-          }}
-        />
-      );
-    }
-
-    if (activeComponent === "password") {
-      return <SetPassword callback={this.setPassword} />;
+    if (activeComponent === "login") {
+      return <Login callback={this.loginCallback} />;
     }
 
     if (activeComponent === "summary") {
@@ -160,20 +145,6 @@ class StateHolder extends React.Component {
             formData={this.state.formData}
             uiSchema={this.state.uiSchema}
           />
-          <button onClick={this.logout}>Logout</button>
-        </div>
-      );
-    }
-
-    if (activeComponent === "confirmation") {
-      return (
-        <div>
-          <Summary
-            steps={this.state.steps}
-            formData={this.state.data}
-            uiSchema={this.state.uiSchema}
-          />
-          <button onClick={this.send}>Submit</button>
           <button onClick={this.logout}>Logout</button>
         </div>
       );
@@ -195,7 +166,32 @@ class StateHolder extends React.Component {
       );
     }
 
-    return <Login callback={this.loginCallback} />;
+    if (activeComponent === "password") {
+      return <SetPassword callback={this.setPassword} />;
+    }
+
+    if (activeComponent === "confirmation") {
+      return (
+        <div>
+          <Summary
+            steps={this.state.steps}
+            formData={this.state.formData}
+            uiSchema={this.state.uiSchema}
+          />
+          <button onClick={this.send}>Submit</button>
+          <button onClick={this.logout}>Logout</button>
+        </div>
+      );
+    }
+
+    if (activeComponent === "thank-you") {
+      return (
+        <Redirect
+          push
+          to={{ pathname: "/thank-you", state: { token: this.state.token } }}
+        />
+      );
+    }
   }
 }
 

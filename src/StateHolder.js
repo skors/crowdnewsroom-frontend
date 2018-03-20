@@ -4,6 +4,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import { t } from "./i18n";
 import { Redirect } from "react-router-dom";
 import * as api from "./api";
+import Checker from "./Checker";
 import FormWizard from "./FormWizard";
 import Login from "./Login";
 import SetPassword from "./SetPassword";
@@ -167,6 +168,7 @@ class StateHolder extends React.Component {
             currentStep={this.props.match.params.step}
             formData={this.state.formData}
             uiSchema={this.state.uiSchema}
+            history={this.props.history}
             submitCallback={this.finishForm}
           />
         </div>

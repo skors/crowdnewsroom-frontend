@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import Form from "react-jsonschema-form";
 import * as _ from "lodash";
 import Engine from "json-rules-engine-simplified";
@@ -6,6 +7,8 @@ import { CSSTransitionGroup } from "react-transition-group";
 import PropTypes from "prop-types";
 
 import "./FormWizard.css";
+
+const getSlugForSchema = ({ title }) => _.kebabCase(title);
 
 class FormWizard extends Component {
   static propTypes = {
@@ -17,9 +20,9 @@ class FormWizard extends Component {
     super(props);
     const { steps, formData } = props;
     this.state = {
-      formData: formData,
-      schema: steps[0].schema,
-      stepsTaken: [steps[0].schema]
+      formData: {},
+      schema: {},
+      stepsTaken: new Set()
     };
     const rules = steps.map(step => {
       return { conditions: step.conditions, event: { schema: step.schema } };
@@ -28,25 +31,34 @@ class FormWizard extends Component {
     this.setNextStep = this.setNextStep.bind(this);
   }
 
-  getNextStep(formData) {
+  updateRoute(schema) {
+    this.props.history.push(`./${getSlugForSchema(schema)}`);
+  }
+
+  getValidSteps(formData) {
     return this.engine.run(formData).then(events => {
-      const validSteps = events.map(event => event.schema);
-      return _.find(
-        validSteps,
-        step => !_.includes(this.state.stepsTaken, step)
-      );
+      return events.map(event => event.schema);
     });
   }
 
+  getNextStep(formData) {
+    return this.getValidSteps(formData).then(validSteps =>
+      _.find(validSteps, step => !this.state.stepsTaken.has(step))
+    );
+  }
+
   advance(formData) {
-    this.getNextStep(formData).then(this.setNextStep);
+    this.getNextStep(formData).then(nextSchema => {
+      this.setNextStep(nextSchema);
+      this.updateRoute(nextSchema);
+    });
     this.updateFormData(formData);
   }
 
   setNextStep(nextSchema) {
     this.setState({
       schema: nextSchema,
-      stepsTaken: [...this.state.stepsTaken, nextSchema]
+      stepsTaken: this.state.stepsTaken.add(nextSchema)
     });
   }
 
@@ -59,14 +71,49 @@ class FormWizard extends Component {
     });
   }
 
-  componentWillMount() {
-    if (!this.props.currentStep) return;
+  resetToFirstStep() {
+    const nextStep = this.props.steps[0].schema;
+    this.setNextStep(nextStep);
+    this.updateRoute(nextStep);
+  }
 
+  setStepFromUrl() {
     const currentSchema = _.find(this.props.steps, step => {
-      return _.kebabCase(step.schema.title) === this.props.currentStep;
+      return getSlugForSchema(step.schema) === this.props.currentStep;
     });
 
     this.setNextStep(currentSchema.schema);
+  }
+
+  componentWillMount() {
+    this.getValidSteps(this.state.formData).then(validSteps => {
+      const isValidStep = _.some(
+        validSteps,
+        step => getSlugForSchema(step.title) === this.props.currentStep
+      );
+
+      if (isValidStep) {
+        this.setStepFromUrl();
+      } else {
+        this.resetToFirstStep();
+      }
+    });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.currentStep === this.props.currentStep) return;
+
+    const currentSchema = _.find(nextProps.steps, step => {
+      return getSlugForSchema(step.schema) === nextProps.currentStep;
+    });
+
+    const stepsTaken = [...this.state.stepsTaken];
+    const currentIndex = stepsTaken.indexOf(currentSchema.schema);
+
+    this.setState({
+      stepsTaken: new Set(stepsTaken.slice(0, currentIndex + 1)),
+      schema: currentSchema.schema
+    });
   }
 
   onSubmit = ({ formData }) => {
@@ -76,6 +123,12 @@ class FormWizard extends Component {
       this.advance(formData);
     }
   };
+
+  get backLink() {
+    const stepsTaken = [...this.state.stepsTaken];
+    const previousStep = stepsTaken[stepsTaken.length - 2];
+    return getSlugForSchema(previousStep);
+  }
 
   render() {
     return (
@@ -91,7 +144,12 @@ class FormWizard extends Component {
             uiSchema={this.props.uiSchema}
             onSubmit={this.onSubmit}
             formData={this.state.formData}
-          />
+          >
+            {this.state.stepsTaken.size > 1 && (
+              <Link to={`./${this.backLink}`}>Prev</Link>
+            )}
+            <input type="submit" />
+          </Form>
         </CSSTransitionGroup>
       </div>
     );

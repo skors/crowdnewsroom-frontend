@@ -4,7 +4,6 @@ import "bootstrap/dist/css/bootstrap.css";
 import { t } from "./i18n";
 import { Redirect } from "react-router-dom";
 import * as api from "./api";
-import Checker from "./Checker";
 import FormWizard from "./FormWizard";
 import Login from "./Login";
 import SetPassword from "./SetPassword";

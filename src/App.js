@@ -1,17 +1,18 @@
 import React, { Component } from "react";
-import "./App.css";
 import StateHolder from "./StateHolder.js";
 import { Route } from "react-router-dom";
 import ThankYou from "./ThankYou";
 
+import "./App.css";
+
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <h1 className="App-title">Crowdnewsroom</h1>
+      <div className="app">
+        <header className="app-header">
+          <h1 className="app-title">Crowdnewsroom</h1>
         </header>
-        <main className="App-content">
+        <main className="app-content">
           <Route
             path="/investigations/:investigation/forms/:form/:step?"
             component={StateHolder}

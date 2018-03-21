@@ -1,17 +1,37 @@
-.App-header {
+body,
+html {
+  background: #efefef;
+  height: 100%;
+}
+
+.app-header {
   background-color: #222;
   padding: 20px;
   color: white;
+  position: fixed;
+  width: 100%;
 }
 
-.App-title {
+.app-title {
   font-size: 1.5em;
 }
 
-.App-intro {
+.app-intro {
   font-size: large;
 }
 
-.App-content {
-  padding: 20px;
+.app-content {
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: flex;
+  -ms-flex-align: center;
+  -ms-flex-pack: center;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+  padding-top: 50px;
+  padding-bottom: 50px;
+  border: 1px solid blue;
+  height: 100vh;
 }

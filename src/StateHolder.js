@@ -160,8 +160,10 @@ class StateHolder extends React.Component {
     if (activeComponent === "wizard") {
       return (
         <div>
-          {this.state.email}
-          <button onClick={this.logout}>Logout</button>
+          <div className="app-user">
+            {this.state.email}
+            <button onClick={this.logout}>Logout</button>
+          </div>
           <FormWizard
             steps={this.state.steps}
             currentStep={this.props.match.params.step}

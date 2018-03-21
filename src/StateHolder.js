@@ -54,7 +54,7 @@ class StateHolder extends React.Component {
         steps: formData.form_json,
         uiSchema: formData.ui_schema_json,
         formInstanceId: formData.id,
-        formData: response.json,
+        formData: response.json || {},
         responseId: response.id
       });
     });

@@ -132,24 +132,34 @@ class FormWizard extends Component {
 
   render() {
     return (
-      <div className="form-transition-container">
+      <div className="form-wizard-transition-container">
         <CSSTransitionGroup
-          transitionName="form-transition"
+          transitionName="form-wizard-transition"
           transitionEnterTimeout={300}
           transitionLeaveTimeout={300}
         >
-          <Form
-            key={this.state.schema.title}
-            schema={this.state.schema}
-            uiSchema={this.props.uiSchema}
-            onSubmit={this.onSubmit}
-            formData={this.state.formData}
-          >
-            {this.state.stepsTaken.size > 1 && (
-              <Link to={`./${this.backLink}`}>Prev</Link>
-            )}
-            <input type="submit" />
-          </Form>
+          <div className="card">
+            <div className="card-body">
+              <Form
+                className="form-wizard"
+                key={this.state.schema.title}
+                schema={this.state.schema}
+                uiSchema={this.props.uiSchema}
+                onSubmit={this.onSubmit}
+                formData={this.state.formData}
+              >
+                {this.state.stepsTaken.size > 1 && (
+                  <Link
+                    className="btn btn-outline-primary mr-2"
+                    to={`./${this.backLink}`}
+                  >
+                    Prev
+                  </Link>
+                )}
+                <input className="btn btn-primary" type="submit" />
+              </Form>
+            </div>
+          </div>
         </CSSTransitionGroup>
       </div>
     );

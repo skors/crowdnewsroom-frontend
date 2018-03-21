@@ -91,9 +91,9 @@ class Login extends Component {
       </div>
     );
     return (
-      <div className="form-transition-container">
-        {this.state.message}
+      <div className="login-container">
         <form className="login" onSubmit={this.login}>
+          {this.state.message}
           <div className="form-group mb-3">
             <label htmlFor="email">E-Mail Adresse</label>
             <input

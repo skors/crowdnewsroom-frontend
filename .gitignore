@@ -6,7 +6,10 @@
 # testing
 /coverage
 
-# production
+# css build
+*.css
+
+# production 
 /build
 
 # misc

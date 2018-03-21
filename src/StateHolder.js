@@ -66,7 +66,7 @@ class StateHolder extends React.Component {
       email: this.state.email,
       id: this.state.responseId,
       form_instance: this.state.formInstanceId,
-      json: this.state.data,
+      json: this.state.formData,
       password: this.state.password
     };
     api

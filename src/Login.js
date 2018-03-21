@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import * as api from "./api";
 import PropTypes from "prop-types";
 
-import "./FormWizard.css";
+import "./Login.css";
 
 class Login extends Component {
   constructor(props) {
@@ -75,29 +75,37 @@ class Login extends Component {
 
   render() {
     const password = (
-      <div>
-        <label htmlFor="password">Passwort</label>
+      <div className="form-group mb-3">
+        <label htmlFor="email">Passwort</label>
         <input
           type="password"
           name="password"
+          className="form-control"
           value={this.state.password}
           onChange={this.setPassword}
         />
+        <p className="mb-3 mt-3">
+          Du hast dieses Formular bereits einmal ausgefüllt. Melde dich mit
+          deinem Passwort an, um deinen Eintrag zu sehen.
+        </p>
       </div>
     );
     return (
       <div className="form-transition-container">
         {this.state.message}
-        <form onSubmit={this.login}>
-          <label htmlFor="email">E-Mail Adresse</label>
-          <input
-            type="email"
-            name="email"
-            value={this.state.email}
-            onChange={this.setEmail}
-          />
+        <form className="login" onSubmit={this.login}>
+          <div className="form-group mb-3">
+            <label htmlFor="email">E-Mail Adresse</label>
+            <input
+              type="email"
+              name="email"
+              className="form-control"
+              value={this.state.email}
+              onChange={this.setEmail}
+            />
+          </div>
           {this.state.accountExists && password}
-          <input type="submit" />
+          <input type="submit" className="btn btn-primary btn-block" />
         </form>
       </div>
     );

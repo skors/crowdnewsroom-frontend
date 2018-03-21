@@ -1,9 +1,3 @@
-body,
-html {
-  background: #efefef;
-  height: 100%;
-}
-
 .app-header {
   background-color: #222;
   padding: 20px;
@@ -18,6 +12,13 @@ html {
 
 .app-intro {
   font-size: large;
+}
+
+.app-user {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  color: white;
 }
 
 .app-content {

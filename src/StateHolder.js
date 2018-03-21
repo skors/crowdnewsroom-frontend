@@ -162,7 +162,12 @@ class StateHolder extends React.Component {
         <div>
           <div className="app-user">
             {this.state.email}
-            <button onClick={this.logout}>Logout</button>
+            <button
+              className="btn btn-outline-warning ml-3"
+              onClick={this.logout}
+            >
+              Logout
+            </button>
           </div>
           <FormWizard
             steps={this.state.steps}

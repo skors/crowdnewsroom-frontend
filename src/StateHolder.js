@@ -18,7 +18,8 @@ class StateHolder extends React.Component {
       loading: true,
       activeComponent: null,
       formInstanceId: null,
-      submissionStatus: "D"
+      submissionStatus: "D",
+      investigation: {}
     };
 
     this.send = this.send.bind(this);
@@ -31,14 +32,20 @@ class StateHolder extends React.Component {
 
   loadData() {
     const { investigation, form } = this.props.match.params;
+    const promises = [
+      api.getForm(investigation, form),
+      api.getInvestigation(investigation)
+    ];
 
-    return api.getForm(investigation, form).then(formData => {
+    return Promise.all(promises).then(([formData, investigationData]) => {
+      console.log(investigationData);
       this.setState({
         loading: false,
         steps: formData.form_json,
         uiSchema: formData.ui_schema_json,
         formInstanceId: formData.id,
-        activeComponent: "wizard"
+        activeComponent: "wizard",
+        investigation: investigationData
       });
     });
   }
@@ -83,6 +90,7 @@ class StateHolder extends React.Component {
       return (
         <div>
           <FormWizard
+            investigation={this.state.investigation}
             steps={this.state.steps}
             currentStep={this.props.match.params.step}
             formData={this.state.formData}
@@ -98,15 +106,22 @@ class StateHolder extends React.Component {
       return (
         <div>
           <Summary
+            investigaiton={this.state.investigation}
             status={this.state.submissionStatus}
             steps={this.state.steps}
             formData={this.state.formData}
             uiSchema={this.state.uiSchema}
-          />
-          <button onClick={this.send}>Submit</button>
-          <button onClick={() => this.setActiveComponent("wizard")}>
-            Edit
-          </button>
+          >
+            <button
+              className="btn btn-secondary"
+              onClick={() => this.setActiveComponent("wizard")}
+            >
+              Edit
+            </button>
+            <button className="btn btn-primary" onClick={this.send}>
+              Submit
+            </button>
+          </Summary>
         </div>
       );
     }

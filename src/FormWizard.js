@@ -169,6 +169,11 @@ class FormWizard extends Component {
           transitionLeaveTimeout={300}
         >
           <div className="card" key={this.state.schema.title}>
+            <img
+              src={this.props.investigation.logo}
+              className="investigationLogo"
+              alt="Logo"
+            />
             <div className="card-body">
               <Form
                 className="form-wizard"

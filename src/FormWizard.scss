@@ -32,3 +32,10 @@
   transform: translateX(-100vw);
   transition: all 300ms ease-in;
 }
+
+.investigationLogo {
+  width: 200px;
+  position: absolute;
+  left: calc(50% - 100px);
+  top: -100px;
+}

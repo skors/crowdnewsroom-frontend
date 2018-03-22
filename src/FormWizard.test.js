@@ -53,7 +53,7 @@ fdescribe("FormWizard", () => {
 
   beforeEach(() => {
     const wrapper = shallow(
-      <FormWizard formData={{}} steps={steps} history={[]} />
+      <FormWizard formData={{}} steps={steps} history={[]} investigation={{}} />
     );
     instance = wrapper.instance();
   });

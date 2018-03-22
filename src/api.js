@@ -27,6 +27,10 @@ export function getForm(investigationId = 1, formId = 1) {
   );
 }
 
+export function getInvestigation(investigationId) {
+  return fetchJson(`${API_URL}/investigations/${investigationId}`);
+}
+
 function createResponse(data, investigationId, formId) {
   return postJSON(
     `/investigations/${investigationId}/forms/${formId}/responses`,

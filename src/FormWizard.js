@@ -151,11 +151,13 @@ class FormWizard extends Component {
 
   maybeAutoAdvance(event) {
     const properties = event.schema.properties;
+    const autoFields = new Set(["boolean", "enum"]);
     const propertyNames = _.keys(properties);
-    const types = _.uniq(_.map(properties, p => p.type));
+    const types = _.uniq(_.map(properties, p => (p.enum ? "enum" : p.type)));
     const fields = new Set(_.keys(event.formData));
     const allFilled = _.every(propertyNames, p => fields.has(p));
-    if (_.isEqual(types, ["boolean"]) && allFilled) {
+    const allAuto = _.every(types, p => autoFields.has(p));
+    if (allAuto && allFilled) {
       this.onSubmit(event);
     }
   }

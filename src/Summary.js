@@ -51,14 +51,19 @@ class Summary extends React.Component {
       <div className="summary">
         <StatusMessage status={this.props.status} />
 
-        {this.state.stepsTaken.map(step => (
-          <Step
-            step={step}
-            key={step.schema.title}
-            formData={this.props.formData}
-            uiSchema={this.props.uiSchema}
-          />
-        ))}
+        <div className="card">
+          <div className="card-body">
+            {this.state.stepsTaken.map(step => (
+              <Step
+                step={step}
+                key={step.schema.title}
+                formData={this.props.formData}
+                uiSchema={this.props.uiSchema}
+              />
+            ))}
+            <div className="buttons">{this.props.children}</div>
+          </div>
+        </div>
       </div>
     );
   }

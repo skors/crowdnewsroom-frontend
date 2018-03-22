@@ -1,3 +1,7 @@
+$theme-colors: ("primary": rgb(226, 19, 125));
+
+@import "../node_modules/bootstrap/scss/bootstrap.scss";
+
 .app-header {
   background-color: #222;
   padding: 20px;

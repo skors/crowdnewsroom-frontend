@@ -1,5 +1,4 @@
 import React from "react";
-import "bootstrap/dist/css/bootstrap.css";
 
 import { t } from "./i18n";
 import { Redirect } from "react-router-dom";

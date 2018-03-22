@@ -48,7 +48,7 @@ const steps = [
   }
 ];
 
-fdescribe("FormWizard", () => {
+describe("FormWizard", () => {
   let instance;
 
   beforeEach(() => {

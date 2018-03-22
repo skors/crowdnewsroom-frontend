@@ -157,11 +157,10 @@ class FormWizard extends Component {
           transitionEnterTimeout={300}
           transitionLeaveTimeout={300}
         >
-          <div className="card">
+          <div className="card" key={this.state.schema.title}>
             <div className="card-body">
               <Form
                 className="form-wizard"
-                key={this.state.schema.title}
                 schema={this.state.schema}
                 uiSchema={this.props.uiSchema}
                 onChange={this.maybeAutoAdvance}

@@ -84,7 +84,11 @@ function Step({ step, formData, uiSchema }) {
     let value;
     if (isFile) {
       value = (
-        <img src={valueText} style={{ maxWidth: "50%", maxHeight: "400px" }} />
+        <img
+          alt="uploaded document"
+          src={valueText}
+          style={{ maxWidth: "50%", maxHeight: "400px" }}
+        />
       );
     } else {
       value = valueText;

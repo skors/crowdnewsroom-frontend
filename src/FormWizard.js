@@ -66,11 +66,22 @@ class FormWizard extends Component {
   }
 
   updateFormData(formData) {
-    this.setState({
-      formData: {
-        ...this.state.formData,
-        ...formData
-      }
+    return this.getValidSteps(formData).then(events => {
+      // remove steps that are not valid anymore if a new path is taken
+      const validProperties = _.flatMap(events, event => {
+        return _.keys(event.properties);
+      });
+
+      const newState = { ...this.state.formData, ...formData };
+      _.each(_.keys(newState), key => {
+        if (!_.includes(validProperties, key)) {
+          delete newState[key];
+        }
+      });
+
+      this.setState({
+        formData: newState
+      });
     });
   }
 

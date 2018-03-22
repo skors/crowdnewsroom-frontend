@@ -162,45 +162,40 @@ class FormWizard extends Component {
 
   render() {
     return (
-      <div className="form-wizard-transition-container">
-        <CSSTransitionGroup
-          transitionName="form-wizard-transition"
-          transitionEnterTimeout={300}
-          transitionLeaveTimeout={300}
-        >
-          <div className="card" key={this.state.schema.title}>
-            <img
-              src={this.props.investigation.logo}
-              className="investigationLogo"
-              alt="Logo"
-            />
-            <div className="card-body">
-              <Form
-                className="form-wizard"
-                schema={this.state.schema}
-                uiSchema={this.props.uiSchema}
-                onChange={this.maybeAutoAdvance}
-                onSubmit={this.onSubmit}
-                formData={this.state.formData}
-              >
-                {this.state.stepsTaken.size > 1 && (
-                  <Link
-                    className="btn btn-outline-primary mr-2"
-                    to={`./${this.backLink}`}
-                  >
-                    Prev
-                  </Link>
-                )}
-                <input
-                  className="btn btn-primary"
-                  type="submit"
-                  value="Weiter"
-                />
-              </Form>
-            </div>
+      <CSSTransitionGroup
+        className="form-wizard-transition-container"
+        transitionName="form-wizard-transition"
+        transitionEnterTimeout={300}
+        transitionLeaveTimeout={300}
+      >
+        <div className="card" key={this.state.schema.title}>
+          <img
+            src={this.props.investigation.logo}
+            className="investigationLogo"
+            alt="Logo"
+          />
+          <div className="card-body">
+            <Form
+              className="form-wizard"
+              schema={this.state.schema}
+              uiSchema={this.props.uiSchema}
+              onChange={this.maybeAutoAdvance}
+              onSubmit={this.onSubmit}
+              formData={this.state.formData}
+            >
+              {this.state.stepsTaken.size > 1 && (
+                <Link
+                  className="btn btn-outline-primary mr-2"
+                  to={`./${this.backLink}`}
+                >
+                  Prev
+                </Link>
+              )}
+              <input className="btn btn-primary" type="submit" value="Weiter" />
+            </Form>
           </div>
-        </CSSTransitionGroup>
-      </div>
+        </div>
+      </CSSTransitionGroup>
     );
   }
 }

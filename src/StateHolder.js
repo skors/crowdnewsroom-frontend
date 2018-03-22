@@ -5,8 +5,6 @@ import { t } from "./i18n";
 import { Redirect } from "react-router-dom";
 import * as api from "./api";
 import FormWizard from "./FormWizard";
-import Login from "./Login";
-import SetPassword from "./SetPassword";
 import Summary from "./Summary";
 
 class StateHolder extends React.Component {
@@ -17,48 +15,30 @@ class StateHolder extends React.Component {
       uiSchema: {},
       formData: {},
       error: false,
-      loading: false,
-      activeComponent: "login",
-      email: null,
-      authToken: null,
+      loading: true,
+      activeComponent: null,
       formInstanceId: null,
       submissionStatus: "D"
     };
 
     this.send = this.send.bind(this);
-    this.updateEmail = this.updateEmail.bind(this);
     this.finishForm = this.finishForm.bind(this);
-    this.loginCallback = this.loginCallback.bind(this);
-    this.logout = this.logout.bind(this);
-    this.setPassword = this.setPassword.bind(this);
   }
 
-  updateEmail(event) {
-    this.setState({ email: event.target.value });
+  componentDidMount() {
+    this.loadData();
   }
 
   loadData() {
     const { investigation, form } = this.props.match.params;
-    const promises = [api.getForm(investigation, form)];
 
-    if (this.state.authToken) {
-      promises.push(
-        api.getFormResponse(investigation, form, this.state.authToken)
-      );
-    }
-
-    return Promise.all(promises).then(([formData, responseData = []]) => {
-      const response = responseData.length ? responseData[0] : {};
-      const submissionStatus = response.status || "D";
-
+    return api.getForm(investigation, form).then(formData => {
       this.setState({
         loading: false,
         steps: formData.form_json,
         uiSchema: formData.ui_schema_json,
         formInstanceId: formData.id,
-        formData: response.json || {},
-        submissionStatus,
-        responseId: response.id
+        activeComponent: "wizard"
       });
     });
   }
@@ -67,62 +47,21 @@ class StateHolder extends React.Component {
     const { investigation, form } = this.props.match.params;
     const payload = {
       email: this.state.email,
-      id: this.state.responseId,
       form_instance: this.state.formInstanceId,
-      json: this.state.formData,
-      password: this.state.password
+      json: this.state.formData
     };
     api
       .postResponse(payload, investigation, form, this.state.authToken)
       .then(() => {
-        this.setState(
-          {
-            activeComponent: "thank-you"
-          },
-          () => {
-            if (this.state.password) {
-              this.logout();
-            }
-          }
-        );
+        this.setState({
+          activeComponent: "thank-you"
+        });
       })
       .catch(console.error);
   }
 
   finishForm(formData) {
-    this.setState({ formData }, () => {
-      if (this.state.authToken) {
-        this.setState({ activeComponent: "confirmation" });
-      } else {
-        this.setState({ activeComponent: "password" });
-      }
-    });
-  }
-
-  loginCallback({ email, token }) {
-    this.setState({ authToken: token, email }, () => {
-      this.loadData()
-        .then(() => {
-          this.setState({ activeComponent: token ? "summary" : "wizard" });
-        })
-        .catch(() => {
-          this.setState({ error: true, loading: false });
-        });
-    });
-  }
-
-  logout() {
-    localStorage.clear();
-    this.setState({
-      email: null,
-      authToken: null,
-      formData: {},
-      activeComponent: "login"
-    });
-  }
-
-  setPassword(password) {
-    this.setState({ password, activeComponent: "confirmation" });
+    this.setState({ formData, activeComponent: "confirmation" });
   }
 
   setActiveComponent(activeComponent) {
@@ -140,39 +79,9 @@ class StateHolder extends React.Component {
       return <div className="error"> {t("form.error")} </div>;
     }
 
-    if (activeComponent === "login") {
-      return <Login callback={this.loginCallback} />;
-    }
-
-    if (activeComponent === "summary") {
-      return (
-        <div>
-          <Summary
-            status={this.state.submissionStatus}
-            steps={this.state.steps}
-            formData={this.state.formData}
-            uiSchema={this.state.uiSchema}
-          />
-          <button onClick={this.logout}>Logout</button>
-          <button onClick={() => this.setActiveComponent("wizard")}>
-            Edit
-          </button>
-        </div>
-      );
-    }
-
     if (activeComponent === "wizard") {
       return (
         <div>
-          <div className="app-user">
-            {this.state.email}
-            <button
-              className="btn btn-outline-warning ml-3"
-              onClick={this.logout}
-            >
-              Logout
-            </button>
-          </div>
           <FormWizard
             steps={this.state.steps}
             currentStep={this.props.match.params.step}
@@ -183,10 +92,6 @@ class StateHolder extends React.Component {
           />
         </div>
       );
-    }
-
-    if (activeComponent === "password") {
-      return <SetPassword callback={this.setPassword} />;
     }
 
     if (activeComponent === "confirmation") {

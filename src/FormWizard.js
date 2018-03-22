@@ -138,6 +138,17 @@ class FormWizard extends Component {
     return getSlugForSchema(previousStep);
   }
 
+  maybeAutoAdvance(event) {
+    const properties = event.schema.properties;
+    const propertyNames = _.keys(properties);
+    const types = _.uniq(_.map(properties, p => p.type));
+    const fields = new Set(_.keys(event.formData));
+    const allFilled = _.every(propertyNames, p => fields.has(p));
+    if (_.isEqual(types, ["boolean"]) && allFilled) {
+      this.onSubmit(event);
+    }
+  }
+
   render() {
     return (
       <div className="form-wizard-transition-container">
@@ -153,6 +164,7 @@ class FormWizard extends Component {
                 key={this.state.schema.title}
                 schema={this.state.schema}
                 uiSchema={this.props.uiSchema}
+                onChange={this.maybeAutoAdvance}
                 onSubmit={this.onSubmit}
                 formData={this.state.formData}
               >
@@ -168,9 +180,6 @@ class FormWizard extends Component {
               </Form>
             </div>
           </div>
-          <a onClick={this.finishLater} style={{ textDecoration: "underline" }}>
-            Finish this later
-          </a>
         </CSSTransitionGroup>
       </div>
     );

@@ -80,11 +80,20 @@ function Step({ step, formData, uiSchema }) {
   const rows = _.map(step.schema.properties, (values, property) => {
     const valueText = getValueText(property, formData, values.type);
     const keyText = getKeyText(property, values.types, uiSchema);
+    const isFile = values.format === "data-url";
+    let value;
+    if (isFile) {
+      value = (
+        <img src={valueText} style={{ maxWidth: "50%", maxHeight: "400px" }} />
+      );
+    } else {
+      value = valueText;
+    }
 
     return (
       <tr key={property}>
         <th>{keyText}</th>
-        <td>{valueText}</td>
+        <td>{value}</td>
       </tr>
     );
   });

@@ -112,12 +112,13 @@ class StateHolder extends React.Component {
     }
 
     if (activeComponent === "thank-you") {
+      const { investigation, form } = this.props.match.params;
       return (
         <Redirect
           push
           to={{
             pathname: "/thank-you",
-            state: { returnUrl: window.location.pathname }
+            state: { investigation, form }
           }}
         />
       );

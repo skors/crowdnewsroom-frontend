@@ -186,7 +186,11 @@ class FormWizard extends Component {
                     Prev
                   </Link>
                 )}
-                <input className="btn btn-primary" type="submit" />
+                <input
+                  className="btn btn-primary"
+                  type="submit"
+                  value="Weiter"
+                />
               </Form>
             </div>
           </div>

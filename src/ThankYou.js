@@ -1,5 +1,6 @@
 import React from "react";
 import "./ThankYou.css";
+import Checker from "./Checker";
 
 export default function ThankYou(props) {
   const { investigation, form } = props.location.state;
@@ -21,6 +22,7 @@ export default function ThankYou(props) {
   return (
     <div>
       <h1>Thank you!</h1>
+      <Checker />
       <p>You will get an email later</p>
       <div className="sharing">
         <a

@@ -12,7 +12,7 @@ const Checker = ({ text }) => {
         <circle
           className="path circle"
           fill="none"
-          stroke="#73AF55"
+          stroke="rgb(226, 19, 125)"
           strokeWidth="6"
           strokeMiterlimit="10"
           cx="65.1"
@@ -22,7 +22,7 @@ const Checker = ({ text }) => {
         <polyline
           className="path check"
           fill="none"
-          stroke="#73AF55"
+          stroke="rgb(226, 19, 125)"
           strokeWidth="6"
           strokeLinecap="round"
           strokeMiterlimit="10"

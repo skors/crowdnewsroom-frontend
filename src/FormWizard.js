@@ -13,7 +13,9 @@ const getSlugForSchema = ({ title }) => _.kebabCase(title);
 class FormWizard extends Component {
   static propTypes = {
     currentStep: PropTypes.string,
-    submitCallback: PropTypes.func
+    steps: PropTypes.arrayOf(PropTypes.object),
+    submitCallback: PropTypes.func,
+    finishLater: PropTypes.func
   };
 
   constructor(props) {
@@ -29,6 +31,7 @@ class FormWizard extends Component {
     });
     this.engine = new Engine(rules);
     this.setNextStep = this.setNextStep.bind(this);
+    this.finishLater = this.finishLater.bind(this);
   }
 
   updateRoute(schema) {
@@ -124,6 +127,11 @@ class FormWizard extends Component {
     }
   };
 
+  finishLater(event) {
+    event.preventDefault();
+    this.props.finishLater && this.props.finishLater();
+  }
+
   get backLink() {
     const stepsTaken = [...this.state.stepsTaken];
     const previousStep = stepsTaken[stepsTaken.length - 2];
@@ -160,6 +168,9 @@ class FormWizard extends Component {
               </Form>
             </div>
           </div>
+          <a onClick={this.finishLater} style={{ textDecoration: "underline" }}>
+            Finish this later
+          </a>
         </CSSTransitionGroup>
       </div>
     );

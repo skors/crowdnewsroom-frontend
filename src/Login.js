@@ -90,10 +90,13 @@ class Login extends Component {
         </p>
       </div>
     );
+    const { message } = this.state;
     return (
       <div className="login-container">
         <form className="login" onSubmit={this.login}>
-          {this.state.message}
+          {message && (
+            <div className="alert alert-danger">{this.state.message}</div>
+          )}
           <div className="form-group mb-3">
             <label htmlFor="email">E-Mail Adresse</label>
             <input

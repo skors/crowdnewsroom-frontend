@@ -11,6 +11,23 @@ function filterSteps(steps, formData) {
   return engine.run(formData);
 }
 
+function StatusMessage({ status }) {
+  const messages = {
+    D:
+      "You're submission is currently in the draft state. Feel free to make changes and submit it.",
+    S:
+      "You're submission has been submitted but not reviewd yet. Feel free to make changes"
+  };
+  const classNames = {
+    D: "alert-primary",
+    S: "alert-success"
+  };
+  const message = _.get(messages, status, "You cannot change it anymore.");
+  const className = _.get(classNames, status, "alert-secondary");
+
+  return <div className={`alert ${className}`}> {message}</div>;
+}
+
 class Summary extends React.Component {
   static propTypes = {
     steps: PropTypes.arrayOf(PropTypes.object),
@@ -32,6 +49,8 @@ class Summary extends React.Component {
   render() {
     return (
       <div className="summary">
+        <StatusMessage status={this.props.status} />
+
         {this.state.stepsTaken.map(step => (
           <Step
             step={step}

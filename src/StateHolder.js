@@ -21,7 +21,8 @@ class StateHolder extends React.Component {
       activeComponent: "login",
       email: null,
       authToken: null,
-      formInstanceId: null
+      formInstanceId: null,
+      submissionStatus: "D"
     };
 
     this.send = this.send.bind(this);
@@ -48,6 +49,7 @@ class StateHolder extends React.Component {
 
     return Promise.all(promises).then(([formData, responseData = []]) => {
       const response = responseData.length ? responseData[0] : {};
+      const submissionStatus = response.status || "D";
 
       this.setState({
         loading: false,
@@ -55,6 +57,7 @@ class StateHolder extends React.Component {
         uiSchema: formData.ui_schema_json,
         formInstanceId: formData.id,
         formData: response.json || {},
+        submissionStatus,
         responseId: response.id
       });
     });
@@ -114,7 +117,7 @@ class StateHolder extends React.Component {
       email: null,
       authToken: null,
       formData: {},
-      isEdit: false
+      activeComponent: "login"
     });
   }
 
@@ -145,6 +148,7 @@ class StateHolder extends React.Component {
       return (
         <div>
           <Summary
+            status={this.state.submissionStatus}
             steps={this.state.steps}
             formData={this.state.formData}
             uiSchema={this.state.uiSchema}
@@ -189,6 +193,7 @@ class StateHolder extends React.Component {
       return (
         <div>
           <Summary
+            status={this.state.submissionStatus}
             steps={this.state.steps}
             formData={this.state.formData}
             uiSchema={this.state.uiSchema}

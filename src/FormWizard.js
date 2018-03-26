@@ -173,8 +173,8 @@ class FormWizard extends Component {
         <div className="card" key={this.state.schema.title}>
           <img
             src={this.props.investigation.logo}
-            className="investigationLogo"
-            alt="Logo"
+            alt={this.props.investigation.name}
+            className="investigation-logo"
           />
           <div className="card-body">
             <Form

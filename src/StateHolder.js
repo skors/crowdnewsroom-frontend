@@ -37,7 +37,6 @@ class StateHolder extends React.Component {
     ];
 
     return Promise.all(promises).then(([formData, investigationData]) => {
-      console.log(investigationData);
       this.setState({
         loading: false,
         steps: formData.form_json,

@@ -2,14 +2,6 @@ $theme-colors: ("primary": rgb(226, 19, 125));
 
 @import "../node_modules/bootstrap/scss/bootstrap.scss";
 
-.app-header {
-  background-color: #222;
-  padding: 20px;
-  color: white;
-  position: fixed;
-  width: 100%;
-}
-
 .app-title {
   font-size: 1.5em;
 }
@@ -18,26 +10,9 @@ $theme-colors: ("primary": rgb(226, 19, 125));
   font-size: large;
 }
 
-.app-user {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  color: white;
-}
-
 .app-content {
-  display: -ms-flexbox;
-  display: -webkit-box;
-  display: flex;
-  -ms-flex-align: center;
-  -ms-flex-pack: center;
-  -webkit-box-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  justify-content: center;
   padding-top: 50px;
   padding-bottom: 50px;
-  height: 100vh;
   background: #efefef;
-  overflow-x: hidden;
+  min-height: 100vh;
 }

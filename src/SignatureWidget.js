@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import SignaturePad from "react-signature-pad-wrapper";
 
+import "./SignatureWidget.css";
+
 class SignatureWidget extends Component {
   signaturePad = undefined;
 
@@ -29,6 +31,7 @@ class SignatureWidget extends Component {
     return (
       <div>
         <SignaturePad
+          className="signature-widget"
           redrawOnResize={true}
           options={options}
           ref={ref => (this.signaturePad = ref)}

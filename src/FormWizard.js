@@ -165,6 +165,15 @@ class FormWizard extends Component {
     }
   }
 
+  transformErrors(errors) {
+    return errors.map(error => {
+      if (error.name === "required") {
+        error.message = "Dieses Feld muss ausgefüllt sein.";
+      }
+      return error;
+    });
+  }
+
   render() {
     return (
       <div className="card">
@@ -188,6 +197,8 @@ class FormWizard extends Component {
               onSubmit={this.onSubmit}
               formData={this.state.formData}
               widgets={{ signatureWidget: SignatureWidget }}
+              transformErrors={this.transformErrors}
+              showErrorList={false}
             >
               {this.state.stepsTaken.size > 1 && (
                 <Link

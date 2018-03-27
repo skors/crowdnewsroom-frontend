@@ -76,6 +76,34 @@ const moreSteps = [
   }
 ];
 
+const existsStep = [
+  {
+    schema: {
+      title: "first",
+      properties: {
+        first_first: {
+          type: "string"
+        }
+      }
+    },
+    conditions: {}
+  },
+  {
+    schema: {
+      title: "second"
+    },
+    conditions: {
+      other: { exists: true }
+    }
+  },
+  {
+    schema: {
+      title: "third"
+    },
+    conditions: {}
+  }
+];
+
 describe("FormWizard", () => {
   let instance;
 
@@ -156,6 +184,30 @@ describe("FormWizard", () => {
         first_first: false,
         first_second: "banana"
       });
+      expect(nextStep.title).toBe("third");
+    });
+  });
+
+  describe("exists conditions", () => {
+    beforeEach(() => {
+      const wrapper = shallow(
+        <FormWizard
+          formData={{}}
+          steps={existsStep}
+          history={[]}
+          investigation={{}}
+        />
+      );
+      instance = wrapper.instance();
+    });
+
+    it("should advance if the exists condition is met", async () => {
+      const nextStep = await instance.getNextStep({ other: "test" });
+      expect(nextStep.title).toBe("second");
+    });
+
+    it("should not advance if the exists condition is not met", async () => {
+      const nextStep = await instance.getNextStep({ first_first: true });
       expect(nextStep.title).toBe("third");
     });
   });

@@ -164,19 +164,19 @@ class FormWizard extends Component {
 
   render() {
     return (
-      <CSSTransitionGroup
-        className="form-wizard-transition-container"
-        transitionName="form-wizard-transition"
-        transitionEnterTimeout={300}
-        transitionLeaveTimeout={300}
-      >
-        <div className="card" key={this.state.schema.title}>
-          <img
-            src={this.props.investigation.logo}
-            alt={this.props.investigation.name}
-            className="investigation-logo"
-          />
-          <div className="card-body">
+      <div className="card">
+        <img
+          src={this.props.investigation.logo}
+          alt={this.props.investigation.name}
+          className="investigation-logo"
+        />
+        <CSSTransitionGroup
+          className="form-wizard-transition-container"
+          transitionName="form-wizard-transition"
+          transitionEnterTimeout={800}
+          transitionLeaveTimeout={400}
+        >
+          <div className="card-body" key={this.state.schema.title}>
             <Form
               className="form-wizard"
               schema={this.state.schema}
@@ -196,8 +196,8 @@ class FormWizard extends Component {
               <input className="btn btn-primary" type="submit" value="Weiter" />
             </Form>
           </div>
-        </div>
-      </CSSTransitionGroup>
+        </CSSTransitionGroup>
+      </div>
     );
   }
 }

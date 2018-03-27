@@ -1,3 +1,12 @@
+$mq-breakpoints: (
+  mobile: 320px,
+  tablet: 740px,
+  desktop: 980px,
+  wide: 1300px
+);
+
+@import "../node_modules/sass-mq/mq.scss";
+
 .form-wizard {
   padding: 20px 60px;
   margin-top: 50px;

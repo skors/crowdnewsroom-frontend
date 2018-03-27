@@ -98,6 +98,9 @@ class FormWizard extends Component {
   }
 
   async componentDidMount() {
+    // TODO: I think all of this checking only actually becomes
+    // necessary once we allow people to jump back to specific
+    // steps in their form. Right now it always resets to first url...
     const validSteps = await this.getValidSteps(this.state.formData);
 
     const isValidStep = _.some(

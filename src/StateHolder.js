@@ -6,6 +6,8 @@ import * as api from "./api";
 import FormWizard from "./FormWizard";
 import Summary from "./Summary";
 
+import "./StateHolder.css";
+
 class StateHolder extends React.Component {
   constructor(props) {
     super(props);
@@ -77,11 +79,17 @@ class StateHolder extends React.Component {
     const { loading, error, activeComponent } = this.state;
 
     if (loading) {
-      return <div>{t("form.loading")}</div>;
+      return (
+        <div className="state-holder__message state-holder__message--loading">
+          {t("form.loading")}
+        </div>
+      );
     }
 
     if (error) {
-      return <div className="error"> {t("form.error")} </div>;
+      return (
+        <div className="state-holder__message--error"> {t("form.error")} </div>
+      );
     }
 
     if (activeComponent === "wizard") {

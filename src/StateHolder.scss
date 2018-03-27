@@ -1,0 +1,11 @@
+.state-holder {
+  &__message {
+    text-align: center;
+    &--error {
+      color: red;
+    }
+    &--loading {
+      color: black;
+    }
+  }
+}

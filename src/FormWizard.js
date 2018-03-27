@@ -6,6 +6,7 @@ import Engine from "json-rules-engine-simplified";
 import { CSSTransitionGroup } from "react-transition-group";
 import PropTypes from "prop-types";
 
+import SignatureWidget from "./SignatureWidget";
 import "./FormWizard.css";
 
 class FormWizard extends Component {
@@ -186,6 +187,7 @@ class FormWizard extends Component {
               onChange={this.maybeAutoAdvance}
               onSubmit={this.onSubmit}
               formData={this.state.formData}
+              widgets={{ signatureWidget: SignatureWidget }}
             >
               {this.state.stepsTaken.size > 1 && (
                 <Link

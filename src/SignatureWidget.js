@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import SignaturePad from "react-signature-pad-wrapper";
 
-class SignatureComponent extends Component {
+class SignatureWidget extends Component {
   signaturePad = undefined;
 
   componentDidMount() {
@@ -34,4 +34,4 @@ class SignatureComponent extends Component {
   }
 }
 
-export default SignatureComponent;
+export default SignatureWidget;

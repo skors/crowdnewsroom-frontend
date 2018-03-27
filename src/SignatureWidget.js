@@ -15,6 +15,7 @@ class SignatureWidget extends Component {
   clear(event) {
     event.preventDefault();
     this.signaturePad.clear();
+    this.props.onChange(null);
   }
 
   render() {

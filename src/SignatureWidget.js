@@ -8,6 +8,13 @@ class SignatureWidget extends Component {
     if (this.signaturePad && this.props.value) {
       this.signaturePad.fromDataURL(this.props.value);
     }
+
+    this.clear = this.clear.bind(this);
+  }
+
+  clear(event) {
+    event.preventDefault();
+    this.signaturePad.clear();
   }
 
   render() {
@@ -28,7 +35,7 @@ class SignatureWidget extends Component {
           width={300}
           height={200}
         />
-        <button onClick={() => this.signaturePad.clear()}> Clear </button>
+        <button onClick={this.clear}> Clear </button>
       </div>
     );
   }

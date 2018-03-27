@@ -61,11 +61,15 @@ class Summary extends React.Component {
   }
 }
 
-function getValueText(property, formData, type) {
-  if (type === "boolean") {
-    return formData[property] ? "Yes" : "No";
+function getValueText(property, formData, values) {
+  if (values.type === "boolean") {
+    return formData[property] ? "Ja" : "Nein";
   }
-  return formData[property];
+  if (values.enum && values.enumNames) {
+    return values.enumNames[values.enum.indexOf(formData[property])];
+  }
+  console.log(values);
+  return values.title || formData[property];
 }
 
 function getKeyText(property, types, uiSchema) {
@@ -75,26 +79,30 @@ function getKeyText(property, types, uiSchema) {
 function Step({ step, formData, uiSchema }) {
   const title = <h2> {step.schema.title} </h2>;
   const rows = _.map(step.schema.properties, (values, property) => {
-    const valueText = getValueText(property, formData, values.type);
-    const keyText = getKeyText(property, values.types, uiSchema);
+    const valueText = getValueText(property, formData, values);
+    const keyText = getKeyText(property, values.type, uiSchema);
+    const isSignature =
+      _.get(uiSchema, [property, "ui:widget"]) === "signatureWidget";
     const isFile = values.format === "data-url";
+    const isHidden = _.get(uiSchema, [property, "ui:widget"]) === "hidden";
+
     let value;
     if (isFile) {
-      value = (
-        <img
-          alt="uploaded document"
-          src={valueText}
-          style={{ maxWidth: "50%", maxHeight: "400px" }}
-        />
-      );
+      value = <i>Datei</i>;
+    } else if (isSignature) {
+      value = <i>Unterschrift</i>;
     } else {
       value = valueText;
     }
 
+    if (isHidden) {
+      return <tr />;
+    }
+
     return (
       <tr key={property}>
-        <th>{keyText}</th>
-        <td>{value}</td>
+        <th style={{ width: "50%" }}>{keyText}</th>
+        <td style={{ width: "50%" }}>{value}</td>
       </tr>
     );
   });

@@ -13,7 +13,8 @@ class FormWizard extends Component {
     currentStep: PropTypes.string,
     steps: PropTypes.arrayOf(PropTypes.object),
     submitCallback: PropTypes.func,
-    finishLater: PropTypes.func
+    finishLater: PropTypes.func,
+    formData: PropTypes.object
   };
 
   constructor(props) {

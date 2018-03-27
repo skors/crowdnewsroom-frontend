@@ -8,8 +8,6 @@ import PropTypes from "prop-types";
 
 import "./FormWizard.css";
 
-const getSlugForSchema = ({ title }) => _.kebabCase(title);
-
 class FormWizard extends Component {
   static propTypes = {
     currentStep: PropTypes.string,
@@ -35,7 +33,7 @@ class FormWizard extends Component {
   }
 
   updateRoute(schema) {
-    this.props.history.push(`./${getSlugForSchema(schema)}`);
+    this.props.history.push(`./${schema.slug}`);
   }
 
   getValidSteps(formData) {
@@ -93,7 +91,7 @@ class FormWizard extends Component {
 
   setStepFromUrl() {
     const currentSchema = _.find(this.props.steps, step => {
-      return getSlugForSchema(step.schema) === this.props.currentStep;
+      return step.schema.slug === this.props.currentStep;
     });
 
     this.setNextStep(currentSchema.schema);
@@ -104,7 +102,7 @@ class FormWizard extends Component {
 
     const isValidStep = _.some(
       validSteps,
-      step => getSlugForSchema(step.title) === this.props.currentStep
+      step => step.slug === this.props.currentStep
     );
 
     if (isValidStep) {
@@ -118,7 +116,7 @@ class FormWizard extends Component {
     if (nextProps.currentStep === this.props.currentStep) return;
 
     const currentSchema = _.find(nextProps.steps, step => {
-      return getSlugForSchema(step.schema) === nextProps.currentStep;
+      return step.schema.slug === nextProps.currentStep;
     });
 
     const stepsTaken = [...this.state.stepsTaken];
@@ -146,7 +144,7 @@ class FormWizard extends Component {
   get backLink() {
     const stepsTaken = [...this.state.stepsTaken];
     const previousStep = stepsTaken[stepsTaken.length - 2];
-    return getSlugForSchema(previousStep);
+    return previousStep.slug;
   }
 
   maybeAutoAdvance(event) {
@@ -176,7 +174,7 @@ class FormWizard extends Component {
           transitionEnterTimeout={800}
           transitionLeaveTimeout={400}
         >
-          <div className="card-body" key={this.state.schema.title}>
+          <div className="card-body" key={this.state.schema.slug}>
             <Form
               className="form-wizard"
               schema={this.state.schema}

@@ -119,13 +119,13 @@ class StateHolder extends React.Component {
             uiSchema={this.state.uiSchema}
           >
             <button
-              className="btn btn-secondary"
+              className="btn btn-outline-primary mr-2"
               onClick={() => this.setActiveComponent("wizard")}
             >
-              Edit
+              Bearbeiten
             </button>
             <button className="btn btn-primary" onClick={this.send}>
-              Submit
+              Senden
             </button>
           </Summary>
         </div>

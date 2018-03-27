@@ -205,7 +205,7 @@ class FormWizard extends Component {
                   className="btn btn-outline-primary mr-2"
                   to={`./${this.backLink}`}
                 >
-                  Prev
+                  Zurück
                 </Link>
               )}
               <input className="btn btn-primary" type="submit" value="Weiter" />

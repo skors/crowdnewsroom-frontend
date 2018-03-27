@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import Engine from "json-rules-engine-simplified";
 import * as _ from "lodash";
+import "./Summary.css";
 
 function filterSteps(steps, formData) {
   const rules = steps.map(step => {
@@ -14,8 +15,7 @@ function filterSteps(steps, formData) {
 function StatusMessage() {
   return (
     <div className={`alert alert-success`}>
-      You're submission is currently in the draft state. Feel free to make
-      changes and submit it.
+      Bitte überprüfen Sie Ihre Angaben:
     </div>
   );
 }
@@ -41,10 +41,9 @@ class Summary extends React.Component {
   render() {
     return (
       <div className="summary">
-        <StatusMessage />
-
         <div className="card">
           <div className="card-body">
+            <StatusMessage />
             {this.state.stepsTaken.map(step => (
               <Step
                 step={step}
@@ -77,7 +76,7 @@ function getKeyText(property, types, uiSchema) {
 }
 
 function Step({ step, formData, uiSchema }) {
-  const title = <h2> {step.schema.title} </h2>;
+  const title = step.schema.title;
   const rows = _.map(step.schema.properties, (values, property) => {
     const valueText = getValueText(property, formData, values);
     const keyText = getKeyText(property, values.type, uiSchema);
@@ -88,9 +87,9 @@ function Step({ step, formData, uiSchema }) {
 
     let value;
     if (isFile) {
-      value = <i>Datei</i>;
+      value = <i>Datei hochgeladen</i>;
     } else if (isSignature) {
-      value = <i>Unterschrift</i>;
+      value = <i>Unterschrift geleistet</i>;
     } else {
       value = valueText;
     }
@@ -100,19 +99,17 @@ function Step({ step, formData, uiSchema }) {
     }
 
     return (
-      <tr key={property}>
-        <th style={{ width: "50%" }}>{keyText}</th>
-        <td style={{ width: "50%" }}>{value}</td>
-      </tr>
+      <li key={property}>
+        <h4 className="summary-step__question">{keyText}</h4>
+        <p className="summary-step__answer">{value}</p>
+      </li>
     );
   });
 
   return (
-    <div className="step">
-      {title}
-      <table>
-        <tbody>{rows}</tbody>
-      </table>
+    <div className="summary-step">
+      <h2 className="summary-step__title">{title}</h2>
+      <ul className="summary-step__list">{rows}</ul>
     </div>
   );
 }

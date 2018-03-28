@@ -5,6 +5,7 @@ import { Redirect } from "react-router-dom";
 import * as api from "./api";
 import FormWizard from "./FormWizard";
 import Summary from "./Summary";
+import FontAwesomeIcon from '@fortawesome/react-fontawesome'
 
 import "./StateHolder.css";
 
@@ -12,7 +13,6 @@ class StateHolder extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      schema: {},
       uiSchema: {},
       formData: {},
       error: false,
@@ -20,7 +20,9 @@ class StateHolder extends React.Component {
       activeComponent: null,
       formInstanceId: null,
       submissionStatus: "D",
-      investigation: {}
+      investigation: {},
+      steps: [],
+      sending: false,
     };
 
     this.send = this.send.bind(this);
@@ -52,6 +54,7 @@ class StateHolder extends React.Component {
 
   send() {
     const { investigation, form } = this.props.match.params;
+    this.setState({sending: true});
     const payload = {
       email: this.state.email,
       form_instance: this.state.formInstanceId,
@@ -124,9 +127,16 @@ class StateHolder extends React.Component {
             >
               Bearbeiten
             </button>
-            <button className="btn btn-primary" onClick={this.send}>
-              Senden
-            </button>
+            {this.state.sending ?
+              <button className="btn btn-primary" disabled>
+                <FontAwesomeIcon icon="spinner" spin />
+                Wird abgeschickt
+              </button>
+              :
+              <button className="btn btn-primary" onClick={this.send}>
+              Abschicken
+              </button>
+            }
           </Summary>
         </div>
       );

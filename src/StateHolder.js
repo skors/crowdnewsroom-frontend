@@ -62,10 +62,8 @@ class StateHolder extends React.Component {
     };
     api
       .postResponse(payload, investigation, form, this.state.authToken)
-      .then(() => {
-        this.setState({
-          activeComponent: "thank-you"
-        });
+      .then(response => {
+        window.location = response.redirect_url;
       })
       .catch(console.error);
   }

@@ -176,21 +176,21 @@ class FormWizard extends Component {
 
   render() {
     return (
-      <div className="card">
+      <div className="form-wizard card">
         <img
           src={this.props.investigation.logo}
           alt={this.props.investigation.name}
-          className="investigation-logo"
+          className="form-wizard__logo"
         />
         <CSSTransitionGroup
-          className="form-wizard-transition-container"
-          transitionName="form-wizard-transition"
+          className="form-wizard__transition-container"
+          transitionName="form-wizard__transition"
           transitionEnterTimeout={800}
           transitionLeaveTimeout={400}
         >
-          <div className="card-body" key={this.state.schema.slug}>
+          <div className="form-wizard__body" key={this.state.schema.slug}>
             <Form
-              className="form-wizard"
+              className="form-wizard__form"
               schema={this.state.schema}
               uiSchema={this.props.uiSchema}
               onChange={this.maybeAutoAdvance}

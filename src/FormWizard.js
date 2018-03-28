@@ -154,6 +154,7 @@ class FormWizard extends Component {
   }
 
   render() {
+    const uiSchema = _.get(this.props.uiSchema, this.state.schema.slug, {});
     return (
       <div className="card">
         <img
@@ -171,7 +172,7 @@ class FormWizard extends Component {
             <Form
               className="form-wizard"
               schema={this.state.schema}
-              uiSchema={this.props.uiSchema}
+              uiSchema={uiSchema}
               onChange={this.maybeAutoAdvance}
               onSubmit={this.onSubmit}
               formData={this.state.formData}

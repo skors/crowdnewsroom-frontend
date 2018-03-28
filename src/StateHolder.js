@@ -1,13 +1,12 @@
 import React from "react";
-
-import { t } from "./i18n";
 import { Redirect } from "react-router-dom";
-import * as api from "./api";
-import FormWizard from "./FormWizard";
-import Summary from "./Summary";
-import FontAwesomeIcon from '@fortawesome/react-fontawesome'
+import FontAwesomeIcon from "@fortawesome/react-fontawesome";
 
 import "./StateHolder.css";
+import FormWizard from "./FormWizard";
+import Summary from "./Summary";
+import { t } from "./i18n";
+import * as api from "./api";
 
 class StateHolder extends React.Component {
   constructor(props) {
@@ -22,11 +21,12 @@ class StateHolder extends React.Component {
       submissionStatus: "D",
       investigation: {},
       steps: [],
-      sending: false,
+      sending: false
     };
 
     this.send = this.send.bind(this);
     this.finishForm = this.finishForm.bind(this);
+    this.jumpToFirstStep = this.jumpToFirstStep.bind(this);
   }
 
   componentDidMount() {
@@ -54,7 +54,7 @@ class StateHolder extends React.Component {
 
   send() {
     const { investigation, form } = this.props.match.params;
-    this.setState({sending: true});
+    this.setState({ sending: true });
     const payload = {
       email: this.state.email,
       form_instance: this.state.formInstanceId,
@@ -74,8 +74,15 @@ class StateHolder extends React.Component {
     this.setState({ formData, activeComponent: "confirmation" });
   }
 
-  setActiveComponent(activeComponent) {
-    this.setState({ activeComponent });
+  jumpToFirstStep() {
+    this.setState(
+      {
+        activeComponent: "wizard"
+      },
+      () => {
+        this.formWizard.resetToFirstStep();
+      }
+    );
   }
 
   render() {
@@ -106,6 +113,7 @@ class StateHolder extends React.Component {
             uiSchema={this.state.uiSchema}
             history={this.props.history}
             submitCallback={this.finishForm}
+            ref={formWizard => (this.formWizard = formWizard)}
           />
         </div>
       );
@@ -123,20 +131,20 @@ class StateHolder extends React.Component {
           >
             <button
               className="btn btn-outline-primary mr-2"
-              onClick={() => this.setActiveComponent("wizard")}
+              onClick={this.jumpToFirstStep}
             >
               Bearbeiten
             </button>
-            {this.state.sending ?
+            {this.state.sending ? (
               <button className="btn btn-primary" disabled>
                 <FontAwesomeIcon icon="spinner" spin />
                 Wird abgeschickt
               </button>
-              :
+            ) : (
               <button className="btn btn-primary" onClick={this.send}>
-              Abschicken
+                Abschicken
               </button>
-            }
+            )}
           </Summary>
         </div>
       );

@@ -87,6 +87,7 @@ class FormWizard extends Component {
 
   resetToFirstStep() {
     const nextStep = this.props.steps[0].schema;
+    this.setState({ stepsTaken: new Set() });
     this.setNextStep(nextStep);
     this.updateRoute(nextStep);
   }

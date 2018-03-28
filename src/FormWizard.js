@@ -92,30 +92,8 @@ class FormWizard extends Component {
     this.updateRoute(nextStep);
   }
 
-  setStepFromUrl() {
-    const currentSchema = _.find(this.props.steps, step => {
-      return step.schema.slug === this.props.currentStep;
-    });
-
-    this.setNextStep(currentSchema.schema);
-  }
-
   async componentDidMount() {
-    // TODO: I think all of this checking only actually becomes
-    // necessary once we allow people to jump back to specific
-    // steps in their form. Right now it always resets to first url...
-    const validSteps = await this.getValidSteps(this.state.formData);
-
-    const isValidStep = _.some(
-      validSteps,
-      step => step.slug === this.props.currentStep
-    );
-
-    if (isValidStep) {
-      this.setStepFromUrl();
-    } else {
-      this.resetToFirstStep();
-    }
+    this.resetToFirstStep();
   }
 
   componentWillReceiveProps(nextProps) {

@@ -49,7 +49,7 @@ class Summary extends React.Component {
                 step={step}
                 key={step.schema.title}
                 formData={this.props.formData}
-                uiSchema={this.props.uiSchema}
+                uiSchema={_.get(this.props.uiSchema, step.schema.slug, {})}
               />
             ))}
             <div className="buttons">{this.props.children}</div>

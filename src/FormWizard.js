@@ -7,6 +7,7 @@ import { CSSTransitionGroup } from "react-transition-group";
 import PropTypes from "prop-types";
 
 import SignatureWidget from "./SignatureWidget";
+import ButtonWidget from "./ButtonWidget";
 import "./FormWizard.css";
 
 class FormWizard extends Component {
@@ -176,7 +177,10 @@ class FormWizard extends Component {
               onChange={this.maybeAutoAdvance}
               onSubmit={this.onSubmit}
               formData={this.state.formData}
-              widgets={{ signatureWidget: SignatureWidget }}
+              widgets={{
+                signatureWidget: SignatureWidget,
+                buttonWidget: ButtonWidget
+              }}
               transformErrors={this.transformErrors}
               showErrorList={false}
             >

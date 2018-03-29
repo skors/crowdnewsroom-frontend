@@ -15,7 +15,6 @@ class FormWizard extends Component {
     currentStep: PropTypes.string,
     steps: PropTypes.arrayOf(PropTypes.object),
     submitCallback: PropTypes.func,
-    finishLater: PropTypes.func,
     formData: PropTypes.object
   };
 
@@ -32,7 +31,6 @@ class FormWizard extends Component {
     });
     this.engine = new Engine(rules);
     this.setNextStep = this.setNextStep.bind(this);
-    this.finishLater = this.finishLater.bind(this);
   }
 
   updateRoute(schema) {
@@ -120,11 +118,6 @@ class FormWizard extends Component {
       this.advance(formData);
     }
   };
-
-  finishLater(event) {
-    event.preventDefault();
-    this.props.finishLater && this.props.finishLater();
-  }
 
   get backLink() {
     const stepsTaken = [...this.state.stepsTaken];

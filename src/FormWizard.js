@@ -5,6 +5,7 @@ import * as _ from "lodash";
 import Engine from "json-rules-engine-simplified";
 import { CSSTransitionGroup } from "react-transition-group";
 import PropTypes from "prop-types";
+import { trackPageView } from "./tracking";
 
 import SignatureWidget from "./SignatureWidget";
 import ButtonWidget from "./ButtonWidget";
@@ -34,7 +35,9 @@ class FormWizard extends Component {
   }
 
   updateRoute(schema) {
-    this.props.history.push(`./${schema.slug}`);
+    const url = `./${schema.slug}`;
+    trackPageView(url);
+    this.props.history.push(url);
   }
 
   getValidSteps(formData) {

@@ -7,6 +7,7 @@ import FormWizard from "./FormWizard";
 import Summary from "./Summary";
 import { t } from "./i18n";
 import * as api from "./api";
+import { trackSubmission } from "./tracking";
 
 class StateHolder extends React.Component {
   constructor(props) {
@@ -55,6 +56,7 @@ class StateHolder extends React.Component {
   send() {
     const { investigation, form } = this.props.match.params;
     this.setState({ sending: true });
+    trackSubmission();
     const payload = {
       email: this.state.email,
       form_instance: this.state.formInstanceId,

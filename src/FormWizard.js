@@ -100,13 +100,14 @@ class FormWizard extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.currentStep === this.props.currentStep) return;
+    if (nextProps.match.params.currentStep === this.props.match.params.step)
+      return;
 
     const currentSchema = _.find(nextProps.steps, step => {
-      return step.schema.slug === nextProps.currentStep;
+      return step.schema.slug === nextProps.match.params.step;
     });
 
-    const stepsTaken = [...this.state.stepsTaken];
+    const stepsTaken = Array.from(this.state.stepsTaken);
     const currentIndex = stepsTaken.indexOf(currentSchema.schema);
 
     this.setState({

@@ -129,18 +129,22 @@ class StateHolder extends React.Component {
           </Summary>
         </Route>
 
-        <Route path={`${this.props.match.path}/:step`}>
-          <FormWizard
-            investigation={this.state.investigation}
-            steps={this.state.steps}
-            currentStep={this.props.match.params.step}
-            formData={this.state.formData}
-            uiSchema={this.state.uiSchema}
-            history={this.props.history}
-            submitCallback={this.finishForm}
-            ref={formWizard => (this.formWizard = formWizard)}
-          />
-        </Route>
+        <Route
+          path={`${this.props.match.path}/:step`}
+          render={({ match }) => {
+            return (
+              <FormWizard
+                investigation={this.state.investigation}
+                steps={this.state.steps}
+                formData={this.state.formData}
+                uiSchema={this.state.uiSchema}
+                history={this.props.history}
+                submitCallback={this.finishForm}
+                match={match}
+              />
+            );
+          }}
+        />
       </Switch>
     );
   }

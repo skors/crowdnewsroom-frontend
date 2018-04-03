@@ -32,6 +32,7 @@ class FormWizard extends Component {
     });
     this.engine = new Engine(rules);
     this.setNextStep = this.setNextStep.bind(this);
+    this.transformErrors = this.transformErrors.bind(this);
   }
 
   updateRoute(schema) {
@@ -142,9 +143,21 @@ class FormWizard extends Component {
   }
 
   transformErrors(errors) {
+    const uiSchema = _.get(this.props.uiSchema, this.state.schema.slug, {});
     return errors.map(error => {
+      // the errors always start with a dot we remove it to get
+      // `property` from `.property`
+      const propertyName = error.property.slice(1, error.property.length);
+
+      const widget = _.get(uiSchema, [propertyName, "ui:widget"]);
+      const isSignature = widget === "signatureWidget";
+
       if (error.name === "required") {
         error.message = "Dieses Feld muss ausgefüllt sein.";
+      }
+      if (isSignature) {
+        error.message =
+          "Bitte unterschreiben Sie in diesem Feld mit der Maus oder dem Finger.";
       }
       return error;
     });

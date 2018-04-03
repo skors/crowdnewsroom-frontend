@@ -1,8 +1,11 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import Engine from "json-rules-engine-simplified";
 import * as _ from "lodash";
+
 import "./Summary.css";
+import { t } from "./i18n";
 
 function filterSteps(steps, formData) {
   const rules = steps.map(step => {
@@ -116,6 +119,12 @@ function Step({ step, formData, uiSchema }) {
     <div className="summary-step">
       <h2 className="summary-step__title">{title}</h2>
       <ul className="summary-step__list">{rows}</ul>
+      <Link
+        className="btn btn-outline-primary btn-sm mb-5"
+        to={`./${step.schema.slug}`}
+      >
+        {t("summary.edit_item")}
+      </Link>
     </div>
   );
 }

@@ -40,8 +40,14 @@ class Summary extends React.Component {
 
   render() {
     return (
-      <div className="summary">
-        <div className="card">
+      <div className="form-wizard card">
+        <img
+          src={this.props.investigation.logo}
+          alt={this.props.investigation.name}
+          className="form-wizard__logo"
+        />
+
+        <div className="summary">
           <div className="card-body">
             <StatusMessage />
             {this.state.stepsTaken.map(step => (

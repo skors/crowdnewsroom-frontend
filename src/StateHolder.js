@@ -130,7 +130,7 @@ class StateHolder extends React.Component {
       return (
         <div>
           <Summary
-            investigaiton={this.state.investigation}
+            investigation={this.state.investigation}
             status={this.state.submissionStatus}
             steps={this.state.steps}
             formData={this.state.formData}

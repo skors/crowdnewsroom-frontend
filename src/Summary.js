@@ -4,8 +4,9 @@ import PropTypes from "prop-types";
 import Engine from "json-rules-engine-simplified";
 import * as _ from "lodash";
 
-import "./Summary.css";
+import Card from "./Card";
 import { t } from "./i18n";
+import "./Summary.css";
 
 function filterSteps(steps, formData) {
   const rules = steps.map(step => {
@@ -35,28 +36,28 @@ class Summary extends React.Component {
 
   render() {
     return (
-      <div className="form-wizard card">
+      <Card
+        logo={this.props.investigation.logo}
+        title={this.props.investigation.name}
+      >
         <img
           src={this.props.investigation.logo}
           alt={this.props.investigation.name}
           className="form-wizard__logo"
         />
-
         <div className="summary">
-          <div className="card-body">
-            <h1 className="summary__message">{t("summary.message")}</h1>
-            {this.state.stepsTaken.map(step => (
-              <Step
-                step={step}
-                key={step.schema.title}
-                formData={this.props.formData}
-                uiSchema={_.get(this.props.uiSchema, step.schema.slug, {})}
-              />
-            ))}
-            <div className="buttons">{this.props.children}</div>
-          </div>
+          <h1 className="summary__message">{t("summary.message")}</h1>
+          {this.state.stepsTaken.map(step => (
+            <Step
+              step={step}
+              key={step.schema.title}
+              formData={this.props.formData}
+              uiSchema={_.get(this.props.uiSchema, step.schema.slug, {})}
+            />
+          ))}
+          <div className="buttons">{this.props.children}</div>
         </div>
-      </div>
+      </Card>
     );
   }
 }
@@ -95,7 +96,7 @@ function Step({ step, formData, uiSchema }) {
     }
 
     if (isHidden) {
-      return <tr />;
+      return <li />;
     }
 
     return (
@@ -112,7 +113,7 @@ function Step({ step, formData, uiSchema }) {
       <ul className="summary-step__list">{rows}</ul>
       <Link
         className="btn btn-outline-primary btn-sm mb-4"
-        to={`./${step.schema.slug}`}
+        to={step.schema.slug}
       >
         {t("summary.edit_item")}
       </Link>

@@ -7,6 +7,7 @@ import { CSSTransitionGroup } from "react-transition-group";
 import PropTypes from "prop-types";
 import { trackPageView } from "./tracking";
 
+import Card from "./Card";
 import SignatureWidget from "./SignatureWidget";
 import ButtonWidget from "./ButtonWidget";
 import "./FormWizard.css";
@@ -194,46 +195,43 @@ class FormWizard extends Component {
   render() {
     const uiSchema = _.get(this.props.uiSchema, this.state.schema.slug, {});
     return (
-      <div className="form-wizard card">
-        <img
-          src={this.props.investigation.logo}
-          alt={this.props.investigation.name}
-          className="form-wizard__logo"
-        />
+      <Card
+        logo={this.props.investigation.logo}
+        title={this.props.investigation.name}
+      >
         <CSSTransitionGroup
           className="form-wizard__transition-container"
           transitionName="form-wizard__transition"
           transitionEnterTimeout={800}
           transitionLeaveTimeout={400}
         >
-          <div className="form-wizard__body" key={this.state.schema.slug}>
-            <Form
-              className="form-wizard__form"
-              schema={this.state.schema}
-              uiSchema={uiSchema}
-              onChange={this.maybeAutoAdvance}
-              onSubmit={this.onSubmit}
-              formData={this.state.formData}
-              widgets={{
-                signatureWidget: SignatureWidget,
-                buttonWidget: ButtonWidget
-              }}
-              transformErrors={this.transformErrors}
-              showErrorList={false}
-            >
-              {this.state.stepsTaken.size > 1 && (
-                <Link
-                  className="btn btn-outline-primary mr-2"
-                  to={`./${this.backLink}`}
-                >
-                  Zurück
-                </Link>
-              )}
-              <input className="btn btn-primary" type="submit" value="Weiter" />
-            </Form>
-          </div>
+          <Form
+            key={this.state.schema.slug}
+            className="form-wizard__form"
+            schema={this.state.schema}
+            uiSchema={uiSchema}
+            onChange={this.maybeAutoAdvance}
+            onSubmit={this.onSubmit}
+            formData={this.state.formData}
+            widgets={{
+              signatureWidget: SignatureWidget,
+              buttonWidget: ButtonWidget
+            }}
+            transformErrors={this.transformErrors}
+            showErrorList={false}
+          >
+            {this.state.stepsTaken.size > 1 && (
+              <Link
+                className="btn btn-outline-primary mr-2"
+                to={`./${this.backLink}`}
+              >
+                Zurück
+              </Link>
+            )}
+            <input className="btn btn-primary" type="submit" value="Weiter" />
+          </Form>
         </CSSTransitionGroup>
-      </div>
+      </Card>
     );
   }
 }

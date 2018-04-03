@@ -15,14 +15,6 @@ function filterSteps(steps, formData) {
   return engine.run(formData);
 }
 
-function StatusMessage() {
-  return (
-    <div className={`alert alert-success`}>
-      Bitte überprüfen Sie Ihre Angaben:
-    </div>
-  );
-}
-
 class Summary extends React.Component {
   static propTypes = {
     steps: PropTypes.arrayOf(PropTypes.object),
@@ -52,7 +44,7 @@ class Summary extends React.Component {
 
         <div className="summary">
           <div className="card-body">
-            <StatusMessage />
+            <h1 className="summary__message">{t("summary.message")}</h1>
             {this.state.stepsTaken.map(step => (
               <Step
                 step={step}
@@ -119,7 +111,7 @@ function Step({ step, formData, uiSchema }) {
       <h2 className="summary-step__title">{title}</h2>
       <ul className="summary-step__list">{rows}</ul>
       <Link
-        className="btn btn-outline-primary btn-sm mb-5"
+        className="btn btn-outline-primary btn-sm mb-4"
         to={`./${step.schema.slug}`}
       >
         {t("summary.edit_item")}

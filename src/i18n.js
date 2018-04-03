@@ -8,6 +8,7 @@ const en = {
       "Your response has been verified by the editors already. If you want to make changes contact us at team@crowdnewsroom.org"
   },
   summary: {
+    message: "Please confirm your details:",
     edit_item: "Edit from here"
   }
 };

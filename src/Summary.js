@@ -76,7 +76,6 @@ function getValueText(property, formData, values) {
   if (values.enum && values.enumNames) {
     return values.enumNames[values.enum.indexOf(formData[property])];
   }
-  console.log(values);
   return values.title || formData[property];
 }
 

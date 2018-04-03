@@ -36,8 +36,6 @@ class SignatureWidget extends Component {
           options={options}
           ref={ref => (this.signaturePad = ref)}
           debounceInterval={100}
-          width={300}
-          height={200}
         />
         <button onClick={this.clear}> Clear </button>
       </div>

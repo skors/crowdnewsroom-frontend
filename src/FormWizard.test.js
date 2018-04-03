@@ -115,6 +115,7 @@ describe("FormWizard", () => {
           steps={steps}
           history={[]}
           investigation={{}}
+          match={{ params: { step: "" } }}
         />
       );
       instance = wrapper.instance();
@@ -156,6 +157,7 @@ describe("FormWizard", () => {
           steps={moreSteps}
           history={[]}
           investigation={{}}
+          match={{ params: { step: "" } }}
         />
       );
       instance = wrapper.instance();
@@ -196,6 +198,7 @@ describe("FormWizard", () => {
           steps={existsStep}
           history={[]}
           investigation={{}}
+          match={{ params: { step: "" } }}
         />
       );
       instance = wrapper.instance();

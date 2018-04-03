@@ -96,7 +96,34 @@ class FormWizard extends Component {
   }
 
   async componentDidMount() {
-    this.resetToFirstStep();
+    const currentSchema = _.find(this.props.steps, step => {
+      return step.schema.slug === this.props.match.params.step;
+    });
+
+    const stepsTaken = new Set();
+    // We need to somehow remember if we can get to the selected
+    // state at all with the current formData. For that we
+    // use this boolean. If we find not way we rest to the start
+    let found = false;
+
+    this.getValidSteps(this.state.formData).then(events => {
+      for (let schema of events) {
+        stepsTaken.add(schema);
+        if (schema.slug === this.props.match.params.step) {
+          found = true;
+          break;
+        }
+      }
+
+      if (stepsTaken.size && found) {
+        this.setState({
+          stepsTaken,
+          schema: currentSchema.schema
+        });
+      } else {
+        this.resetToFirstStep();
+      }
+    });
   }
 
   componentWillReceiveProps(nextProps) {

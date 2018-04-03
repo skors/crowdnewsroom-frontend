@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, Redirect, Route, Switch } from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom";
 import FontAwesomeIcon from "@fortawesome/react-fontawesome";
 
 import "./StateHolder.css";
@@ -110,19 +110,16 @@ class StateHolder extends React.Component {
             formData={this.state.formData}
             uiSchema={this.state.uiSchema}
           >
-            <Link
-              className="btn btn-outline-primary mr-2"
-              to={`${this.props.match.url}/start`}
-            >
-              Bearbeiten
-            </Link>
             {this.state.sending ? (
-              <button className="btn btn-primary" disabled>
+              <button className="btn btn-primary btn-lg btn-block" disabled>
                 <FontAwesomeIcon icon="spinner" spin />
                 Wird abgeschickt
               </button>
             ) : (
-              <button className="btn btn-primary" onClick={this.send}>
+              <button
+                className="btn btn-primary btn-lg btn-block"
+                onClick={this.send}
+              >
                 Abschicken
               </button>
             )}

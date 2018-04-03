@@ -1,5 +1,5 @@
 import React from "react";
-import { Redirect } from "react-router-dom";
+import { Link, Redirect, Route, Switch } from "react-router-dom";
 import FontAwesomeIcon from "@fortawesome/react-fontawesome";
 
 import "./StateHolder.css";
@@ -17,7 +17,6 @@ class StateHolder extends React.Component {
       formData: {},
       error: false,
       loading: true,
-      activeComponent: null,
       formInstanceId: null,
       submissionStatus: "D",
       investigation: {},
@@ -27,7 +26,6 @@ class StateHolder extends React.Component {
 
     this.send = this.send.bind(this);
     this.finishForm = this.finishForm.bind(this);
-    this.jumpToFirstStep = this.jumpToFirstStep.bind(this);
   }
 
   componentDidMount() {
@@ -48,7 +46,6 @@ class StateHolder extends React.Component {
           steps: formData.form_json,
           uiSchema: formData.ui_schema_json,
           formInstanceId: formData.id,
-          activeComponent: "wizard",
           investigation: investigationData
         });
       })
@@ -75,22 +72,13 @@ class StateHolder extends React.Component {
   }
 
   finishForm(formData) {
-    this.setState({ formData, activeComponent: "confirmation" });
-  }
-
-  jumpToFirstStep() {
-    this.setState(
-      {
-        activeComponent: "wizard"
-      },
-      () => {
-        this.formWizard.resetToFirstStep();
-      }
-    );
+    this.setState({ formData }, () => {
+      this.props.history.push(`${this.props.match.url}/summary`);
+    });
   }
 
   render() {
-    const { loading, error, activeComponent } = this.state;
+    const { loading, error } = this.state;
 
     if (loading) {
       return (
@@ -103,32 +91,18 @@ class StateHolder extends React.Component {
     if (error) {
       return (
         <div className="state-holder__message state-holder__message--error">
-          {" "}
-          {t("form.error")}{" "}
+          {t("form.error")}
         </div>
       );
     }
 
-    if (activeComponent === "wizard") {
-      return (
-        <div>
-          <FormWizard
-            investigation={this.state.investigation}
-            steps={this.state.steps}
-            currentStep={this.props.match.params.step}
-            formData={this.state.formData}
-            uiSchema={this.state.uiSchema}
-            history={this.props.history}
-            submitCallback={this.finishForm}
-            ref={formWizard => (this.formWizard = formWizard)}
-          />
-        </div>
-      );
-    }
+    return (
+      <Switch>
+        <Route exact path={`${this.props.match.path}`}>
+          <Redirect to={`${this.props.match.url}/start`} />
+        </Route>
 
-    if (activeComponent === "confirmation") {
-      return (
-        <div>
+        <Route path={`${this.props.match.path}/summary`}>
           <Summary
             investigation={this.state.investigation}
             status={this.state.submissionStatus}
@@ -136,12 +110,12 @@ class StateHolder extends React.Component {
             formData={this.state.formData}
             uiSchema={this.state.uiSchema}
           >
-            <button
+            <Link
               className="btn btn-outline-primary mr-2"
-              onClick={this.jumpToFirstStep}
+              to={`${this.props.match.url}/start`}
             >
               Bearbeiten
-            </button>
+            </Link>
             {this.state.sending ? (
               <button className="btn btn-primary" disabled>
                 <FontAwesomeIcon icon="spinner" spin />
@@ -153,22 +127,22 @@ class StateHolder extends React.Component {
               </button>
             )}
           </Summary>
-        </div>
-      );
-    }
+        </Route>
 
-    if (activeComponent === "thank-you") {
-      const { investigation, form } = this.props.match.params;
-      return (
-        <Redirect
-          push
-          to={{
-            pathname: "/thank-you",
-            state: { investigation, form }
-          }}
-        />
-      );
-    }
+        <Route path={`${this.props.match.path}/:step`}>
+          <FormWizard
+            investigation={this.state.investigation}
+            steps={this.state.steps}
+            currentStep={this.props.match.params.step}
+            formData={this.state.formData}
+            uiSchema={this.state.uiSchema}
+            history={this.props.history}
+            submitCallback={this.finishForm}
+            ref={formWizard => (this.formWizard = formWizard)}
+          />
+        </Route>
+      </Switch>
+    );
   }
 }
 

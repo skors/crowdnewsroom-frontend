@@ -15,7 +15,7 @@ class App extends Component {
       <main className="app-content">
         <Switch>
           <Route path="/thank-you" component={ThankYou} />
-          <Route path="/:investigation/:form/:step?" component={StateHolder} />
+          <Route path="/:investigation/:form" component={StateHolder} />
         </Switch>
       </main>
     );

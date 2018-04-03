@@ -41,16 +41,20 @@ class StateHolder extends React.Component {
       api.getInvestigation(investigation)
     ];
 
-    return Promise.all(promises).then(([formData, investigationData]) => {
-      this.setState({
-        loading: false,
-        steps: formData.form_json,
-        uiSchema: formData.ui_schema_json,
-        formInstanceId: formData.id,
-        activeComponent: "wizard",
-        investigation: investigationData
+    return Promise.all(promises)
+      .then(([formData, investigationData]) => {
+        this.setState({
+          loading: false,
+          steps: formData.form_json,
+          uiSchema: formData.ui_schema_json,
+          formInstanceId: formData.id,
+          activeComponent: "wizard",
+          investigation: investigationData
+        });
+      })
+      .catch(() => {
+        this.setState({ error: true, loading: false });
       });
-    });
   }
 
   send() {
@@ -98,7 +102,10 @@ class StateHolder extends React.Component {
 
     if (error) {
       return (
-        <div className="state-holder__message--error"> {t("form.error")} </div>
+        <div className="state-holder__message state-holder__message--error">
+          {" "}
+          {t("form.error")}{" "}
+        </div>
       );
     }
 

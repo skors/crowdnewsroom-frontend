@@ -12,7 +12,17 @@ const makeParams = (verb, data) => {
 };
 
 function fetchJson(url) {
-  return fetch(url).then(response => response.json());
+  return fetch(url)
+    .then(response => {
+      if (response.ok) {
+        return Promise.resolve(response);
+      } else {
+        let error = new Error(response.statusText || response.status);
+        error.response = response;
+        return Promise.reject(error);
+      }
+    })
+    .then(response => response.json());
 }
 
 function postJSON(url, data) {

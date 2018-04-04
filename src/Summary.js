@@ -67,15 +67,17 @@ function getValueText(property, formData, values) {
   return values.title || formData[property];
 }
 
-function getKeyText(property, types, uiSchema) {
-  return _.get(uiSchema, [property, "ui:title"], property);
+function getKeyText(propertyKey, values, uiSchema) {
+  const uiTitle = _.get(uiSchema, [propertyKey, "ui:title"]);
+  const schemaTitle = values.title;
+  return uiTitle || schemaTitle || propertyKey;
 }
 
 function Step({ step, formData, uiSchema }) {
   const title = step.schema.title;
   const rows = _.map(step.schema.properties, (values, property) => {
     const valueText = getValueText(property, formData, values);
-    const keyText = getKeyText(property, values.type, uiSchema);
+    const keyText = getKeyText(property, values, uiSchema);
     const isSignature =
       _.get(uiSchema, [property, "ui:widget"]) === "signatureWidget";
     const isFile = values.format === "data-url";

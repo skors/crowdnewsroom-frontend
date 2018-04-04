@@ -28,13 +28,8 @@
 }
 
 .form-wizard__form {
-  padding: 25px;
   margin-top: 50px;
   text-align: center;
-
-  @include mq(tablet) {
-    padding: 20px 60px;
-  }
 
   .control-label {
     font-weight: bold;

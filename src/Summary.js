@@ -31,7 +31,7 @@ class Summary extends React.Component {
               uiSchema={_.get(this.props.uiSchema, schema.slug, {})}
             />
           ))}
-          <div className="buttons">{this.props.children}</div>
+          <div className="summary__buttons">{this.props.children}</div>
         </div>
       </Card>
     );

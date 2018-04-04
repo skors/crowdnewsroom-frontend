@@ -2,11 +2,11 @@
 @import "../node_modules/sass-mq/mq.scss";
 
 .card {
-  padding: 15px 0;
+  padding: 30px 15px;
   margin: 15px;
 
   @include mq(tablet) {
-    padding: 60px 0;
+    padding: 60px;
     margin: 100px auto 60px auto;
     width: 640px;
   }

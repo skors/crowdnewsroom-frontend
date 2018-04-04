@@ -4,6 +4,8 @@ import { Route, Switch } from "react-router-dom";
 import fontawesome from "@fortawesome/fontawesome";
 import faSpinner from "@fortawesome/fontawesome-free-solid/faSpinner";
 
+import "babel-polyfill";
+
 import "./App.css";
 
 fontawesome.library.add(faSpinner);

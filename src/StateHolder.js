@@ -117,14 +117,14 @@ class StateHolder extends React.Component {
             {this.state.sending ? (
               <button className="btn btn-primary btn-lg btn-block" disabled>
                 <FontAwesomeIcon icon="spinner" spin />
-                Wird abgeschickt
+                {t("form.submitting")}
               </button>
             ) : (
               <button
                 className="btn btn-primary btn-lg btn-block"
                 onClick={this.send}
               >
-                Abschicken
+                {t("form.submit")}
               </button>
             )}
           </Summary>

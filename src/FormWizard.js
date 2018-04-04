@@ -7,6 +7,7 @@ import { CSSTransitionGroup } from "react-transition-group";
 import PropTypes from "prop-types";
 import { trackPageView } from "./tracking";
 
+import { t } from "./i18n";
 import Card from "./Card";
 import SignatureWidget from "./SignatureWidget";
 import ButtonWidget from "./ButtonWidget";
@@ -183,14 +184,13 @@ class FormWizard extends Component {
       const isSignature = widget === "signatureWidget";
 
       if (error.name === "required") {
-        error.message = "Dieses Feld muss ausgefüllt sein.";
+        error.message = t("errors.required");
       }
       if (error.name === "type" && error.params.type === "boolean") {
-        error.message = "Bitte wählen Sie eine der Optionen aus.";
+        error.message = t("errors.boolean");
       }
       if (isSignature) {
-        error.message =
-          "Bitte unterschreiben Sie in diesem Feld mit der Maus oder dem Finger.";
+        error.message = t("errors.signature");
       }
       return error;
     });
@@ -229,7 +229,7 @@ class FormWizard extends Component {
                 className="btn btn-outline-primary mr-2"
                 to={`./${this.backLink}`}
               >
-                Zurück
+                {t("form.back")}
               </Link>
             )}
             <input className="btn btn-primary" type="submit" value="Weiter" />

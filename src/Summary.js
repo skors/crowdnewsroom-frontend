@@ -64,7 +64,7 @@ class Summary extends React.Component {
 
 function getValueText(property, formData, values) {
   if (values.type === "boolean") {
-    return formData[property] ? "Ja" : "Nein";
+    return formData[property] ? t("summary.yes") : t("summary.no");
   }
   if (values.enum && values.enumNames) {
     return values.enumNames[values.enum.indexOf(formData[property])];
@@ -88,9 +88,9 @@ function Step({ step, formData, uiSchema }) {
 
     let value;
     if (isFile) {
-      value = <i>Datei hochgeladen</i>;
+      value = <i>{t("summary.file_uploaded")}</i>;
     } else if (isSignature) {
-      value = <i>Unterschrift geleistet</i>;
+      value = <i>{t("summary.signature_given")}</i>;
     } else {
       value = valueText;
     }

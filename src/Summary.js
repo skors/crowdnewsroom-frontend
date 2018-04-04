@@ -40,11 +40,6 @@ class Summary extends React.Component {
         logo={this.props.investigation.logo}
         title={this.props.investigation.name}
       >
-        <img
-          src={this.props.investigation.logo}
-          alt={this.props.investigation.name}
-          className="form-wizard__logo"
-        />
         <div className="summary">
           <h1 className="summary__message">{t("summary.message")}</h1>
           {this.state.stepsTaken.map(step => (

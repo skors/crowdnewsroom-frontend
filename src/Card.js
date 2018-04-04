@@ -6,7 +6,8 @@ import "./Card.css";
 class Card extends Component {
   static propTypes = {
     logo: PropTypes.string,
-    title: PropTypes.string
+    title: PropTypes.string,
+    dataPrivacyUrl: PropTypes.string
   };
 
   render() {
@@ -18,6 +19,20 @@ class Card extends Component {
           alt={this.props.title}
         />
         <div className="card__body">{this.props.children}</div>
+        <div className="card__footer">
+          {this.props.dataPrivacyUrl ? (
+            <a
+              className="card__footer--data-privacy"
+              href={this.props.dataPrivacyUrl}
+              target="_blank"
+              rel="noopener"
+            >
+              Datenschutz
+            </a>
+          ) : (
+            ""
+          )}
+        </div>
       </div>
     );
   }

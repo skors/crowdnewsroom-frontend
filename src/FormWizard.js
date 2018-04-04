@@ -202,6 +202,7 @@ class FormWizard extends Component {
       <Card
         logo={this.props.investigation.logo}
         title={this.props.investigation.name}
+        dataPrivacyUrl={this.props.investigation.data_privacy_url}
       >
         <CSSTransitionGroup
           className="form-wizard__transition-container"

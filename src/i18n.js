@@ -45,7 +45,8 @@ const de = {
       "Bitte unterschreiben Sie in diesem Feld mit der Maus oder dem Finger."
   },
   summary: {
-    message: "Bitte bestätigen Sie Ihre Angaben:",
+    message:
+      "Bitte überprüfen Sie Ihre Angaben und klicken Sie abschließend unten auf den Button “Abschicken”",
     edit_item: "Von diesem Schritt aus bearbeiten",
     yes: "Ja",
     no: "Nein",

@@ -23,6 +23,7 @@ class Summary extends React.Component {
       >
         <div className="summary">
           <h1 className="summary__message">{t("summary.message")}</h1>
+          <div className="summary__buttons">{this.props.children}</div>
           {Array.from(this.props.stepsTaken).map(schema => (
             <Step
               schema={schema}

@@ -106,6 +106,11 @@ function Step({ step, formData, uiSchema }) {
     );
   });
 
+  const order = uiSchema["ui:order"];
+  if (order) {
+    rows.sort((a, b) => order.indexOf(a.key) > order.indexOf(b.key));
+  }
+
   // If this step has only hidden inputs we hide the whole
   // thing completely. This is the case if this is a faked
   // purely informative step.

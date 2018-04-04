@@ -61,4 +61,35 @@
     margin: 0;
     padding: 0;
   }
+
+  .file-upload {
+    // style input label to look like a button:
+    label {
+      color: #fff;
+      background-color: $color-primary;
+      border-color: $color-primary;
+      padding: 0.5rem 1rem;
+      border-radius: 0.3rem;
+      font-weight: normal;
+      font-size: 1.25rem;
+      line-height: 1.5;
+      cursor: pointer;
+    }
+
+    // hide input while maintaining functionality:
+    input {
+      width: 0.1px;
+      height: 0.1px;
+      opacity: 0;
+      overflow: hidden;
+      position: absolute;
+      z-index: -1;
+    }
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+  }
 }

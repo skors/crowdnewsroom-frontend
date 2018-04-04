@@ -1,3 +1,6 @@
+$color-primary: rgb(226, 19, 125);
+$theme-colors: ("primary": $color-primary);
+
 $mq-breakpoints: (
   mobile: 320px,
   tablet: 740px,

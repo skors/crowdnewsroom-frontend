@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
+import { t } from "./i18n";
 import "./Card.css";
 
 function Card(props) {
@@ -16,7 +17,7 @@ function Card(props) {
             target="_blank"
             rel="noopener"
           >
-            Datenschutz
+            {t("card.data_privacy")}
           </a>
         ) : (
           ""

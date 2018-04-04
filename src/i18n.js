@@ -21,6 +21,9 @@ const en = {
     no: "No",
     file_uploaded: "File uploaded",
     signature_given: "Signature given"
+  },
+  card: {
+    data_privacy: "Data Privacy"
   }
 };
 /* eslint-enable */
@@ -46,6 +49,9 @@ const de = {
     no: "Nein",
     file_uploaded: "Datei hochgeladen",
     signature_given: "Unterschrift geleistet"
+  },
+  card: {
+    data_privacy: "Datenschutz"
   }
 };
 

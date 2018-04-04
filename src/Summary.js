@@ -75,6 +75,7 @@ function getKeyText(propertyKey, values, uiSchema) {
 
 function Step({ step, formData, uiSchema }) {
   const title = step.schema.title;
+  let hasVisibleFields = false;
   const rows = _.map(step.schema.properties, (values, property) => {
     const valueText = getValueText(property, formData, values);
     const keyText = getKeyText(property, values, uiSchema);
@@ -96,6 +97,7 @@ function Step({ step, formData, uiSchema }) {
       return <li />;
     }
 
+    hasVisibleFields = true;
     return (
       <li key={property}>
         <h4 className="summary-step__question">{keyText}</h4>
@@ -103,6 +105,13 @@ function Step({ step, formData, uiSchema }) {
       </li>
     );
   });
+
+  // If this step has only hidden inputs we hide the whole
+  // thing completely. This is the case if this is a faked
+  // purely informative step.
+  if (!hasVisibleFields) {
+    return <div />;
+  }
 
   return (
     <div className="summary-step">

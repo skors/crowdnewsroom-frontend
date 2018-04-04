@@ -11,12 +11,7 @@ function Card(props) {
       <div className="card__body">{props.children}</div>
       <div className="card__footer">
         {props.dataPrivacyUrl ? (
-          <a
-            className="card__footer--data-privacy"
-            href={props.dataPrivacyUrl}
-            target="_blank"
-            rel="noopener"
-          >
+          <a href={props.dataPrivacyUrl} target="_blank" rel="noopener">
             {t("card.data_privacy")}
           </a>
         ) : (

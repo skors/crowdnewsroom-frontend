@@ -98,8 +98,12 @@ class StateHolder extends React.Component {
 
     return (
       <Switch>
-        <Route exact path={`${this.props.match.path}`}>
+        <Route exact strict path={`${this.props.match.path}`}>
           <Redirect to={`${this.props.match.url}/start`} />
+        </Route>
+
+        <Route exact strict path={`${this.props.match.path}/`}>
+          <Redirect to={`${this.props.match.url}start`} />
         </Route>
 
         <Route path={`${this.props.match.path}/summary`}>

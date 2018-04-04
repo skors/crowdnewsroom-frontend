@@ -9,6 +9,12 @@ import { t } from "./i18n";
 import * as api from "./api";
 import { trackSubmission } from "./tracking";
 
+function unloadListener(e) {
+  const dialogText = t("form.confirm_close");
+  e.returnValue = dialogText;
+  return dialogText;
+}
+
 class StateHolder extends React.Component {
   constructor(props) {
     super(props);
@@ -29,6 +35,7 @@ class StateHolder extends React.Component {
   }
 
   componentDidMount() {
+    window.addEventListener("beforeunload", unloadListener);
     this.loadData();
   }
 
@@ -66,6 +73,7 @@ class StateHolder extends React.Component {
     api
       .postResponse(payload, investigation, form, this.state.authToken)
       .then(response => {
+        window.removeEventListener("beforeunload", unloadListener);
         window.location = response.redirect_url;
       })
       .catch(console.error);

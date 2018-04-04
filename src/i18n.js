@@ -7,7 +7,8 @@ const en = {
     error: "There was an error loading the form data...",
     back: "Back",
     submit: "Submit",
-    submitting: "Submitting..."
+    submitting: "Submitting...",
+    confirm_close: "Do you really want to close the before submitting?"
   },
   errors: {
     required: "This field is required.",
@@ -34,7 +35,8 @@ const de = {
     error: "Beim Laden des Formulars ist ein Fehler aufgetreten...",
     back: "Zurück",
     submit: "Abschicken",
-    submitting: "Wird abgeschickt..."
+    submitting: "Wird abgeschickt...",
+    confirm_close: "Möchten Sie das Fenster wirklich schließen?"
   },
   errors: {
     required: "Dieses Feld muss ausgefüllt sein.",

@@ -172,6 +172,7 @@ class FormWizard extends Component {
   }
 
   transformErrors(errors) {
+    console.log(errors);
     const uiSchema = _.get(this.props.uiSchema, this.state.schema.slug, {});
     return errors.map(error => {
       // the errors always start with a dot we remove it to get
@@ -183,6 +184,9 @@ class FormWizard extends Component {
 
       if (error.name === "required") {
         error.message = "Dieses Feld muss ausgefüllt sein.";
+      }
+      if (error.name === "type" && error.params.type === "boolean") {
+        error.message = "Bitte wählen Sie eine der Optionen aus.";
       }
       if (isSignature) {
         error.message =

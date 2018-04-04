@@ -145,6 +145,10 @@ class FormWizard extends Component {
     });
   }
 
+  componentDidUpdate() {
+    window.scrollTo(0, 0);
+  }
+
   onSubmit = ({ formData }) => {
     if (this.state.schema.final) {
       this.props.submitCallback(formData, this.state.stepsTaken);

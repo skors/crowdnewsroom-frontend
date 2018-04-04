@@ -1,5 +1,13 @@
+@import "theme";
+@import "../node_modules/sass-mq/mq.scss";
+
 .button-widget__button {
-  display: block;
-  min-width: 40%;
-  margin: 0.5em;
+  display: inline-block;
+  margin: 0.5em auto;
+  min-width: 80%;
+  overflow: visible;
+
+  @include mq(tablet) {
+    min-width: 32%;
+  }
 }

@@ -20,7 +20,8 @@ class StateHolder extends React.Component {
       formInstanceId: null,
       investigation: {},
       steps: [],
-      sending: false
+      sending: false,
+      stepsTaken: new Set()
     };
 
     this.send = this.send.bind(this);
@@ -70,8 +71,8 @@ class StateHolder extends React.Component {
       .catch(console.error);
   }
 
-  finishForm(formData) {
-    this.setState({ formData }, () => {
+  finishForm(formData, stepsTaken) {
+    this.setState({ formData, stepsTaken }, () => {
       this.props.history.push(`${this.props.match.url}/summary`);
     });
   }
@@ -111,6 +112,7 @@ class StateHolder extends React.Component {
             steps={this.state.steps}
             formData={this.state.formData}
             uiSchema={this.state.uiSchema}
+            stepsTaken={this.state.stepsTaken}
           >
             {this.state.sending ? (
               <button className="btn btn-primary btn-lg btn-block" disabled>

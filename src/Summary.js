@@ -1,38 +1,19 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import Engine from "json-rules-engine-simplified";
 import * as _ from "lodash";
 
 import Card from "./Card";
 import { t } from "./i18n";
 import "./Summary.css";
 
-function filterSteps(steps, formData) {
-  const rules = steps.map(step => {
-    return { conditions: step.conditions, event: { schema: step.schema } };
-  });
-  const engine = new Engine(rules);
-  return engine.run(formData);
-}
-
 class Summary extends React.Component {
   static propTypes = {
     steps: PropTypes.arrayOf(PropTypes.object),
     formData: PropTypes.object,
-    uiSchema: PropTypes.object
+    uiSchema: PropTypes.object,
+    stepsTaken: PropTypes.object
   };
-
-  state = {
-    stepsTaken: []
-  };
-
-  async componentDidMount() {
-    const { steps, formData } = this.props;
-    this.setState({
-      stepsTaken: await filterSteps(steps, formData)
-    });
-  }
 
   render() {
     return (
@@ -42,12 +23,12 @@ class Summary extends React.Component {
       >
         <div className="summary">
           <h1 className="summary__message">{t("summary.message")}</h1>
-          {this.state.stepsTaken.map(step => (
+          {Array.from(this.props.stepsTaken).map(schema => (
             <Step
-              step={step}
-              key={step.schema.title}
+              schema={schema}
+              key={schema.title}
               formData={this.props.formData}
-              uiSchema={_.get(this.props.uiSchema, step.schema.slug, {})}
+              uiSchema={_.get(this.props.uiSchema, schema.slug, {})}
             />
           ))}
           <div className="buttons">{this.props.children}</div>
@@ -73,10 +54,10 @@ function getKeyText(propertyKey, values, uiSchema) {
   return uiTitle || schemaTitle || propertyKey;
 }
 
-function Step({ step, formData, uiSchema }) {
-  const title = step.schema.title;
+function Step({ schema, formData, uiSchema }) {
+  const title = schema.title;
   let hasVisibleFields = false;
-  const rows = _.map(step.schema.properties, (values, property) => {
+  const rows = _.map(schema.properties, (values, property) => {
     const valueText = getValueText(property, formData, values);
     const keyText = getKeyText(property, values, uiSchema);
     const isSignature =
@@ -122,10 +103,7 @@ function Step({ step, formData, uiSchema }) {
     <div className="summary-step">
       <h2 className="summary-step__title">{title}</h2>
       <ul className="summary-step__list">{rows}</ul>
-      <Link
-        className="btn btn-outline-primary btn-sm mb-4"
-        to={step.schema.slug}
-      >
+      <Link className="btn btn-outline-primary btn-sm mb-4" to={schema.slug}>
         {t("summary.edit_item")}
       </Link>
     </div>

@@ -147,7 +147,7 @@ class FormWizard extends Component {
 
   onSubmit = ({ formData }) => {
     if (this.state.schema.final) {
-      this.props.submitCallback(formData);
+      this.props.submitCallback(formData, this.state.stepsTaken);
     } else {
       this.advance(formData);
     }
@@ -173,7 +173,6 @@ class FormWizard extends Component {
   }
 
   transformErrors(errors) {
-    console.log(errors);
     const uiSchema = _.get(this.props.uiSchema, this.state.schema.slug, {});
     return errors.map(error => {
       // the errors always start with a dot we remove it to get

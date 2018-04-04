@@ -92,4 +92,26 @@
       padding: 0;
     }
   }
+
+  .checkbox {
+    position: relative;
+    padding-left: 1.25rem;
+    margin: 0 auto;
+    text-align: left;
+
+    @include mq(tablet) {
+      width: 80%;
+    }
+
+    input {
+      display: block;
+      position: absolute;
+      left: 0;
+      top: 0.25rem;
+    }
+
+    label {
+      display: block;
+    }
+  }
 }

@@ -210,8 +210,8 @@ class FormWizard extends Component {
         <CSSTransitionGroup
           className="form-wizard__transition-container"
           transitionName="form-wizard__transition"
-          transitionEnterTimeout={800}
-          transitionLeaveTimeout={400}
+          transitionEnterTimeout={1300}
+          transitionLeaveTimeout={1}
         >
           <Form
             key={this.state.schema.slug}

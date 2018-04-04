@@ -6,10 +6,12 @@ import "./Card.css";
 
 function Card(props) {
   return (
-    <div className="card">
-      <img className="card__logo" src={props.logo} alt={props.title} />
-      <div className="card__body">{props.children}</div>
-      <div className="card__footer">
+    <div>
+      <div className="card">
+        <img className="card__logo" src={props.logo} alt={props.title} />
+        <div className="card__body">{props.children}</div>
+      </div>
+      <div className="footer">
         {props.dataPrivacyUrl ? (
           <a href={props.dataPrivacyUrl} target="_blank" rel="noopener">
             {t("card.data_privacy")}

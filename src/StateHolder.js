@@ -18,7 +18,6 @@ class StateHolder extends React.Component {
       error: false,
       loading: true,
       formInstanceId: null,
-      submissionStatus: "D",
       investigation: {},
       steps: [],
       sending: false
@@ -109,7 +108,6 @@ class StateHolder extends React.Component {
         <Route path={`${this.props.match.path}/summary`}>
           <Summary
             investigation={this.state.investigation}
-            status={this.state.submissionStatus}
             steps={this.state.steps}
             formData={this.state.formData}
             uiSchema={this.state.uiSchema}

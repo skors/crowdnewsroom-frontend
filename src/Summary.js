@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 import * as _ from "lodash";
 
@@ -16,6 +16,10 @@ class Summary extends React.Component {
   };
 
   render() {
+    if (Object.keys(this.props.formData).length === 0) {
+      return <Redirect to="./start" />;
+    }
+
     return (
       <Card
         logo={this.props.investigation.logo}

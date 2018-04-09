@@ -46,7 +46,7 @@ const de = {
   },
   summary: {
     message:
-      "Bitte überprüfen Sie Ihre Angaben und klicken Sie abschließend unten auf den Button “Abschicken”",
+      "Bitte überprüfen Sie Ihre Angaben und klicken Sie abschließend auf den Button “Abschicken”",
     edit_item: "Von diesem Schritt aus bearbeiten",
     yes: "Ja",
     no: "Nein",

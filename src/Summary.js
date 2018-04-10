@@ -59,49 +59,58 @@ function getKeyText(propertyKey, values, uiSchema) {
   return uiTitle || schemaTitle || propertyKey;
 }
 
-function Step({ schema, formData, uiSchema }) {
-  const title = schema.title;
-  let hasVisibleFields = false;
-  const rows = _.map(schema.properties, (values, property) => {
-    const valueText = getValueText(property, formData, values);
-    const keyText = getKeyText(property, values, uiSchema);
-    const isSignature =
-      _.get(uiSchema, [property, "ui:widget"]) === "signatureWidget";
-    const isFile = values.format === "data-url";
-    const isHidden = _.get(uiSchema, [property, "ui:widget"]) === "hidden";
+export function Row({ values, property, formData, uiSchema }) {
+  const valueText = getValueText(property, formData, values);
+  const keyText = getKeyText(property, values, uiSchema);
+  const isSignature =
+    _.get(uiSchema, [property, "ui:widget"]) === "signatureWidget";
+  const isFile = values.format === "data-url";
 
-    let value;
-    if (isFile) {
-      value = <i>{t("summary.file_uploaded")}</i>;
-    } else if (isSignature) {
-      value = <i>{t("summary.signature_given")}</i>;
-    } else {
-      value = valueText;
-    }
-
-    if (isHidden) {
-      return <li />;
-    }
-
-    hasVisibleFields = true;
-    return (
-      <li key={property}>
-        <h4 className="summary-step__question">{keyText}</h4>
-        <p className="summary-step__answer">{value}</p>
-      </li>
-    );
-  });
-
-  const order = uiSchema["ui:order"];
-  if (order) {
-    rows.sort((a, b) => order.indexOf(a.key) > order.indexOf(b.key));
+  let value;
+  if (isFile) {
+    value = <i>{t("summary.file_uploaded")}</i>;
+  } else if (isSignature) {
+    value = <i>{t("summary.signature_given")}</i>;
+  } else {
+    value = valueText;
   }
+
+  return (
+    <li>
+      <h4 className="summary-step__question">{keyText}</h4>
+      <p className="summary-step__answer">{value}</p>
+    </li>
+  );
+}
+
+export function Step({ schema, formData, uiSchema }) {
+  const title = schema.title;
+
+  const visibleFields = _.pickBy(schema.properties, (values, property) => {
+    const isHidden = _.get(uiSchema, [property, "ui:widget"]) === "hidden";
+    return !isHidden;
+  });
 
   // If this step has only hidden inputs we hide the whole
   // thing completely. This is the case if this is a faked
   // purely informative step.
-  if (!hasVisibleFields) {
+  if (_.isEmpty(visibleFields)) {
     return <div />;
+  }
+
+  const rows = _.map(visibleFields, (values, property) => (
+    <Row
+      key={property}
+      values={values}
+      property={property}
+      formData={formData}
+      uiSchema={uiSchema}
+    />
+  ));
+
+  const order = uiSchema["ui:order"];
+  if (order) {
+    rows.sort((a, b) => order.indexOf(a.key) > order.indexOf(b.key));
   }
 
   return (

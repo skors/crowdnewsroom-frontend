@@ -92,4 +92,17 @@ describe("Row", () => {
     expect(wrapper.find("li h4").text()).toEqual("signature");
     expect(wrapper.find("li p").text()).toEqual(t("summary.signature_given"));
   });
+
+  it("should do something smart about multiple files", async () => {
+    const property = "signature";
+    const values = {
+      type: "array",
+      items: { type: "string", format: "data-url" }
+    };
+    const uiSchema = { signature: { "ui:widget": "signatureWidget" } };
+
+    const wrapper = makeRow(values, property, {}, uiSchema);
+    expect(wrapper.find("li h4").text()).toEqual("signature");
+    expect(wrapper.find("li p").text()).toEqual(t("summary.signature_given"));
+  });
 });

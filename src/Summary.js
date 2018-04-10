@@ -50,7 +50,7 @@ function getValueText(property, formData, values) {
   if (values.enum && values.enumNames) {
     return values.enumNames[values.enum.indexOf(formData[property])];
   }
-  return values.title || formData[property];
+  return formData[property];
 }
 
 function getKeyText(propertyKey, values, uiSchema) {
@@ -60,19 +60,28 @@ function getKeyText(propertyKey, values, uiSchema) {
 }
 
 export function Row({ values, property, formData, uiSchema }) {
-  const valueText = getValueText(property, formData, values);
   const keyText = getKeyText(property, values, uiSchema);
   const isSignature =
     _.get(uiSchema, [property, "ui:widget"]) === "signatureWidget";
   const isFile = values.format === "data-url";
+  const isFileCollection =
+    values.type === "array" && values.items.format === "data-url";
 
   let value;
   if (isFile) {
     value = <i>{t("summary.file_uploaded")}</i>;
   } else if (isSignature) {
     value = <i>{t("summary.signature_given")}</i>;
+  } else if (isFileCollection) {
+    value = (
+      <i>
+        {t("summary.files_uploaded", {
+          smart_count: formData[property].length
+        })}
+      </i>
+    );
   } else {
-    value = valueText;
+    value = getValueText(property, formData, values);
   }
 
   return (

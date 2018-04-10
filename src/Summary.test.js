@@ -94,15 +94,40 @@ describe("Row", () => {
   });
 
   it("should do something smart about multiple files", async () => {
-    const property = "signature";
+    const property = "files";
     const values = {
       type: "array",
       items: { type: "string", format: "data-url" }
     };
-    const uiSchema = { signature: { "ui:widget": "signatureWidget" } };
+    let formData = { files: ["data-url...", "data-url..."] };
+
+    let wrapper = makeRow(values, property, formData);
+    expect(wrapper.find("li h4").text()).toEqual("files");
+    expect(wrapper.find("li p").text()).toEqual(t("summary.files_uploaded", 2));
+
+    formData = { files: ["data-url..."] };
+
+    wrapper = makeRow(values, property, formData);
+    expect(wrapper.find("li p").text()).toEqual(t("summary.files_uploaded", 1));
+  });
+
+  it("should display the answers to responses", async () => {
+    const property = "firstName";
+    const values = { type: "string" };
+    const formData = { firstName: "Peter" };
+
+    const wrapper = makeRow(values, property, formData);
+    expect(wrapper.find("li h4").text()).toEqual("firstName");
+    expect(wrapper.find("li p").text()).toEqual("Peter");
+  });
+
+  it("should display the uiTitles as headings", async () => {
+    const property = "firstName";
+    const values = { type: "string" };
+    const uiSchema = { firstName: { "ui:title": "First Name" } };
 
     const wrapper = makeRow(values, property, {}, uiSchema);
-    expect(wrapper.find("li h4").text()).toEqual("signature");
-    expect(wrapper.find("li p").text()).toEqual(t("summary.signature_given"));
+    expect(wrapper.find("li h4").text()).toEqual("First Name");
+    expect(wrapper.find("li p").text()).toEqual("");
   });
 });

@@ -21,6 +21,8 @@ const en = {
     yes: "Yes",
     no: "No",
     file_uploaded: "File uploaded",
+    files_uploaded:
+      "%{smart_count} file uploaded |||| %{smart_count} files uploaded",
     signature_given: "Signature given"
   },
   card: {
@@ -51,6 +53,8 @@ const de = {
     yes: "Ja",
     no: "Nein",
     file_uploaded: "Datei hochgeladen",
+    files_uploaded:
+      "%{smart_count} Datei hochgeladen |||| %{smart_count} Dateien hochgeladen",
     signature_given: "Unterschrift geleistet"
   },
   card: {
@@ -61,8 +65,8 @@ const de = {
 // this would be the place where we decide if we pass the
 // `en` or the `de` object. Right now we just always pass
 // the German translations
-const polyglot = new Polyglot({ phrases: de });
+const polyglot = new Polyglot({ phrases: de, locale: "de" });
 
-const t = key => polyglot.t(key);
+const t = (key, ...rest) => polyglot.t(key, ...rest);
 
 export { t };

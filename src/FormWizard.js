@@ -9,8 +9,8 @@ import { trackPageView } from "./tracking";
 
 import { t } from "./i18n";
 import Card from "./Card";
-import SignatureWidget from "./SignatureWidget";
-import ButtonWidget from "./ButtonWidget";
+import SignatureWidget from "./formWidgets/SignatureWidget";
+import ButtonWidget from "./formWidgets/ButtonWidget";
 import "./FormWizard.css";
 
 class FormWizard extends Component {

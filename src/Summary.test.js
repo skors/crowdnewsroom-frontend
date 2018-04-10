@@ -3,6 +3,7 @@ import { configure, shallow } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 
 import { Step, Row } from "./Summary";
+import { t } from "./i18n";
 
 configure({ adapter: new Adapter() });
 
@@ -56,27 +57,39 @@ describe("Step", () => {
   });
 });
 
+const makeRow = (values = {}, property = "", formData = {}, uiSchema = {}) => {
+  return shallow(
+    <Row
+      values={values}
+      property={property}
+      formData={formData}
+      uiSchema={uiSchema}
+    />
+  );
+};
+
 describe("Row", () => {
-  let wrapper;
+  it("should render list elements", async () => {
+    const wrapper = makeRow();
+    expect(wrapper.find("li")).toHaveLength(1);
+  });
 
-  describe("should render a nice list element", () => {
-    beforeEach(() => {
-      const values = {};
-      const property = {};
-      const formData = {};
-      const uiSchema = {};
-      wrapper = shallow(
-        <Row
-          values={values}
-          property={property}
-          formData={formData}
-          uiSchema={uiSchema}
-        />
-      );
-    });
+  it("should display files correctly", async () => {
+    const property = "proof";
+    const values = { format: "data-url", type: "string" };
 
-    it("should set first step", async () => {
-      expect(wrapper.find("li")).toHaveLength(1);
-    });
+    const wrapper = makeRow(values, property);
+    expect(wrapper.find("li h4").text()).toEqual("proof");
+    expect(wrapper.find("li p").text()).toEqual(t("summary.file_uploaded"));
+  });
+
+  it("should display signatures correctly", async () => {
+    const property = "signature";
+    const values = { type: "string" };
+    const uiSchema = { signature: { "ui:widget": "signatureWidget" } };
+
+    const wrapper = makeRow(values, property, {}, uiSchema);
+    expect(wrapper.find("li h4").text()).toEqual("signature");
+    expect(wrapper.find("li p").text()).toEqual(t("summary.signature_given"));
   });
 });

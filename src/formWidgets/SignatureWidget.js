@@ -15,7 +15,6 @@ class SignatureWidget extends Component {
   }
 
   clear(event) {
-    event.preventDefault();
     this.signaturePad.clear();
     this.props.onChange(null);
   }
@@ -37,7 +36,10 @@ class SignatureWidget extends Component {
           ref={ref => (this.signaturePad = ref)}
           debounceInterval={100}
         />
-        <button onClick={this.clear}> Clear </button>
+        <button type="button" onClick={this.clear}>
+          {" "}
+          Clear{" "}
+        </button>
       </div>
     );
   }

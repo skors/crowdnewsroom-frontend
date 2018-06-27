@@ -11,7 +11,7 @@ configure({ adapter: new Adapter() });
 const steps = [
   {
     schema: {
-      title: "first",
+      slug: "first",
       properties: {
         first_first: {
           type: "boolean"
@@ -35,7 +35,7 @@ const steps = [
   },
   {
     schema: {
-      title: "second",
+      slug: "second",
       properties: {
         second_first: {
           type: "boolean"
@@ -45,7 +45,7 @@ const steps = [
   },
   {
     schema: {
-      title: "third",
+      slug: "third",
       properties: {
         third_first: {
           type: "boolean"
@@ -58,7 +58,7 @@ const steps = [
 const moreSteps = [
   {
     schema: {
-      title: "first",
+      slug: "first",
       properties: {
         first_first: {
           type: "boolean"
@@ -82,7 +82,7 @@ const moreSteps = [
   },
   {
     schema: {
-      title: "third"
+      slug: "third"
     }
   }
 ];
@@ -90,7 +90,7 @@ const moreSteps = [
 const existsStep = [
   {
     schema: {
-      title: "first",
+      slug: "first",
       properties: {
         first_first: {
           type: "string"
@@ -108,12 +108,12 @@ const existsStep = [
   },
   {
     schema: {
-      title: "second"
+      slug: "second"
     }
   },
   {
     schema: {
-      title: "third"
+      slug: "third"
     }
   }
 ];
@@ -136,17 +136,17 @@ describe("FormWizard", () => {
     });
 
     it("should set first step", async () => {
-      expect(instance.state.schema.title).toBe("first");
+      expect(instance.state.schema.slug).toBe("first");
     });
 
-    fit("should advance to correct state", async () => {
+    it("should advance to correct state", async () => {
       const nextStep = await instance.getNextStep({ first_first: false });
-      expect(nextStep.schema.title).toBe("third");
+      expect(nextStep.schema.slug).toBe("third");
     });
 
     it("should advance to another correct state", async () => {
       const nextStep = await instance.getNextStep({ first_first: true });
-      expect(nextStep.schema.title).toBe("second");
+      expect(nextStep.schema.slug).toBe("second");
     });
 
     it("should reset formState if path changed", async () => {
@@ -155,7 +155,7 @@ describe("FormWizard", () => {
       });
       const nextStep = await instance.getNextStep({ first_first: false });
 
-      expect(nextStep.schema.title).toBe("third");
+      expect(nextStep.schema.slug).toBe("third");
 
       await instance.updateFormData({ first_first: false });
       // note that the - now invalid - second_first is not in the data anymore
@@ -179,12 +179,12 @@ describe("FormWizard", () => {
 
     it("should work if the first condition is met", async () => {
       const nextStep = await instance.getNextStep({ first_first: true });
-      expect(nextStep.schema.title).toBe("third");
+      expect(nextStep.schema.slug).toBe("third");
     });
 
     it("should work if the second condition is met", async () => {
       const nextStep = await instance.getNextStep({ first_second: "banana" });
-      expect(nextStep.schema.title).toBe("third");
+      expect(nextStep.schema.slug).toBe("third");
     });
 
     it("should not work if the conditions are not met", async () => {
@@ -200,7 +200,7 @@ describe("FormWizard", () => {
         first_first: false,
         first_second: "banana"
       });
-      expect(nextStep.schema.title).toBe("third");
+      expect(nextStep.schema.slug).toBe("third");
     });
   });
 
@@ -220,7 +220,7 @@ describe("FormWizard", () => {
 
     it("should advance if the exists condition is met", async () => {
       const nextStep = await instance.getNextStep({ other: "test" });
-      expect(nextStep.schema.title).toBe("second");
+      expect(nextStep.schema.slug).toBe("second");
     });
 
     it("should not advance if the exists condition is not met", async () => {

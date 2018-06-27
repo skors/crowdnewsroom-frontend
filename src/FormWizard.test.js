@@ -18,7 +18,20 @@ const steps = [
         }
       }
     },
-    conditions: {}
+    rules: [
+      {
+        conditions: {
+          first_first: { equal: true }
+        },
+        event: "second"
+      },
+      {
+        conditions: {
+          first_first: { equal: false }
+        },
+        event: "third"
+      }
+    ]
   },
   {
     schema: {
@@ -28,9 +41,6 @@ const steps = [
           type: "boolean"
         }
       }
-    },
-    conditions: {
-      first_first: { equal: true }
     }
   },
   {
@@ -41,9 +51,6 @@ const steps = [
           type: "boolean"
         }
       }
-    },
-    conditions: {
-      first_first: { equal: false }
     }
   }
 ];
@@ -61,17 +68,21 @@ const moreSteps = [
         }
       }
     },
-    conditions: {}
+    rules: [
+      {
+        conditions: {
+          or: [
+            { first_first: { equal: true } },
+            { first_second: { equal: "banana" } }
+          ]
+        },
+        event: "third"
+      }
+    ]
   },
   {
     schema: {
       title: "third"
-    },
-    conditions: {
-      or: [
-        { first_first: { equal: true } },
-        { first_second: { equal: "banana" } }
-      ]
     }
   }
 ];
@@ -86,21 +97,24 @@ const existsStep = [
         }
       }
     },
-    conditions: {}
+    rules: [
+      {
+        conditions: {
+          other: { exists: true }
+        },
+        event: "second"
+      }
+    ]
   },
   {
     schema: {
       title: "second"
-    },
-    conditions: {
-      other: { exists: true }
     }
   },
   {
     schema: {
       title: "third"
-    },
-    conditions: {}
+    }
   }
 ];
 
@@ -125,14 +139,14 @@ describe("FormWizard", () => {
       expect(instance.state.schema.title).toBe("first");
     });
 
-    it("should advance to correct state", async () => {
+    fit("should advance to correct state", async () => {
       const nextStep = await instance.getNextStep({ first_first: false });
-      expect(nextStep.title).toBe("third");
+      expect(nextStep.schema.title).toBe("third");
     });
 
     it("should advance to another correct state", async () => {
       const nextStep = await instance.getNextStep({ first_first: true });
-      expect(nextStep.title).toBe("second");
+      expect(nextStep.schema.title).toBe("second");
     });
 
     it("should reset formState if path changed", async () => {
@@ -141,7 +155,7 @@ describe("FormWizard", () => {
       });
       const nextStep = await instance.getNextStep({ first_first: false });
 
-      expect(nextStep.title).toBe("third");
+      expect(nextStep.schema.title).toBe("third");
 
       await instance.updateFormData({ first_first: false });
       // note that the - now invalid - second_first is not in the data anymore
@@ -165,12 +179,12 @@ describe("FormWizard", () => {
 
     it("should work if the first condition is met", async () => {
       const nextStep = await instance.getNextStep({ first_first: true });
-      expect(nextStep.title).toBe("third");
+      expect(nextStep.schema.title).toBe("third");
     });
 
     it("should work if the second condition is met", async () => {
       const nextStep = await instance.getNextStep({ first_second: "banana" });
-      expect(nextStep.title).toBe("third");
+      expect(nextStep.schema.title).toBe("third");
     });
 
     it("should not work if the conditions are not met", async () => {
@@ -186,7 +200,7 @@ describe("FormWizard", () => {
         first_first: false,
         first_second: "banana"
       });
-      expect(nextStep.title).toBe("third");
+      expect(nextStep.schema.title).toBe("third");
     });
   });
 
@@ -206,12 +220,12 @@ describe("FormWizard", () => {
 
     it("should advance if the exists condition is met", async () => {
       const nextStep = await instance.getNextStep({ other: "test" });
-      expect(nextStep.title).toBe("second");
+      expect(nextStep.schema.title).toBe("second");
     });
 
     it("should not advance if the exists condition is not met", async () => {
       const nextStep = await instance.getNextStep({ first_first: true });
-      expect(nextStep.title).toBe("third");
+      expect(nextStep).toBeUndefined();
     });
   });
 });

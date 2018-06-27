@@ -27,46 +27,45 @@ class FormWizard extends Component {
     this.state = {
       formData,
       schema: steps[0].schema,
+      step: steps[0],
       stepsTaken: new Set()
     };
-    const rules = steps.map(step => {
-      return { conditions: step.conditions, event: { schema: step.schema } };
-    });
-    this.engine = new Engine(rules);
     this.setNextStep = this.setNextStep.bind(this);
     this.transformErrors = this.transformErrors.bind(this);
   }
 
-  updateRoute(schema) {
-    const url = `./${schema.slug}`;
+  updateRoute(step) {
+    const url = `./${step.schema.slug}`;
     trackPageView(url);
     this.props.history.push(url);
   }
 
   getValidSteps(formData) {
-    return this.engine.run(formData).then(events => {
-      return events.map(event => event.schema);
-    });
+    const engine = new Engine(this.state.step.rules);
+    return engine.run(formData);
   }
 
   getNextStep(formData) {
-    return this.getValidSteps(formData).then(validSteps =>
-      _.find(validSteps, step => !this.state.stepsTaken.has(step))
-    );
+    return this.getValidSteps(formData).then(validSteps => {
+      return _.find(
+        this.props.steps,
+        step => step.schema.slug === validSteps[0]
+      );
+    });
   }
 
   advance(formData) {
-    this.getNextStep(formData).then(nextSchema => {
-      this.setNextStep(nextSchema);
-      this.updateRoute(nextSchema);
+    this.getNextStep(formData).then(nextStep => {
+      this.setNextStep(nextStep);
+      this.updateRoute(nextStep);
     });
     this.updateFormData(formData);
   }
 
-  setNextStep(nextSchema) {
+  setNextStep(nextStep) {
     this.setState({
-      schema: nextSchema,
-      stepsTaken: this.state.stepsTaken.add(nextSchema)
+      step: nextStep,
+      stepsTaken: this.state.stepsTaken.add(nextStep.schema.slug)
     });
   }
 
@@ -91,7 +90,7 @@ class FormWizard extends Component {
   }
 
   resetToFirstStep() {
-    const nextStep = this.props.steps[0].schema;
+    const nextStep = this.props.steps[0];
     this.setState({ stepsTaken: new Set() });
     this.setNextStep(nextStep);
     this.updateRoute(nextStep);
@@ -108,10 +107,10 @@ class FormWizard extends Component {
     // use this boolean. If we find not way we rest to the start
     let found = false;
 
-    this.getValidSteps(this.state.formData).then(events => {
-      for (let schema of events) {
-        stepsTaken.add(schema);
-        if (schema.slug === this.props.match.params.step) {
+    this.getValidSteps(this.state.formData).then(step_slugs => {
+      for (let slug of step_slugs) {
+        stepsTaken.add(slug);
+        if (slug === this.props.match.params.step) {
           found = true;
           break;
         }
@@ -132,16 +131,17 @@ class FormWizard extends Component {
     if (nextProps.match.params.currentStep === this.props.match.params.step)
       return;
 
-    const currentSchema = _.find(nextProps.steps, step => {
+    const currentStep = _.find(nextProps.steps, step => {
       return step.schema.slug === nextProps.match.params.step;
     });
 
     const stepsTaken = Array.from(this.state.stepsTaken);
-    const currentIndex = stepsTaken.indexOf(currentSchema.schema);
+    const currentIndex = stepsTaken.indexOf(currentStep.schema.slug);
 
     this.setState({
       stepsTaken: new Set(stepsTaken.slice(0, currentIndex + 1)),
-      schema: currentSchema.schema
+      schema: currentStep.schema,
+      step: currentStep
     });
   }
 
@@ -159,8 +159,7 @@ class FormWizard extends Component {
 
   get backLink() {
     const stepsTaken = [...this.state.stepsTaken];
-    const previousStep = stepsTaken[stepsTaken.length - 2];
-    return previousStep.slug;
+    return stepsTaken[stepsTaken.length - 2];
   }
 
   maybeAutoAdvance(event) {

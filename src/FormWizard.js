@@ -40,13 +40,9 @@ class FormWizard extends Component {
     this.props.history.push(url);
   }
 
-  getValidSteps(formData) {
-    const engine = new Engine(this.state.step.rules);
-    return engine.run(formData);
-  }
-
-  getNextStep(formData) {
-    return this.getValidSteps(formData).then(validSteps => {
+  getNextStep(formData, rules = this.state.step.rules) {
+    const engine = new Engine(rules);
+    return engine.run(formData).then(validSteps => {
       return _.find(
         this.props.steps,
         step => step.schema.slug === validSteps[0]
@@ -55,37 +51,17 @@ class FormWizard extends Component {
   }
 
   advance(formData) {
+    this.setState({ formData });
     this.getNextStep(formData).then(nextStep => {
       this.setNextStep(nextStep);
       this.updateRoute(nextStep);
     });
-    this.updateFormData(formData);
   }
 
   setNextStep(nextStep) {
     this.setState({
       step: nextStep,
       stepsTaken: this.state.stepsTaken.add(nextStep.schema.slug)
-    });
-  }
-
-  updateFormData(formData) {
-    return this.getValidSteps(formData).then(events => {
-      // remove steps that are not valid anymore if a new path is taken
-      const validProperties = _.flatMap(events, event => {
-        return _.keys(event.properties);
-      });
-
-      const newState = { ...this.state.formData, ...formData };
-      _.each(_.keys(newState), key => {
-        if (!_.includes(validProperties, key)) {
-          delete newState[key];
-        }
-      });
-
-      this.setState({
-        formData: newState
-      });
     });
   }
 
@@ -97,34 +73,17 @@ class FormWizard extends Component {
   }
 
   async componentDidMount() {
-    const currentSchema = _.find(this.props.steps, step => {
-      return step.schema.slug === this.props.match.params.step;
-    });
-
-    const stepsTaken = new Set();
-    // We need to somehow remember if we can get to the selected
-    // state at all with the current formData. For that we
-    // use this boolean. If we find not way we rest to the start
-    let found = false;
-
-    this.getValidSteps(this.state.formData).then(step_slugs => {
-      for (let slug of step_slugs) {
-        stepsTaken.add(slug);
-        if (slug === this.props.match.params.step) {
-          found = true;
-          break;
-        }
-      }
-
-      if (stepsTaken.size && found) {
-        this.setState({
-          stepsTaken,
-          schema: currentSchema.schema
-        });
-      } else {
-        this.resetToFirstStep();
-      }
-    });
+    const canGetToSelectedStep = await this.canWeGetHere(
+      this.props.match.params.step
+    );
+    if (canGetToSelectedStep) {
+      const currentStep = _.find(this.props.steps, step => {
+        return step.schema.slug === this.props.match.params.step;
+      });
+      this.setState({ schema: currentStep.schema, step: currentStep });
+    } else {
+      this.resetToFirstStep();
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -151,7 +110,13 @@ class FormWizard extends Component {
 
   onSubmit = ({ formData }) => {
     if (this.state.schema.final) {
-      this.props.submitCallback(formData, this.state.stepsTaken);
+      const stepSchemas = this.props.steps.filter(step => {
+        return this.state.stepsTaken.has(step.schema.slug);
+      });
+      this.props.submitCallback(
+        formData,
+        new Set(stepSchemas.map(step => step.schema))
+      );
     } else {
       this.advance(formData);
     }
@@ -160,6 +125,20 @@ class FormWizard extends Component {
   get backLink() {
     const stepsTaken = [...this.state.stepsTaken];
     return stepsTaken[stepsTaken.length - 2];
+  }
+
+  async descend(formData, rules, stepSlug) {
+    let nextStep = await this.getNextStep(formData, rules);
+    if (_.isUndefined(nextStep)) {
+      return false;
+    }
+    if (nextStep.schema.slug === stepSlug) {
+      return true;
+    }
+    if (nextStep.schema.final) {
+      return false;
+    }
+    return await this.descend(formData, nextStep.rules, stepSlug);
   }
 
   maybeAutoAdvance(event) {
@@ -173,6 +152,17 @@ class FormWizard extends Component {
     if (allAuto && allFilled) {
       this.onSubmit(event);
     }
+  }
+
+  async canWeGetHere(step) {
+    if (this.props.steps[0].schema.slug === step) {
+      return true;
+    }
+    return await this.descend(
+      this.state.formData,
+      this.props.steps[0].rules,
+      step
+    );
   }
 
   transformErrors(errors) {

@@ -277,45 +277,88 @@ describe("FormWizard", () => {
   });
 
   describe("jumping back", () => {
-    beforeEach(() => {
-      const wrapper = shallow(
-        <FormWizard
-          formData={{}}
-          steps={jumpSteps}
-          history={[]}
-          investigation={{}}
-          match={{ params: { step: "" } }}
-        />
-      );
-      instance = wrapper.instance();
+    describe("canWeGetHere", () => {
+      beforeEach(() => {
+        const wrapper = shallow(
+          <FormWizard
+            formData={{}}
+            steps={jumpSteps}
+            history={[]}
+            investigation={{}}
+            match={{ params: { step: "" } }}
+          />
+        );
+        instance = wrapper.instance();
+      });
+
+      it("knows that we cannot get back to previous step if formData is not given", async () => {
+        const canShowStep = await instance.canWeGetHere("second");
+        expect(canShowStep).toBe(false);
+      });
+
+      it("returns true for initial state", async () => {
+        const canShowStep = await instance.canWeGetHere("first");
+        expect(canShowStep).toBe(true);
+      });
+
+      it("returns true for a condition that is met", async () => {
+        instance.setState({ formData: { first_first: "A" } });
+        const canShowStep = await instance.canWeGetHere("second");
+        expect(canShowStep).toBe(true);
+      });
+
+      it("returns true for a condition two levels deep that is met", async () => {
+        instance.setState({
+          formData: { first_first: "A", second_first: "A" }
+        });
+        const canShowStep = await instance.canWeGetHere("third");
+        expect(canShowStep).toBe(true);
+      });
+
+      it("returns false for a condition two levels deep that is not met", async () => {
+        instance.setState({
+          formData: { first_first: "A", second_first: "B" }
+        });
+        const canShowStep = await instance.canWeGetHere("third");
+        expect(canShowStep).toBe(false);
+      });
     });
 
-    it("knows that we cannot get back to previous step if formData is not given", async () => {
-      const canShowStep = await instance.canWeGetHere("second");
-      expect(canShowStep).toBe(false);
-    });
+    describe("componentDidMount", () => {
+      // This is why we are doing all of this. We want to make sure that when a new instance
+      // of the FormWizard is mounted  with formData that does not match the step that is given
+      // in the url we reset to the first state.
+      // But if it *does* match (e.g. because we are jumping back to the overview) the wizard
+      // takes the step that was given to it.
 
-    it("returns true for initial state", async () => {
-      const canShowStep = await instance.canWeGetHere("first");
-      expect(canShowStep).toBe(true);
-    });
+      it("resets to first step if formData does not mach step slug", async () => {
+        const wrapper = shallow(
+          <FormWizard
+            formData={{ first_first: "A" }}
+            steps={jumpSteps}
+            history={[]}
+            investigation={{}}
+            match={{ params: { step: "third" } }}
+          />
+        );
+        const instance = wrapper.instance();
+        expect(instance.state.step.schema.slug).toBe("first");
+      });
 
-    it("returns true for a condition that is met", async () => {
-      instance.setState({ formData: { first_first: "A" } });
-      const canShowStep = await instance.canWeGetHere("second");
-      expect(canShowStep).toBe(true);
-    });
-
-    it("returns true for a condition two levels deep that is met", async () => {
-      instance.setState({ formData: { first_first: "A", second_first: "A" } });
-      const canShowStep = await instance.canWeGetHere("third");
-      expect(canShowStep).toBe(true);
-    });
-
-    it("returns false for a condition two levels deep that is not met", async () => {
-      instance.setState({ formData: { first_first: "A", second_first: "B" } });
-      const canShowStep = await instance.canWeGetHere("third");
-      expect(canShowStep).toBe(false);
+      it("starts at selected step if matching formData is given", async () => {
+        const wrapper = shallow(
+          <FormWizard
+            formData={{ first_first: "A", second_first: "A" }}
+            steps={jumpSteps}
+            history={[]}
+            investigation={{}}
+            match={{ params: { step: "third" } }}
+          />
+        );
+        const instance = wrapper.instance();
+        await instance.componentDidMount();
+        expect(instance.state.step.schema.slug).toBe("third");
+      });
     });
   });
 });

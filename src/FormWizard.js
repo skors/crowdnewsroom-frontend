@@ -23,12 +23,12 @@ class FormWizard extends Component {
 
   constructor(props) {
     super(props);
-    const { steps, formData } = props;
+    const { steps, formData, stepsTaken } = props;
     this.state = {
       formData,
       schema: steps[0].schema,
       step: steps[0],
-      stepsTaken: new Set()
+      stepsTaken: stepsTaken || new Set()
     };
     this.setNextStep = this.setNextStep.bind(this);
     this.transformErrors = this.transformErrors.bind(this);
@@ -110,13 +110,7 @@ class FormWizard extends Component {
 
   onSubmit = ({ formData }) => {
     if (this.state.schema.final) {
-      const stepSchemas = this.props.steps.filter(step => {
-        return this.state.stepsTaken.has(step.schema.slug);
-      });
-      this.props.submitCallback(
-        formData,
-        new Set(stepSchemas.map(step => step.schema))
-      );
+      this.props.submitCallback(formData, this.state.stepsTaken);
     } else {
       this.advance(formData);
     }

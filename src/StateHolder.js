@@ -616,6 +616,7 @@ class StateHolder extends React.Component {
                 formData={this.state.formData}
                 uiSchema={this.state.uiSchema}
                 history={this.props.history}
+                stepsTaken={this.state.stepsTaken}
                 submitCallback={this.finishForm}
                 match={match}
               />

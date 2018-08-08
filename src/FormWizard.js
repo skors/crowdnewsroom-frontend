@@ -23,125 +23,84 @@ class FormWizard extends Component {
 
   constructor(props) {
     super(props);
-    const { steps, formData } = props;
+    const { steps, formData, stepsTaken } = props;
     this.state = {
       formData,
       schema: steps[0].schema,
-      stepsTaken: new Set()
+      step: steps[0],
+      stepsTaken: stepsTaken || new Set()
     };
-    const rules = steps.map(step => {
-      return { conditions: step.conditions, event: { schema: step.schema } };
-    });
-    this.engine = new Engine(rules);
     this.setNextStep = this.setNextStep.bind(this);
     this.transformErrors = this.transformErrors.bind(this);
   }
 
-  updateRoute(schema) {
-    const url = `./${schema.slug}`;
+  updateRoute(step) {
+    const url = `./${step.schema.slug}`;
     trackPageView(url);
     this.props.history.push(url);
   }
 
-  getValidSteps(formData) {
-    return this.engine.run(formData).then(events => {
-      return events.map(event => event.schema);
+  getNextStep(formData, rules = this.state.step.rules) {
+    const engine = new Engine(rules);
+    return engine.run(formData).then(validSteps => {
+      return _.find(
+        this.props.steps,
+        step => step.schema.slug === validSteps[0]
+      );
     });
-  }
-
-  getNextStep(formData) {
-    return this.getValidSteps(formData).then(validSteps =>
-      _.find(validSteps, step => !this.state.stepsTaken.has(step))
-    );
   }
 
   advance(formData) {
-    this.getNextStep(formData).then(nextSchema => {
-      this.setNextStep(nextSchema);
-      this.updateRoute(nextSchema);
+    this.setState({ formData });
+    this.getNextStep(formData).then(nextStep => {
+      this.setNextStep(nextStep);
+      this.updateRoute(nextStep);
     });
-    this.updateFormData(formData);
   }
 
-  setNextStep(nextSchema) {
+  setNextStep(nextStep) {
     this.setState({
-      schema: nextSchema,
-      stepsTaken: this.state.stepsTaken.add(nextSchema)
-    });
-  }
-
-  updateFormData(formData) {
-    return this.getValidSteps(formData).then(events => {
-      // remove steps that are not valid anymore if a new path is taken
-      const validProperties = _.flatMap(events, event => {
-        return _.keys(event.properties);
-      });
-
-      const newState = { ...this.state.formData, ...formData };
-      _.each(_.keys(newState), key => {
-        if (!_.includes(validProperties, key)) {
-          delete newState[key];
-        }
-      });
-
-      this.setState({
-        formData: newState
-      });
+      step: nextStep,
+      stepsTaken: this.state.stepsTaken.add(nextStep.schema.slug)
     });
   }
 
   resetToFirstStep() {
-    const nextStep = this.props.steps[0].schema;
+    const nextStep = this.props.steps[0];
     this.setState({ stepsTaken: new Set() });
     this.setNextStep(nextStep);
     this.updateRoute(nextStep);
   }
 
   async componentDidMount() {
-    const currentSchema = _.find(this.props.steps, step => {
-      return step.schema.slug === this.props.match.params.step;
-    });
-
-    const stepsTaken = new Set();
-    // We need to somehow remember if we can get to the selected
-    // state at all with the current formData. For that we
-    // use this boolean. If we find not way we rest to the start
-    let found = false;
-
-    this.getValidSteps(this.state.formData).then(events => {
-      for (let schema of events) {
-        stepsTaken.add(schema);
-        if (schema.slug === this.props.match.params.step) {
-          found = true;
-          break;
-        }
-      }
-
-      if (stepsTaken.size && found) {
-        this.setState({
-          stepsTaken,
-          schema: currentSchema.schema
-        });
-      } else {
-        this.resetToFirstStep();
-      }
-    });
+    const canGetToSelectedStep = await this.canWeGetHere(
+      this.props.match.params.step
+    );
+    if (canGetToSelectedStep) {
+      const currentStep = _.find(this.props.steps, step => {
+        return step.schema.slug === this.props.match.params.step;
+      });
+      this.setState({ schema: currentStep.schema, step: currentStep });
+    } else {
+      this.resetToFirstStep();
+    }
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.match.params.currentStep === this.props.match.params.step)
       return;
 
-    const currentSchema = _.find(nextProps.steps, step => {
+    const currentStep = _.find(nextProps.steps, step => {
       return step.schema.slug === nextProps.match.params.step;
     });
 
     const stepsTaken = Array.from(this.state.stepsTaken);
-    const currentIndex = stepsTaken.indexOf(currentSchema.schema);
+    const currentIndex = stepsTaken.indexOf(currentStep.schema.slug);
 
     this.setState({
       stepsTaken: new Set(stepsTaken.slice(0, currentIndex + 1)),
-      schema: currentSchema.schema
+      schema: currentStep.schema,
+      step: currentStep
     });
   }
 
@@ -159,8 +118,21 @@ class FormWizard extends Component {
 
   get backLink() {
     const stepsTaken = [...this.state.stepsTaken];
-    const previousStep = stepsTaken[stepsTaken.length - 2];
-    return previousStep.slug;
+    return stepsTaken[stepsTaken.length - 2];
+  }
+
+  async descend(formData, rules, stepSlug) {
+    let nextStep = await this.getNextStep(formData, rules);
+    if (_.isUndefined(nextStep)) {
+      return false;
+    }
+    if (nextStep.schema.slug === stepSlug) {
+      return true;
+    }
+    if (nextStep.schema.final) {
+      return false;
+    }
+    return await this.descend(formData, nextStep.rules, stepSlug);
   }
 
   maybeAutoAdvance(event) {
@@ -174,6 +146,17 @@ class FormWizard extends Component {
     if (allAuto && allFilled) {
       this.onSubmit(event);
     }
+  }
+
+  async canWeGetHere(step) {
+    if (this.props.steps[0].schema.slug === step) {
+      return true;
+    }
+    return await this.descend(
+      this.state.formData,
+      this.props.steps[0].rules,
+      step
+    );
   }
 
   transformErrors(errors) {

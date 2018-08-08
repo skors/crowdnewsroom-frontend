@@ -7,41 +7,40 @@ import Card from "./Card";
 import { t } from "./i18n";
 import "./Summary.css";
 
-class Summary extends React.Component {
-  static propTypes = {
-    steps: PropTypes.arrayOf(PropTypes.object),
-    formData: PropTypes.object,
-    uiSchema: PropTypes.object,
-    stepsTaken: PropTypes.object
-  };
-
-  render() {
-    if (Object.keys(this.props.formData).length === 0) {
-      return <Redirect to="./start" />;
-    }
-
-    return (
-      <Card
-        logo={this.props.investigation.logo}
-        title={this.props.investigation.name}
-      >
-        <div className="summary">
-          <h1 className="summary__message">{t("summary.message")}</h1>
-          <div className="summary__buttons">{this.props.children}</div>
-          {Array.from(this.props.stepsTaken).map(schema => (
-            <Step
-              schema={schema}
-              key={schema.title}
-              formData={this.props.formData}
-              uiSchema={_.get(this.props.uiSchema, schema.slug, {})}
-            />
-          ))}
-          <div className="summary__buttons">{this.props.children}</div>
-        </div>
-      </Card>
-    );
+function Summary(props) {
+  if (Object.keys(props.formData).length === 0) {
+    return <Redirect to="./start" />;
   }
+
+  const stepsTaken = props.steps.filter(step =>
+    props.stepsTaken.has(step.schema.slug)
+  );
+
+  return (
+    <Card logo={props.investigation.logo} title={props.investigation.name}>
+      <div className="summary">
+        <h1 className="summary__message">{t("summary.message")}</h1>
+        <div className="summary__buttons">{props.children}</div>
+        {stepsTaken.map(({ schema }) => (
+          <Step
+            schema={schema}
+            key={schema.title}
+            formData={props.formData}
+            uiSchema={_.get(props.uiSchema, schema.slug, {})}
+          />
+        ))}
+        <div className="summary__buttons">{props.children}</div>
+      </div>
+    </Card>
+  );
 }
+
+Summary.propTypes = {
+  steps: PropTypes.arrayOf(PropTypes.object),
+  formData: PropTypes.object,
+  uiSchema: PropTypes.object,
+  stepsTaken: PropTypes.object
+};
 
 function getValueText(property, formData, values) {
   if (values.type === "boolean") {

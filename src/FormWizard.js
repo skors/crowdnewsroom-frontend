@@ -11,6 +11,8 @@ import { t } from "./i18n";
 import Card from "./Card";
 import SignatureWidget from "./formWidgets/SignatureWidget";
 import ButtonWidget from "./formWidgets/ButtonWidget";
+import OneLineWidget from "./formWidgets/OneLineWidget";
+import ImageUploadWidget from "./formWidgets/ImageUploadWidget";
 import "./FormWizard.css";
 
 class FormWizard extends Component {
@@ -208,7 +210,9 @@ class FormWizard extends Component {
             formData={this.state.formData}
             widgets={{
               signatureWidget: SignatureWidget,
-              buttonWidget: ButtonWidget
+              buttonWidget: ButtonWidget,
+              oneLineWidget: OneLineWidget,
+              imageUpload: ImageUploadWidget
             }}
             transformErrors={this.transformErrors}
             showErrorList={false}

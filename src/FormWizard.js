@@ -196,6 +196,8 @@ class FormWizard extends Component {
           transitionEnterTimeout={1300}
           transitionLeaveTimeout={1}
         >
+          <h3 className="slide-title">{this.state.schema.title}</h3>
+          <h4 className="slide-description">{this.state.schema.description}</h4>
           <Form
             key={this.state.schema.slug}
             className="form-wizard__form"

@@ -110,3 +110,8 @@
     }
   }
 }
+
+/* Hack to disable the old slide title */
+#root__title {
+  display: none;
+}

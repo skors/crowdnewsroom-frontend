@@ -219,7 +219,11 @@ class FormWizard extends Component {
                 {t("form.back")}
               </Link>
             )}
-            <input className="btn btn-primary" type="submit" value="Weiter" />
+            <input
+              className="btn btn-primary"
+              type="submit"
+              value={this.state.schema.nextButtonLabel}
+            />
           </Form>
         </CSSTransitionGroup>
       </Card>

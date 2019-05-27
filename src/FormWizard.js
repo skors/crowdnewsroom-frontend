@@ -11,6 +11,8 @@ import { t } from "./i18n";
 import Card from "./Card";
 import SignatureWidget from "./formWidgets/SignatureWidget";
 import ButtonWidget from "./formWidgets/ButtonWidget";
+import OneLineWidget from "./formWidgets/OneLineWidget";
+import ImageUploadWidget from "./formWidgets/ImageUploadWidget";
 import "./FormWizard.css";
 
 class FormWizard extends Component {
@@ -196,6 +198,8 @@ class FormWizard extends Component {
           transitionEnterTimeout={1300}
           transitionLeaveTimeout={1}
         >
+          <h3 className="slide-title">{this.state.schema.title}</h3>
+          <h4 className="slide-description">{this.state.schema.description}</h4>
           <Form
             key={this.state.schema.slug}
             className="form-wizard__form"
@@ -206,7 +210,9 @@ class FormWizard extends Component {
             formData={this.state.formData}
             widgets={{
               signatureWidget: SignatureWidget,
-              buttonWidget: ButtonWidget
+              buttonWidget: ButtonWidget,
+              oneLineWidget: OneLineWidget,
+              imageUpload: ImageUploadWidget
             }}
             transformErrors={this.transformErrors}
             showErrorList={false}
@@ -219,7 +225,11 @@ class FormWizard extends Component {
                 {t("form.back")}
               </Link>
             )}
-            <input className="btn btn-primary" type="submit" value="Weiter" />
+            <input
+              className="btn btn-primary"
+              type="submit"
+              value={this.state.schema.nextButtonLabel}
+            />
           </Form>
         </CSSTransitionGroup>
       </Card>

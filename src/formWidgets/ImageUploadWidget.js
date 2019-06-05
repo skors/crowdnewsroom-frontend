@@ -25,7 +25,7 @@ function FilesInfo(props) {
 class ImageUploadWidget extends FileWidget {
   render() {
     const { multiple, id, readonly, disabled, autofocus } = this.props;
-    const { filesInfo } = this.state;
+    // const { filesInfo } = this.state;
     return (
       <div>
         <p>
@@ -46,7 +46,7 @@ class ImageUploadWidget extends FileWidget {
     );
   }
 }
-/* 
+/*
         <FilesInfo filesInfo={filesInfo} />
         */
 

@@ -46,7 +46,7 @@ class ImageUploadWidget extends FileWidget {
     );
   }
 }
-/* 
+/*
         <FilesInfo filesInfo={filesInfo} />
         */
 

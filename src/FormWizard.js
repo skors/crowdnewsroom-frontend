@@ -43,22 +43,13 @@ class FormWizard extends Component {
   }
 
   getNextStep(formData, rules = this.state.step.rules) {
-    if (rules) {
-      // complex conditional form
-      const engine = new Engine(rules);
-      return engine.run(formData).then(validSteps => {
-        return _.find(
-          this.props.steps,
-          step => step.schema.slug === validSteps[0]
-        );
-      });
-    } else {
-      // simple form build via formbuilder
-      const currentStepIx = this.props.steps.indexOf(this.state.step);
-      const nextStep = this.props.steps[currentStepIx + 1];
-      const promise = new Promise((resolve, reject) => resolve(nextStep));
-      return promise;
-    }
+    const engine = new Engine(rules);
+    return engine.run(formData).then(validSteps => {
+      return _.find(
+        this.props.steps,
+        step => step.schema.slug === validSteps[0]
+      );
+    });
   }
 
   advance(formData) {

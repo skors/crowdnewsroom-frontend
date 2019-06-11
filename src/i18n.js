@@ -5,6 +5,7 @@ const en = {
   form: {
     loading: "Loading...",
     error: "There was an error loading the form data...",
+    next: "Next",
     back: "Back",
     submit: "Submit",
     submitting: "Submitting...",
@@ -35,6 +36,7 @@ const de = {
   form: {
     loading: "Lädt...",
     error: "Beim Laden des Formulars ist ein Fehler aufgetreten...",
+    next: "Weiter",
     back: "Zurück",
     submit: "Abschicken",
     submitting: "Wird abgeschickt...",

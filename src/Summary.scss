@@ -5,27 +5,32 @@
 }
 
 .summary__buttons {
-  margin: 1em 0 0 0;
+  margin: 2em 0;
 }
 
 .summary-step {
+  border-top: 1px solid grey;
+  padding: 2em 0 0.5em 0;
+
   &__title {
     font-size: 22px;
     font-weight: bold;
+    margin: 0 0 1em 0;
   }
 
   &__list {
     margin: 0;
-    padding: 0;
+    padding: 0 0 1em 0;
     list-style: none;
   }
 
   &__question {
     font-size: 16px;
     font-weight: bold;
+    margin: 0;
   }
 
   &__answer {
-    margin: 0.5em 0;
+    margin: 0 0 0.8em 0;
   }
 }

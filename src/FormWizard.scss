@@ -11,8 +11,11 @@
     font-weight: 900;
     font-style: normal;
     color: #152934;
-    font-size: 3rem;
     text-align: center;
+
+    @include mq(tablet) {
+      font-size: 2.6rem;
+    }
   }
 }
 

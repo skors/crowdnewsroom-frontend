@@ -24,11 +24,11 @@
 }
 
 .card__logo {
-  width: 150px;
+  width: 95px;
   position: absolute;
   margin-left: 50%;
-  left: -75px;
-  top: -55px;
+  left: -55px;
+  top: -50px;
 
   @include mq(tablet) {
     width: 200px;

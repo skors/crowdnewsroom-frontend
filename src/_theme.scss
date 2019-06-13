@@ -1,4 +1,4 @@
-$color-primary: #212529;
+$color-primary: #204763;
 $theme-colors: ("primary": $color-primary);
 
 $mq-breakpoints: (
@@ -7,3 +7,5 @@ $mq-breakpoints: (
   desktop: 980px,
   wide: 1300px
 );
+
+$enable-rounded: false;

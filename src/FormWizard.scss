@@ -5,6 +5,18 @@
   display: block;
   position: relative;
   width: 100%;
+
+  .slide-title {
+    font-family: "Roboto", DejaVu Sans, "Helvetica Neue", Helvetica, sans-serif;
+    font-weight: 900;
+    font-style: normal;
+    color: #152934;
+    text-align: center;
+
+    @include mq(tablet) {
+      font-size: 2.6rem;
+    }
+  }
 }
 
 .form-wizard__transition-enter {
@@ -28,17 +40,45 @@
 }
 
 .form-wizard__form {
-  margin-top: 50px;
-  text-align: center;
+  margin-top: 30px;
+  // text-align: center;
+
+  .field-description {
+    font-size: 125%;
+    line-height: 1.6;
+    margin-bottom: 1.5em;
+  }
 
   .control-label {
     font-weight: bold;
-    font-size: 22px;
+    font-size: 100%;
+    color: #152934;
+    line-height: 1.8;
+    display: block;
+    text-align: left;
+  }
+
+  input[type="text"].form-control {
+    display: block;
+    width: 100%;
+    height: 2.4375rem;
+    margin: 0 0 1rem;
+    padding: 0.5rem;
+    border: 1px solid #cacaca;
+    border-radius: 3px;
+    background-color: #fefefe;
+    // -webkit-box-shadow: inset 0 1px 2px rgba(10,10,10,.1);
+    // box-shadow: inset 0 1px 2px rgba(10,10,10,.1);
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #0a0a0a;
   }
 
   .field-radio-group {
     text-align: left;
-    padding-left: 35%;
+    // padding-left: 35%;
   }
 
   .radio input {
@@ -48,7 +88,7 @@
   .help-block {
     color: #999999;
     margin-top: 1em;
-    padding: 0 10%;
+    // padding: 0 10%;
   }
 
   .error-detail {
@@ -64,7 +104,7 @@
       background-color: $color-primary;
       border-color: $color-primary;
       padding: 0.5rem 1rem;
-      border-radius: 0.3rem;
+      border-radius: 0;
       font-weight: normal;
       font-size: 1.25rem;
       line-height: 1.5;

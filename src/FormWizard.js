@@ -199,7 +199,6 @@ class FormWizard extends Component {
           transitionLeaveTimeout={1}
         >
           <h3 className="slide-title">{this.state.schema.title}</h3>
-          <h4 className="slide-description">{this.state.schema.description}</h4>
           <Form
             key={this.state.schema.slug}
             className="form-wizard__form"
@@ -228,7 +227,7 @@ class FormWizard extends Component {
             <input
               className="btn btn-primary"
               type="submit"
-              value={this.state.schema.nextButtonLabel}
+              value={this.state.schema.nextButtonLabel || t("form.next")}
             />
           </Form>
         </CSSTransitionGroup>

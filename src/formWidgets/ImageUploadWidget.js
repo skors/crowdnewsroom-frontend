@@ -1,69 +1,33 @@
-import React from "react";
-import FileWidget from "react-jsonschema-form";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 
-class ImageUploadWidget extends FileWidget {
-  encodedValue = "";
+import { dataURItoBlob, shouldRender } from "./utils";
 
-  constructor(props) {
-    super(props);
-    // init the value property, example had this so I just copied it over
-    this.state = { value: "" };
-    this.set = this.set.bind(this);
-  }
-
-  set(event) {
-    // get the file data
-    var files = event.target.files;
-    var reader = new FileReader();
-    reader.readAsBinaryString(files[0]);
-    // we can't use 'this' to refer to the widget inside the onload callback below
-    var widget = this;
-    reader.onload = function() {
-      // now convert to base64 and save it
-      // the hidden field is bound to state.value so will update itself
-      widget.setState({ value: btoa(reader.result) });
-    };
-    reader.onerror = function() {
-      console.log("Error using FileReader to get base64 image data.");
-    };
-  }
-
-  render() {
-    const { multiple, id, readonly, disabled, autofocus } = this.props;
-    // const { filesInfo } = this.state;
-    return (
-      <div>
-        <p>
-          <input
-            ref={ref => (this.inputRef = ref)}
-            id={id + "-wrapper"}
-            type="file"
-            disabled={readonly || disabled}
-            onChange={this.set}
-            autoFocus={autofocus}
-            multiple={multiple}
-            accept="image/*"
-            capture="environment"
-          />
-          <input
-            ref={ref => (this.inputRef = ref)}
-            id={id}
-            name={this.props.id}
-            type="hidden"
-            value={this.state.value}
-          />
-        </p>
-      </div>
-    );
-  }
+function addNameToDataURL(dataURL, name) {
+  return dataURL.replace(";base64", `;name=${encodeURIComponent(name)};base64`);
 }
-/*
-        <FilesInfo filesInfo={filesInfo} />
-        */
 
-export default ImageUploadWidget;
+function processFile(file) {
+  const { name, size, type } = file;
+  return new Promise((resolve, reject) => {
+    const reader = new window.FileReader();
+    reader.onerror = reject;
+    reader.onload = event => {
+      resolve({
+        dataURL: addNameToDataURL(event.target.result, name),
+        name,
+        size,
+        type
+      });
+    };
+    reader.readAsDataURL(file);
+  });
+}
 
-/*
+function processFiles(files) {
+  return Promise.all([].map.call(files, processFile));
+}
+
 function FilesInfo(props) {
   const { filesInfo } = props;
   if (filesInfo.length === 0) {
@@ -82,4 +46,87 @@ function FilesInfo(props) {
     </ul>
   );
 }
-*/
+
+function extractFileInfo(dataURLs) {
+  return dataURLs
+    .filter(dataURL => typeof dataURL !== "undefined")
+    .map(dataURL => {
+      const { blob, name } = dataURItoBlob(dataURL);
+      return {
+        name: name,
+        size: blob.size,
+        type: blob.type
+      };
+    });
+}
+
+class ImageFileWidget extends Component {
+  constructor(props) {
+    super(props);
+    const { value } = props;
+    const values = Array.isArray(value) ? value : [value];
+    this.state = { values, filesInfo: extractFileInfo(values) };
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return shouldRender(this, nextProps, nextState);
+  }
+
+  onChange = event => {
+    const { multiple, onChange } = this.props;
+    processFiles(event.target.files).then(filesInfo => {
+      const state = {
+        values: filesInfo.map(fileInfo => fileInfo.dataURL),
+        filesInfo
+      };
+      this.setState(state, () => {
+        if (multiple) {
+          onChange(state.values);
+        } else {
+          onChange(state.values[0]);
+        }
+      });
+    });
+  };
+
+  render() {
+    const { multiple, id, readonly, disabled, autofocus } = this.props;
+    const { filesInfo } = this.state;
+    return (
+      <div>
+        <p>
+          <input
+            ref={ref => (this.inputRef = ref)}
+            id={id}
+            type="file"
+            disabled={readonly || disabled}
+            onChange={this.onChange}
+            defaultValue=""
+            autoFocus={autofocus}
+            multiple={multiple}
+            accept="image/*"
+            capture="environment"
+          />
+        </p>
+        <FilesInfo filesInfo={filesInfo} />
+      </div>
+    );
+  }
+}
+
+ImageFileWidget.defaultProps = {
+  autofocus: false
+};
+
+if (process.env.NODE_ENV !== "production") {
+  ImageFileWidget.propTypes = {
+    multiple: PropTypes.bool,
+    value: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.arrayOf(PropTypes.string)
+    ]),
+    autofocus: PropTypes.bool
+  };
+}
+
+export default ImageFileWidget;

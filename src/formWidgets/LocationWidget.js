@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-//import "./LocationWidget.css";
+import "./LocationWidget.css";
 
 class LocationWidget extends Component {
   constructor(props) {
@@ -14,7 +14,7 @@ class LocationWidget extends Component {
 
   render() {
     return (
-      <div>
+      <div class="location">
         <button class="button" name={this.props.id}>
           <i class="fi-marker" />
           <span>{this.props.schema.title}</span>

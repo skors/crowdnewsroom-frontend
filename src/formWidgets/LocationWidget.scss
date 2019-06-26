@@ -13,6 +13,7 @@
     border-radius: 3px;
     background: 0 0;
     background-color: rgba(0, 0, 0, 0);
+    color: #fff;
     line-height: 1;
     cursor: auto;
     overflow: visible;
@@ -32,16 +33,39 @@
       text-align: center;
       cursor: pointer;
       background-color: #204763;
-      color: #fefefe;
+      color: #fff;
       &:hover,
       &:focus {
         background-color: #1b3c54;
-        color: #fefefe;
+        color: #fff;
+      }
+      span {
+        display: inline-block;
+        vertical-align: middle;
+        margin-left: 0.25rem;
       }
     }
     &:focus,
     &.button:focus {
       outline: 0;
+    }
+  }
+  .button.alert {
+    background-color: #c60f13;
+    color: #fff;
+    &:hover,
+    &:focus {
+      background-color: #9e0c0f;
+      color: #fff;
+    }
+  }
+  .button.success {
+    background-color: #5da423;
+    color: #fff;
+    &:hover,
+    &:focus {
+      background-color: #4a831c;
+      color: #fff;
     }
   }
   i.fi-marker::before {
@@ -56,6 +80,6 @@
     line-height: 1;
     -webkit-font-smoothing: antialiased;
     text-decoration: inherit;
-    vertical-align: text-bottom;
+    vertical-align: middle;
   }
 }

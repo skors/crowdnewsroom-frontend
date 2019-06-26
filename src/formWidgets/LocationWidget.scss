@@ -44,6 +44,24 @@
       outline: 0;
     }
   }
+  .button.alert {
+    background-color: #c60f13;
+    color: #fefefe;
+    &:hover,
+    &:focus {
+      background-color: #9e0c0f;
+      color: #fefefe;
+    }
+  }
+  .button.success {
+    background-color: #5da423;
+    color: #0a0a0a;
+    &:hover,
+    &:focus {
+      background-color: #4a831c;
+      color: #0a0a0a;
+    }
+  }
   i.fi-marker::before {
     content: "";
     display: inline-block;

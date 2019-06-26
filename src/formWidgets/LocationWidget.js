@@ -7,6 +7,7 @@ class LocationWidget extends Component {
     super(props);
     this.state = { latlon: "" };
     this.buttonText = this.props.schema.title;
+    this.buttonState = "button";
   }
 
   onClick = event => {
@@ -18,11 +19,13 @@ class LocationWidget extends Component {
         var value = position.coords.latitude + "," + position.coords.longitude;
         widget.setState({ latlon: value });
         widget.buttonText = "Location received!";
+        widget.buttonState = "button success";
         return widget.props.onChange(value === "" ? "" : value);
       },
       function(error) {
         console.log(error);
         widget.buttonText = "Error fetching location! Click to try again.";
+        widget.buttonState = "button alert";
       }
     );
   };
@@ -37,7 +40,7 @@ class LocationWidget extends Component {
           type="hidden"
           readOnly={true}
         />
-        <button className="button" onClick={this.onClick}>
+        <button className={this.buttonState} onClick={this.onClick}>
           <i className="fi-marker" />
           <span>{this.buttonText}</span>
         </button>

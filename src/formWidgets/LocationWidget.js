@@ -8,6 +8,7 @@ class LocationWidget extends Component {
     this.state = { latlon: "" };
     this.buttonText = this.props.options.location_button;
     this.buttonState = "button";
+    this.errorMessage = "";
     console.log(this.props);
   }
 
@@ -21,12 +22,28 @@ class LocationWidget extends Component {
         widget.setState({ latlon: value });
         widget.buttonText = widget.props.options.location_success;
         widget.buttonState = "button success";
+        widget.errorMessage = "";
         return widget.props.onChange(value === "" ? "" : value);
       },
       function(error) {
+        var reason;
+        if (error.code === 1) {
+          reason = "permission denied";
+        } else if (error.code === 2) {
+          reason = "position unavailable";
+        } else if (error.code === 3) {
+          reason = "timed out";
+        } else {
+          reason = "unknown reason";
+        }
+        if (error.message) {
+          widget.errorMessage = error.message;
+        }
         console.log(error);
-        widget.buttonText = widget.props.options.location_error;
+        widget.buttonText =
+          widget.props.options.location_error + " (Reason: " + reason + ").";
         widget.buttonState = "button alert";
+        return widget.props.onChange("");
       }
     );
   };
@@ -45,6 +62,7 @@ class LocationWidget extends Component {
           <i className="fi-marker" />
           <span>{this.buttonText}</span>
         </button>
+        <span className="location-errors">{this.errorMessage}</span>
       </div>
     );
   }

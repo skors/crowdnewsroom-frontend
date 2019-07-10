@@ -68,18 +68,28 @@
       color: #fff;
     }
   }
-  i.fi-marker::before {
-    content: "";
+  i {
     display: inline-block;
     width: 16px;
     height: 16px;
-    background: transparent url(location-marker.svg) no-repeat center center;
-    background-size: contain;
-    font-family: inherit;
-    font-size: 0.9rem;
     line-height: 1;
     -webkit-font-smoothing: antialiased;
     text-decoration: inherit;
     vertical-align: middle;
+    &.fi-marker {
+      background: transparent url(location-marker.svg) no-repeat center center;
+      background-size: contain;
+    }
+  }
+  span.location-errors {
+    font-family: "Roboto", DejaVu Sans, "Helvetica Neue", Helvetica, sans-serif;
+    font-size: 90%;
+    line-height: 1;
+    color: #666;
+    display: block;
+    margin-top: -0.5rem;
+    &:empty {
+      display: none;
+    }
   }
 }

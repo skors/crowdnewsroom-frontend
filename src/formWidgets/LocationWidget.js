@@ -5,24 +5,27 @@ import "./LocationWidget.css";
 class LocationWidget extends Component {
   constructor(props) {
     super(props);
-    this.state = { latlon: "" };
-    this.buttonText = this.props.options.location_button;
-    this.buttonState = "button";
-    this.errorMessage = "";
-    console.log(this.props);
+    this.state = {
+      latlon: "",
+      label: this.props.options.location_button,
+      stateclass: "button",
+      errorMessage: ""
+    };
   }
 
   onClick = event => {
     event.preventDefault();
     const widget = this;
-    widget.buttonText = widget.props.options.location_load;
+    this.setState({ label: widget.props.options.location_load });
     navigator.geolocation.getCurrentPosition(
       function(position) {
         var value = position.coords.latitude + "," + position.coords.longitude;
-        widget.setState({ latlon: value });
-        widget.buttonText = widget.props.options.location_success;
-        widget.buttonState = "button success";
-        widget.errorMessage = "";
+        widget.setState({
+          latlon: value,
+          label: widget.props.options.location_success,
+          stateclass: "button success",
+          errorMessage: ""
+        });
         return widget.props.onChange(value === "" ? "" : value);
       },
       function(error) {
@@ -37,12 +40,14 @@ class LocationWidget extends Component {
           reason = "unknown reason";
         }
         if (error.message) {
-          widget.errorMessage = error.message;
+          widget.setState({ errorMessage: error.message });
         }
         console.log(error);
-        widget.buttonText =
-          widget.props.options.location_error + " (Reason: " + reason + ").";
-        widget.buttonState = "button alert";
+        widget.setState({
+          errorMessage: reason + ": " + error.message,
+          label: widget.props.options.location_error,
+          stateclass: "button alert"
+        });
         return widget.props.onChange("");
       }
     );
@@ -58,11 +63,11 @@ class LocationWidget extends Component {
           type="hidden"
           readOnly={true}
         />
-        <button className={this.buttonState} onClick={this.onClick}>
+        <button className={this.state.stateclass} onClick={this.onClick}>
           <i className="fi-marker" />
-          <span>{this.buttonText}</span>
+          <span>{this.state.label}</span>
         </button>
-        <span className="location-errors">{this.errorMessage}</span>
+        <span className="location-errors">{this.state.errorMessage}</span>
       </div>
     );
   }

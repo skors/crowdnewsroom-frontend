@@ -6,25 +6,26 @@ class LocationWidget extends Component {
   constructor(props) {
     super(props);
     this.state = { latlon: "" };
-    this.buttonText = this.props.schema.title;
+    this.buttonText = this.props.options.location_button;
     this.buttonState = "button";
+    console.log(this.props);
   }
 
   onClick = event => {
     event.preventDefault();
     const widget = this;
-    widget.buttonText = "Getting your location...";
+    widget.buttonText = widget.props.options.location_load;
     navigator.geolocation.getCurrentPosition(
       function(position) {
         var value = position.coords.latitude + "," + position.coords.longitude;
         widget.setState({ latlon: value });
-        widget.buttonText = "Location received!";
+        widget.buttonText = widget.props.options.location_success;
         widget.buttonState = "button success";
         return widget.props.onChange(value === "" ? "" : value);
       },
       function(error) {
         console.log(error);
-        widget.buttonText = "Error fetching location! Click to try again.";
+        widget.buttonText = widget.props.options.location_error;
         widget.buttonState = "button alert";
       }
     );

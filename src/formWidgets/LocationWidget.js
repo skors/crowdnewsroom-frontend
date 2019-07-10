@@ -16,7 +16,10 @@ class LocationWidget extends Component {
   onClick = event => {
     event.preventDefault();
     const widget = this;
-    this.setState({ label: widget.props.options.location_load });
+    this.setState({
+      label: widget.props.options.location_load,
+      stateclass: "button"
+    });
     navigator.geolocation.getCurrentPosition(
       function(position) {
         var value = position.coords.latitude + "," + position.coords.longitude;

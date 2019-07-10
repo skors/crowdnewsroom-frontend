@@ -95,7 +95,9 @@ export function Step({ schema, formData, uiSchema }) {
   const title = schema.title;
 
   const visibleFields = _.pickBy(schema.properties, (values, property) => {
-    const isHidden = _.get(uiSchema, [property, "ui:widget"]) === "hidden";
+    const isHidden =
+      _.get(uiSchema, [property, "ui:widget"]) === "hidden" ||
+      _.get(uiSchema, [property, "ui:widget"]) === "oneLineWidget";
     return !isHidden;
   });
 

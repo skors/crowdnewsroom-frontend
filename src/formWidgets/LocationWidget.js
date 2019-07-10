@@ -27,11 +27,11 @@ class LocationWidget extends Component {
       },
       function(error) {
         var reason;
-        if (error.code == 1) {
+        if (error.code === 1) {
           reason = "permission denied";
-        } else if (error.code == 2) {
+        } else if (error.code === 2) {
           reason = "position unavailable";
-        } else if (error.code == 3) {
+        } else if (error.code === 3) {
           reason = "timed out";
         } else {
           reason = "unknown reason";

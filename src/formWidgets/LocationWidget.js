@@ -33,6 +33,15 @@ class LocationWidget extends Component {
       },
       function(error) {
         var reason;
+        var errorMessage = error.message;
+        if (error.message) {
+          if (widget.props.options.location_help_url) {
+            errorMessage +=
+              '. <a href="' +
+              widget.props.options.location_help_url +
+              '" target="_blank">Click here to learn more.</a>';
+          }
+        }
         if (error.code === 1) {
           reason = "permission denied";
         } else if (error.code === 2) {
@@ -42,12 +51,10 @@ class LocationWidget extends Component {
         } else {
           reason = "unknown reason";
         }
-        if (error.message) {
-          widget.setState({ errorMessage: error.message });
-        }
+        reason = reason.charAt(0).toUpperCase() + reason.slice(1);
         console.log(error);
         widget.setState({
-          errorMessage: reason + ": " + error.message,
+          errorMessage: "<strong>" + reason + "</strong>: " + errorMessage,
           label: widget.props.options.location_error,
           stateclass: "button alert"
         });
@@ -70,7 +77,10 @@ class LocationWidget extends Component {
           <i className="fi-marker" />
           <span>{this.state.label}</span>
         </button>
-        <span className="location-errors">{this.state.errorMessage}</span>
+        <span
+          className="location-errors"
+          dangerouslySetInnerHTML={{ __html: this.state.errorMessage }}
+        />
       </div>
     );
   }

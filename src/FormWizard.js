@@ -13,6 +13,7 @@ import SignatureWidget from "./formWidgets/SignatureWidget";
 import ButtonWidget from "./formWidgets/ButtonWidget";
 import OneLineWidget from "./formWidgets/OneLineWidget";
 import ImageUploadWidget from "./formWidgets/ImageUploadWidget";
+import LocationWidget from "./formWidgets/LocationWidget";
 import "./FormWizard.css";
 
 class FormWizard extends Component {
@@ -211,7 +212,8 @@ class FormWizard extends Component {
               signatureWidget: SignatureWidget,
               buttonWidget: ButtonWidget,
               oneLineWidget: OneLineWidget,
-              imageUpload: ImageUploadWidget
+              imageUpload: ImageUploadWidget,
+              locationWidget: LocationWidget
             }}
             transformErrors={this.transformErrors}
             showErrorList={false}

@@ -7,7 +7,7 @@ class OneLineWidget extends Component {
     const props = this.props;
     return (
       <div>
-        <p className="oneline">{props.schema.title}</p>
+        <p className="oneline">{props.schema.placeholder}</p>
       </div>
     );
   }

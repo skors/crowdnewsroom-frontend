@@ -1,7 +1,33 @@
-import React from "react";
-import FileWidget from "react-jsonschema-form";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 
-/*
+import { dataURItoBlob, shouldRender } from "./utils";
+
+function addNameToDataURL(dataURL, name) {
+  return dataURL.replace(";base64", `;name=${encodeURIComponent(name)};base64`);
+}
+
+function processFile(file) {
+  const { name, size, type } = file;
+  return new Promise((resolve, reject) => {
+    const reader = new window.FileReader();
+    reader.onerror = reject;
+    reader.onload = event => {
+      resolve({
+        dataURL: addNameToDataURL(event.target.result, name),
+        name,
+        size,
+        type
+      });
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function processFiles(files) {
+  return Promise.all([].map.call(files, processFile));
+}
+
 function FilesInfo(props) {
   const { filesInfo } = props;
   if (filesInfo.length === 0) {
@@ -20,12 +46,52 @@ function FilesInfo(props) {
     </ul>
   );
 }
-*/
 
-class ImageUploadWidget extends FileWidget {
+function extractFileInfo(dataURLs) {
+  return dataURLs
+    .filter(dataURL => typeof dataURL !== "undefined")
+    .map(dataURL => {
+      const { blob, name } = dataURItoBlob(dataURL);
+      return {
+        name: name,
+        size: blob.size,
+        type: blob.type
+      };
+    });
+}
+
+class ImageFileWidget extends Component {
+  constructor(props) {
+    super(props);
+    const { value } = props;
+    const values = Array.isArray(value) ? value : [value];
+    this.state = { values, filesInfo: extractFileInfo(values) };
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return shouldRender(this, nextProps, nextState);
+  }
+
+  onChange = event => {
+    const { multiple, onChange } = this.props;
+    processFiles(event.target.files).then(filesInfo => {
+      const state = {
+        values: filesInfo.map(fileInfo => fileInfo.dataURL),
+        filesInfo
+      };
+      this.setState(state, () => {
+        if (multiple) {
+          onChange(state.values);
+        } else {
+          onChange(state.values[0]);
+        }
+      });
+    });
+  };
+
   render() {
     const { multiple, id, readonly, disabled, autofocus } = this.props;
-    // const { filesInfo } = this.state;
+    const { filesInfo } = this.state;
     return (
       <div>
         <p>
@@ -42,12 +108,25 @@ class ImageUploadWidget extends FileWidget {
             capture="environment"
           />
         </p>
+        <FilesInfo filesInfo={filesInfo} />
       </div>
     );
   }
 }
-/*
-        <FilesInfo filesInfo={filesInfo} />
-        */
 
-export default ImageUploadWidget;
+ImageFileWidget.defaultProps = {
+  autofocus: false
+};
+
+if (process.env.NODE_ENV !== "production") {
+  ImageFileWidget.propTypes = {
+    multiple: PropTypes.bool,
+    value: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.arrayOf(PropTypes.string)
+    ]),
+    autofocus: PropTypes.bool
+  };
+}
+
+export default ImageFileWidget;

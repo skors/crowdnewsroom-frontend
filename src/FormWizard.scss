@@ -149,6 +149,11 @@
       display: block;
     }
   }
+
+  .btn.btn-primary {
+    position: absolute;
+    right: 0;
+  }
 }
 
 /* Hack to disable the old slide title */

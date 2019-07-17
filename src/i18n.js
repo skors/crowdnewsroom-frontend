@@ -9,7 +9,8 @@ const en = {
     back: "Back",
     submit: "Submit",
     submitting: "Submitting...",
-    confirm_close: "Do you really want to close the before submitting?"
+    confirm_close: "Do you really want to close the before submitting?",
+    location_more: "Click here to learn more"
   },
   errors: {
     required: "This field is required.",
@@ -40,7 +41,8 @@ const de = {
     back: "Zurück",
     submit: "Abschicken",
     submitting: "Wird abgeschickt...",
-    confirm_close: "Möchten Sie das Fenster wirklich schließen?"
+    confirm_close: "Möchten Sie das Fenster wirklich schließen?",
+    location_more: "Hier klicken, um mehr zu erfahren"
   },
   errors: {
     required: "Dieses Feld muss ausgefüllt sein.",
@@ -64,11 +66,15 @@ const de = {
   }
 };
 
-// this would be the place where we decide if we pass the
-// `en` or the `de` object. Right now we just always pass
-// the German translations
-const polyglot = new Polyglot({ phrases: de, locale: "de" });
+// add more languages if you need
+const translations = {
+  de: new Polyglot({ phrases: de, locale: "de" }),
+  en: new Polyglot({ phrases: en, locale: "en" })
+};
 
-const t = (key, ...rest) => polyglot.t(key, ...rest);
+// FIXME
+let activeLocale = "de";
+const t = (key, ...rest) => translations[activeLocale || "de"].t(key, ...rest);
+t.setLocale = (code = "de") => (activeLocale = code);
 
 export { t };

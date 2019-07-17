@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { t } from "../i18n";
 
 import "./LocationWidget.css";
 
@@ -39,7 +40,7 @@ class LocationWidget extends Component {
             errorMessage +=
               '. <a href="' +
               widget.props.options.location_help_url +
-              '" target="_blank">Click here to learn more.</a>';
+              `" target="_blank">${t("form.location_more")}</a>`;
           }
         }
         if (error.code === 1) {
@@ -52,7 +53,7 @@ class LocationWidget extends Component {
           reason = "unknown reason";
         }
         reason = reason.charAt(0).toUpperCase() + reason.slice(1);
-        console.log(error);
+        // console.log(error);
         widget.setState({
           errorMessage: "<strong>" + reason + "</strong>: " + errorMessage,
           label: widget.props.options.location_error,

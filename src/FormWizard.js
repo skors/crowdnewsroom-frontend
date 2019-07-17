@@ -26,6 +26,7 @@ class FormWizard extends Component {
 
   constructor(props) {
     super(props);
+    t.setLocale(props.language);
     const { steps, formData, stepsTaken } = props;
     this.state = {
       formData,

@@ -227,7 +227,7 @@ class FormWizard extends Component {
               </Link>
             )}
             <input
-              className="btn btn-primary"
+              className="btn btn-primary form-wizard__btn-next"
               type="submit"
               value={this.state.schema.nextButtonLabel || t("form.next")}
             />

@@ -41,6 +41,7 @@
 
 .form-wizard__form {
   margin-top: 30px;
+  padding-bottom: 30px;
   // text-align: center;
 
   .field-description {
@@ -149,11 +150,11 @@
       display: block;
     }
   }
+}
 
-  .btn.btn-primary {
-    position: absolute;
-    right: 0;
-  }
+.form-wizard__btn-next {
+  position: absolute;
+  right: 0;
 }
 
 /* Hack to disable the old slide title */

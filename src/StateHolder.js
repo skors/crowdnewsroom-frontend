@@ -53,7 +53,8 @@ class StateHolder extends React.Component {
           steps: formData.form_json,
           uiSchema: formData.ui_schema_json,
           formInstanceId: formData.id,
-          investigation: investigationData
+          investigation: investigationData,
+          language: formData.language
         });
       })
       .catch(() => {
@@ -121,6 +122,7 @@ class StateHolder extends React.Component {
             formData={this.state.formData}
             uiSchema={this.state.uiSchema}
             stepsTaken={this.state.stepsTaken}
+            language={this.state.language}
           >
             {this.state.sending ? (
               <button className="btn btn-primary btn-lg btn-block" disabled>
@@ -150,6 +152,7 @@ class StateHolder extends React.Component {
                 history={this.props.history}
                 stepsTaken={this.state.stepsTaken}
                 submitCallback={this.finishForm}
+                language={this.state.language}
                 match={match}
               />
             );

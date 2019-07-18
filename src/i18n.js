@@ -3,12 +3,12 @@ import Polyglot from "node-polyglot";
 /* eslint-disable no-unused-vars*/
 const en = {
   form: {
-    loading: "Loading...",
-    error: "There was an error loading the form data...",
+    loading: "Loading …",
+    error: "There was an error loading the form data …",
     next: "Next",
     back: "Back",
     submit: "Submit",
-    submitting: "Submitting...",
+    submitting: "Submitting …",
     confirm_close: "Do you really want to close the before submitting?",
     location_more: "Click here to learn more"
   },
@@ -35,12 +35,12 @@ const en = {
 
 const de = {
   form: {
-    loading: "Lädt...",
-    error: "Beim Laden des Formulars ist ein Fehler aufgetreten...",
+    loading: "Lädt …",
+    error: "Beim Laden des Formulars ist ein Fehler aufgetreten …",
     next: "Weiter",
     back: "Zurück",
     submit: "Abschicken",
-    submitting: "Wird abgeschickt...",
+    submitting: "Wird abgeschickt …",
     confirm_close: "Möchten Sie das Fenster wirklich schließen?",
     location_more: "Hier klicken, um mehr zu erfahren"
   },

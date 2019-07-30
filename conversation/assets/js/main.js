@@ -16,13 +16,28 @@ var vm = new Vue({
     errorMessage: "Sample error message"
   },
   mounted: function() {
-    // download JSON
-    // fill data dict
+    console.log("mounted");
+
+    var uri = window.location.search.substring(1);
+    var params = new URLSearchParams(uri);
+    var investigation = params.get("investigation");
+    if (!investigation) {
+      investigation = "where-do-you-live-again";
+    }
+    var interviewer = params.get("interviewer");
+    if (!interviewer) {
+      interviewer = "wo-stehst-du-bahn";
+    }
+
+    var formURL =
+      "https://crowdnewsroom-staging.correctiv.org/forms/investigations/" +
+      investigation +
+      "/forms/" +
+      interviewer;
+
     var vm = this;
     axios
-      .get(
-        "https://crowdnewsroom-staging.correctiv.org/forms/investigations/where-do-you-live-again/forms/wo-stehst-du-bahn"
-      )
+      .get(formURL)
       .then(function(response) {
         vm.formschema = response.data.form_json;
         vm.uischema = response.data.ui_schema_json;

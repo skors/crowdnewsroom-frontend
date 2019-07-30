@@ -15,7 +15,8 @@
 
     <div class="container" id="chat">
       <div id="investigation-title">
-        <h1>Investigation name</h1>
+        <h1 v-if="loading">Loading conversational UI...</h1>
+        <h1 v-if="!loading">Investigation name</h1>
       </div>
 
       <div id="chat-content">

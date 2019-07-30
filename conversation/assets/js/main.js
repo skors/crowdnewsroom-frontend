@@ -1,0 +1,212 @@
+// Vue.http.options.emulateJSON = true;
+
+var vm = new Vue({
+  el: "#chat",
+  name: "chat",
+  delimiters: ["${", "}"],
+  data: {
+    messages: [{ from: "user", content: "Hello bot!" }],
+    formschema: "",
+    uischema: "",
+    fields: [],
+    fieldIndex: -1,
+    formData: new FormData(),
+    loading: true,
+    errored: false,
+    errorMessage: "Sample error message"
+  },
+  mounted: function() {
+    // download JSON
+    // fill data dict
+    var vm = this;
+    axios
+      .get(
+        "https://crowdnewsroom-staging.correctiv.org/forms/investigations/where-do-you-live-again/forms/wo-stehst-du-bahn"
+      )
+      .then(function(response) {
+        vm.formschema = response.data.form_json;
+        vm.uischema = response.data.ui_schema_json;
+      })
+      .catch(error => {
+        console.log(error);
+        vm.errored = true;
+      })
+      .finally(() => {
+        vm.initChat();
+      });
+  },
+  computed: {
+    currentField: function() {
+      return this.fields[this.fieldIndex];
+    }
+  },
+  methods: {
+    initChat: function() {
+      // called when all form data (form + ui) has been loaded
+      for (idx in this.formschema) {
+        var slide = this.formschema[idx];
+        for (i in slide.schema.properties) {
+          var field = slide.schema.properties[i];
+          field.slideSlug = slide.schema.slug;
+          var widgetType = this.getFieldType(field);
+          if (widgetType == "text") {
+            widgetType = "";
+          }
+          field.widget = widgetType;
+          this.fields.push(field);
+        }
+      }
+      this.loading = false;
+      console.log(this.fields);
+      this.showNextField();
+    },
+
+    showNextField: function() {
+      this.fieldIndex += 1;
+      var field = this.fields[this.fieldIndex];
+      this.messages.push({
+        from: "bot",
+        content: field.title,
+        field: field
+      });
+    },
+
+    sendMessage: function() {
+      var el = document.getElementById("input-box");
+      var msg = el.value;
+      if (msg) {
+        this.messages.push({ from: "user", content: msg });
+        this.formData.set(this.currentField.slug, msg);
+        // clear message box and return focus to it
+        el.value = "";
+        el.focus();
+        var objDiv = document.getElementById("chat-content");
+        objDiv.scrollTop = objDiv.scrollHeight;
+
+        for (var pair of this.formData.entries()) {
+          console.log(pair[0] + ", " + pair[1]);
+        }
+
+        this.showNextField();
+      }
+    },
+    sendOption: function(field, value) {
+      // for multiple-choice fields
+      this.formData.set(field.slug, value);
+      this.showNextField();
+    },
+    setFile: function(ev, field) {
+      // for file upload fields
+      // var f = ev.target.files[0]
+      var f = "file";
+      console.log(f);
+      this.formData.append(field.slug, f);
+      this.showNextField();
+    },
+    setLocation: function(ev, field) {
+      var vm = this;
+      navigator.geolocation.getCurrentPosition(
+        function(position) {
+          var value =
+            position.coords.latitude + "," + position.coords.longitude;
+          vm.formData.append(field.slug, value);
+          console.log(value);
+          vm.showNextField();
+        },
+        function(error) {
+          console.log(error);
+          /*
+          var errorMessage = error.message;
+          if (error.message) {
+            if (widget.props.options.location_help_url) {
+              errorMessage +=
+                '. <a href="' +
+                widget.props.options.location_help_url +
+                '" target="_blank">Click here to learn more.</a>';
+            }
+          }
+          if (error.code === 1) {
+            reason = "permission denied";
+          } else if (error.code === 2) {
+            reason = "position unavailable";
+          } else if (error.code === 3) {
+            reason = "timed out";
+          } else {
+            reason = "unknown reason";
+          }
+          reason = reason.charAt(0).toUpperCase() + reason.slice(1);
+          console.log(error);
+          widget.setState({
+            errorMessage: "<strong>" + reason + "</strong>: " + errorMessage,
+            label: widget.props.options.location_error,
+            stateclass: "button alert"
+          });
+          return widget.props.onChange("");
+          */
+        }
+      );
+    },
+
+    getFieldType: function(field) {
+      if (this.getFieldWidget(field) == "oneLineWidget") {
+        return "oneline";
+      }
+      if (field.type == "boolean") {
+        return "boolean";
+      }
+      if (field.type == "integer" || field.type == "number") {
+        return "number";
+      }
+      if (field.type == "array") {
+        return "checkboxes";
+      }
+
+      if (field.type == "string") {
+        if (field.format == "email") {
+          return "email";
+        }
+        if (field.format == "date") {
+          return "date";
+        }
+        if (this.getFieldWidget(field) == "textarea") {
+          return "longtext";
+        }
+        if (this.getFieldWidget(field) == "signatureWidget") {
+          return "signature";
+        }
+        if (this.getFieldWidget(field) == "locationWidget") {
+          return "location";
+        }
+        if (this.getFieldWidget(field) == "radio") {
+          return "radio";
+        }
+        if (field.format == "data-url") {
+          if (this.getFieldWidget(field) == "imageUpload") {
+            return "imageupload";
+          }
+          return "fileupload";
+        }
+        if (field.enum && !this.getFieldWidget(field)) {
+          return "dropdown";
+        }
+        return "text";
+      }
+      console.log("Unrecognized field");
+      console.log(field);
+      return "";
+    },
+    getFieldWidget: function(field) {
+      // if a specific widget is specified in the UI Schema, return its name
+      if (!(field.slideSlug in this.uischema)) {
+        return null;
+      }
+      if (!(field.slug in this.uischema[field.slideSlug])) {
+        return null;
+      }
+      if (!("ui:widget" in this.uischema[field.slideSlug][field.slug])) {
+        return null;
+      }
+      return this.uischema[field.slideSlug][field.slug]["ui:widget"];
+    }
+  }
+});

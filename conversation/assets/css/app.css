@@ -236,31 +236,113 @@ body {
 /* Animations and transitions
 */
 
+#chat-content {
+  animation: fadeIn 2.5s;
+  animation-fill-mode: forwards;
+}
+
 .investigation-message .message {
-  /*animation: opacityChange 0.1875s cubic-bezier(0.215, 0.61, 0.355, 1);*/
-  animation: opacityChange 3s cubic-bezier(0.215, 0.61, 0.355, 1);
+  animation: fadeIn 2s cubic-bezier(0.215, 0.61, 0.355, 1);
   will-change: opacity;
+  animation-fill-mode: forwards;
 }
 
 .message .avatar span {
-  animation: avatarOpacity 2s cubic-bezier(0.215, 0.61, 0.355, 1);
+  animation: fadeIn 1.25s cubic-bezier(0.215, 0.61, 0.355, 1);
+  animation-fill-mode: forwards;
 }
 
-@keyframes opacityChange {
+/* animating bot messages
+<p v-if="message.from === 'bot'" class="loading">
+<img src="assets/img/loading-dots.svg" height="8px">
+</p>
+
+.investigation-message .message p.loading {
+  animation: fadeOut 0.1875s cubic-bezier(0.215, 0.61, 0.355, 1);
+  animation-delay: 2s;
+  animation-fill-mode:forwards;
+}
+
+.investigation-message .message .test {
+  opacity: 0;
+  animation: fadeIn 0.1875s cubic-bezier(0.215, 0.61, 0.355, 1);
+  animation-delay: 4.18s;
+  animation-fill-mode: forwards;
+}*/
+
+.widget div button {
+  opacity: 0;
+  transform: translate(0.75rem);
+  animation: slideLeft 0.6s;
+  animation-fill-mode: forwards;
+}
+
+.widget div button:nth-child(0) {
+  animation-delay: 0ms;
+}
+.widget div button:first-child {
+  animation-delay: 0.2s;
+}
+.widget div button:nth-child(2) {
+  animation-delay: 0.3s;
+}
+.widget div button:nth-child(3) {
+  animation-delay: 0.4s;
+}
+.widget div button:nth-child(4) {
+  animation-delay: 0.5s;
+}
+.widget div button:nth-child(5) {
+  animation-delay: 0.6s;
+}
+.widget div button:nth-child(6) {
+  animation-delay: 0.7s;
+}
+.widget div button:nth-child(7) {
+  animation-delay: 0.8s;
+}
+.widget div button:nth-child(8) {
+  animation-delay: 0.9s;
+}
+.widget div button:nth-child(9) {
+  animation-delay: 1s;
+}
+.widget div button:nth-child(n + 10) {
+  animation-delay: 1s;
+}
+
+@keyframes slideLeft {
   0% {
+    -webkit-transform: translate(0.75rem);
+    transform: translate(0.75rem);
     opacity: 0;
   }
-  100% {
+  to {
+    -webkit-transform: translate(0);
+    transform: translate(0);
     opacity: 1;
   }
 }
 
-@keyframes avatarOpacity {
+@keyframes fadeIn {
   0% {
     opacity: 0;
+    visibility: hidden;
   }
-  100% {
+  to {
     opacity: 1;
+    visibility: visible;
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+    visibility: visible;
+  }
+  to {
+    opacity: 0;
+    visibility: hidden;
   }
 }
 
@@ -388,6 +470,10 @@ textarea:focus {
     -webkit-box-shadow 0.5s;
 }
 
-div > .button + .button {
-  margin-left: 0.75rem;
+.message .widget div .button {
+  margin-right: 0.75rem;
+}
+
+.message .widget div .button:last-child {
+  margin-right: 0;
 }

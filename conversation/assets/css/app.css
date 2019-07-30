@@ -49,7 +49,7 @@ body {
   width: 90%;
   max-width: 60rem;
   margin: 0 auto;
-  color: #152934;
+  color: #204763;
   font: 1em/1.2 "Roboto", DejaVu Sans, "Helvetica Neue", Helvetica, sans-serif;
   font-weight: normal;
   font-style: normal;
@@ -79,9 +79,12 @@ body {
   height: 100vh;
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: auto 5fr auto; /* shortned sintax is  grid-template-columns: repeat(3, 1fr); */
-  grid-gap: 0; /* sets both grid-column-gap and grid-row-gap */
-  gap: 0; /* use both grid-gap and gap for better browser support; gap is the newest */
+  grid-template-rows: auto 5fr auto;
+  grid-gap: 0;
+  gap: 0;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .container #chat-content {
@@ -148,14 +151,14 @@ body {
   /* investigation message bubble */
   justify-self: start;
   background-color: #fff;
-  border-radius: 10px 10px 10px 0;
+  border-radius: 15px 15px 15px 0;
 }
 
 .container #chat-wrapper .message-wrapper.user-message .message {
   /* user message bubble */
   justify-self: end;
   background-color: #d4e0e8;
-  border-radius: 10px 10px 0 10px;
+  border-radius: 15px 15px 0 15px;
 }
 
 .container #message-bar {
@@ -230,6 +233,37 @@ body {
   }
 }
 
+/* Animations and transitions
+*/
+
+.investigation-message .message {
+  /*animation: opacityChange 0.1875s cubic-bezier(0.215, 0.61, 0.355, 1);*/
+  animation: opacityChange 3s cubic-bezier(0.215, 0.61, 0.355, 1);
+  will-change: opacity;
+}
+
+.message .avatar span {
+  animation: avatarOpacity 2s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+@keyframes opacityChange {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes avatarOpacity {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 /* Buttons and inputs
 */
 
@@ -261,7 +295,7 @@ button,
   vertical-align: middle;
   margin: 0 0 1rem 0;
   padding: 0.5em 1em;
-  border: 1px solid transparent;
+  border: 1px solid rgba(32, 71, 99, 0.2);
   border-radius: 14px;
   -webkit-transition: background-color 0.25s ease-out, color 0.25s ease-out;
   transition: background-color 0.25s ease-out, color 0.25s ease-out;
@@ -271,16 +305,17 @@ button,
   line-height: 1;
   text-align: center;
   cursor: pointer;
-  background-color: #4d7d9e;
-  color: #fff;
+  background-color: rgba(32, 71, 99, 0.1);
+  color: #4d7d9e;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0) !important;
 }
 
 button:hover,
 button:focus,
 .button:hover,
 .button:focus {
-  background-color: #1b3c54;
-  color: #fff;
+  background-color: rgba(32, 71, 99, 0.2);
+  color: #204763;
   outline: 0;
 }
 
@@ -316,7 +351,7 @@ textarea {
   font-size: 1rem;
   font-weight: normal;
   line-height: 1.5;
-  color: #0a0a0a;
+  color: #204763;
   -webkit-transition: border-color 0.25s ease-in-out, -webkit-box-shadow 0.5s;
   transition: border-color 0.25s ease-in-out, -webkit-box-shadow 0.5s;
   /*transition: box-shadow 0.5s, border-color 0.25s ease-in-out;

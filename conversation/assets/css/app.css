@@ -1,0 +1,358 @@
+/* ~~~~~~~~~~~~~~~~~~~~~~ Custom styles 
+~~~~~~~~~~~~~~~~~~~~~~*/
+
+/*
+	Name: Correctiv CrowdNewsroom
+	Date: 2019
+	Description: Interface for Correctiv CrowdNewsroom conversational form.
+	Version: 1.0
+	Original author: J++ <http://jplusplus.org/>
+*/
+
+/* Typography
+*/
+
+@font-face {
+  font-family: "Roboto";
+  font-weight: 400;
+  font-style: normal;
+  src: local("Roboto Regular"),
+    url("../fonts/Roboto/Roboto-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-weight: 900;
+  font-style: normal;
+  src: local("Roboto Black"),
+    url("../fonts/Roboto/Roboto/Roboto-Black.ttf") format("truetype");
+}
+
+.investigation-title h1 {
+  font-size: 2em;
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+/* Colours Crowd Newsroom
+
+Dark blue: #204763 or rgba(32, 71, 99, 0.6)
+Text color: #152934
+Light blue: #d4e0e8
+Middle blue:  #4d7d9e
+*/
+
+/* Layout
+*/
+
+body {
+  width: 90%;
+  max-width: 60rem;
+  margin: 0 auto;
+  color: #152934;
+  font: 1em/1.2 "Roboto", DejaVu Sans, "Helvetica Neue", Helvetica, sans-serif;
+  font-weight: normal;
+  font-style: normal;
+  background: #ece9e6; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to top,
+    #ffffff,
+    #ece9e6
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to top,
+    #ffffff,
+    #ece9e6
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+@media screen and (max-width: 39.9375em) {
+  /* Small only */
+  body {
+    width: calc(100% - 2em);
+    max-width: calc(100% - 2em);
+    margin: 0 1em;
+  }
+}
+
+.container {
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 5fr auto; /* shortned sintax is  grid-template-columns: repeat(3, 1fr); */
+  grid-gap: 0; /* sets both grid-column-gap and grid-row-gap */
+  gap: 0; /* use both grid-gap and gap for better browser support; gap is the newest */
+}
+
+.container #chat-content {
+  overflow-y: auto;
+  min-height: 100%;
+}
+
+.container #chat-wrapper {
+  display: grid;
+  grid-template-columns: auto;
+  align-content: end;
+  min-height: 100%;
+}
+
+.container #chat-wrapper .message-wrapper {
+  display: grid;
+  grid-template-rows: 1;
+  grid-gap: 0.5em;
+  gap: 0.5em;
+  margin-bottom: 1.5em;
+}
+
+.container #chat-wrapper .message-wrapper.investigation-message {
+  grid-template-columns: 30px auto;
+  justify-content: start;
+}
+
+.container #chat-wrapper .message-wrapper.user-message {
+  grid-template-columns: auto 30px;
+  justify-content: end;
+}
+.container #chat-wrapper .message-wrapper.user-message .avatar {
+  /* re-order avatar and message */
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.container #chat-wrapper .message-wrapper .message {
+  background-color: #fff;
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1);
+  padding: 0.25em 1em;
+}
+
+.container #chat-wrapper .message-wrapper .avatar {
+  align-self: end;
+}
+
+.container #chat-wrapper .message-wrapper .avatar span {
+  display: block;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+.container #chat-wrapper .message-wrapper .investigation-avatar span {
+  background-color: #4d7d9e;
+}
+
+.container #chat-wrapper .message-wrapper .user-avatar span {
+  background-color: #ff6e7f;
+}
+
+.container #chat-wrapper .message-wrapper.investigation-message .message {
+  /* investigation message bubble */
+  justify-self: start;
+  background-color: #fff;
+  border-radius: 10px 10px 10px 0;
+}
+
+.container #chat-wrapper .message-wrapper.user-message .message {
+  /* user message bubble */
+  justify-self: end;
+  background-color: #d4e0e8;
+  border-radius: 10px 10px 0 10px;
+}
+
+.container #message-bar {
+  /*
+    color: #fff;
+    background-color: #204763;
+    padding: 2em;
+    border-top: 1px solid #204763;*/
+  padding: 1em 0 2em;
+}
+
+.container #message-bar #user-input-bar {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto;
+  grid-gap: 0;
+  gap: 0;
+}
+
+.container #message-bar #user-input-bar input,
+.container #message-bar #user-input-bar button.button {
+  display: inline-block;
+  margin-bottom: 0;
+}
+
+.container #message-bar #user-input-bar input[type="text"] {
+  border-radius: 2rem 0 0 2rem;
+  height: 2.8375rem;
+  margin: 0;
+  padding: 0.95rem;
+}
+
+.container #message-bar #user-input-bar .button {
+  border-radius: 0 2rem 2rem 0;
+  height: 2.8375rem;
+  margin: 0;
+  padding: 0.95rem;
+}
+
+.container #message-bar .error-messages {
+  font-size: 0.85em;
+  line-height: 1;
+  color: #c60f13;
+  background-color: #fcecec;
+  padding: 0.15em 1em;
+  margin-bottom: 1em;
+}
+
+/* Alternative layouts */
+
+@media screen and (min-width: 64em) {
+  /* Large and up message layout: all left aligned */
+  .container #chat-wrapper .message-wrapper.investigation-message,
+  .container #chat-wrapper .message-wrapper.user-message {
+    grid-template-columns: 30px 1fr;
+    justify-content: start;
+  }
+  .container #chat-wrapper .message-wrapper.investigation-message .message,
+  .container #chat-wrapper .message-wrapper.user-message .message {
+    max-width: 80%;
+  }
+
+  .container #chat-wrapper .message-wrapper.user-message .avatar {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .container #chat-wrapper .message-wrapper.investigation-message .message,
+  .container #chat-wrapper .message-wrapper.user-message .message {
+    justify-self: start;
+    border-radius: 10px 10px 10px 0;
+  }
+}
+
+/* Buttons and inputs
+*/
+
+/*
+button {
+  text-transform: none;
+  padding: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: 0;
+  border-radius: 0;
+  background: 0 0;
+  background-color: transparent;
+  color: #fff;
+  line-height: 1;
+  cursor: auto;
+  overflow: visible;
+}*/
+
+button::-moz-focus-inner {
+  border-style: none;
+  padding: 0;
+}
+
+button,
+.button {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 0 1rem 0;
+  padding: 0.5em 1em;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  -webkit-transition: background-color 0.25s ease-out, color 0.25s ease-out;
+  transition: background-color 0.25s ease-out, color 0.25s ease-out;
+  font-family: inherit;
+  font-size: 0.9rem;
+  -webkit-appearance: none;
+  line-height: 1;
+  text-align: center;
+  cursor: pointer;
+  background-color: #4d7d9e;
+  color: #fff;
+}
+
+button:hover,
+button:focus,
+.button:hover,
+.button:focus {
+  background-color: #1b3c54;
+  color: #fff;
+  outline: 0;
+}
+
+[type="text"],
+[type="password"],
+[type="date"],
+[type="datetime"],
+[type="datetime-local"],
+[type="month"],
+[type="week"],
+[type="email"],
+[type="number"],
+[type="search"],
+[type="tel"],
+[type="time"],
+[type="url"],
+[type="color"],
+textarea {
+  display: block;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
+  height: 2.4375rem;
+  margin: 0 0 1rem;
+  padding: 0.5rem;
+  border: 1px solid #d4e0e8; /* #cacaca */
+  border-radius: 0;
+  background-color: #fefefe;
+  /*-webkit-box-shadow: inset 0 1px 2px rgba(10, 10, 10, 0.1);
+          box-shadow: inset 0 1px 2px rgba(10, 10, 10, 0.1);
+  */
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: normal;
+  line-height: 1.5;
+  color: #0a0a0a;
+  -webkit-transition: border-color 0.25s ease-in-out, -webkit-box-shadow 0.5s;
+  transition: border-color 0.25s ease-in-out, -webkit-box-shadow 0.5s;
+  /*transition: box-shadow 0.5s, border-color 0.25s ease-in-out;
+  transition: box-shadow 0.5s, border-color 0.25s ease-in-out, -webkit-box-shadow 0.5s;*/
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+[type="text"]:focus,
+[type="password"]:focus,
+[type="date"]:focus,
+[type="datetime"]:focus,
+[type="datetime-local"]:focus,
+[type="month"]:focus,
+[type="week"]:focus,
+[type="email"]:focus,
+[type="number"]:focus,
+[type="search"]:focus,
+[type="tel"]:focus,
+[type="time"]:focus,
+[type="url"]:focus,
+[type="color"]:focus,
+textarea:focus {
+  outline: none;
+  border: 1px solid #4d7d9e; /* #8a8a8a */
+  background-color: #fff;
+  -webkit-box-shadow: 0 0 5px #cacaca;
+  box-shadow: 0 0 5px #cacaca;
+  -webkit-transition: border-color 0.25s ease-in-out, -webkit-box-shadow 0.5s;
+  transition: border-color 0.25s ease-in-out, -webkit-box-shadow 0.5s;
+  transition: box-shadow 0.5s, border-color 0.25s ease-in-out;
+  transition: box-shadow 0.5s, border-color 0.25s ease-in-out,
+    -webkit-box-shadow 0.5s;
+}
+
+div > .button + .button {
+  margin-left: 0.75rem;
+}

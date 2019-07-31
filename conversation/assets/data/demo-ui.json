@@ -1,0 +1,50 @@
+{
+  "slide-157adfrsa": {
+    "ui:order": ["slide-157-dummy"]
+  },
+  "banana-consumptionaerm": {
+    "ui:order": [
+      "text-input-447",
+      "dropdown-357",
+      "email-input-512",
+      "banana-consumption-location-956"
+    ],
+    "location-198": {
+      "ui:widget": "locationWidget"
+    },
+    "banana-consumption-location-274": {
+      "ui:widget": "locationWidget",
+      "ui:location_load": "Determining your location...",
+      "ui:location_error": "Error finding your location! Click to try again.",
+      "ui:location_button": "Click to send your location",
+      "ui:location_success": "Location found!",
+      "ui:location_safari_help":
+        "\nYou may need to allow location access on your system settings before you can turn them on for Safari. To do this:\n\n1. Open **System Preferences > Security & Privacy Preferences > Privacy > Location Services**.\n2. To allow for changes, click the lock in the bottom left.\n3. Check \"Enable Location Services\".\n"
+    },
+    "banana-consumption-location-956": {
+      "ui:widget": "locationWidget",
+      "ui:location_load": "Determining your location...",
+      "ui:location_error": "Error finding your location! Click to try again.",
+      "ui:location_button": "Click to send your location",
+      "ui:location_success": "Location found!",
+      "ui:location_help_url": "http://example.com"
+    },
+    "banana-consumption-one-line-346": {
+      "ui:widget": "oneLineWidget",
+      "classNames": "hidden-title",
+      "ui:placeholder": "Edit this field's label to BLAH"
+    },
+    "banana-consumption-one-line-421": {
+      "ui:widget": "oneLineWidget",
+      "classNames": "hidden-title",
+      "ui:options": {
+        "label": false
+      },
+      "ui:placeholder": "Edit this field's haha to change its text."
+    },
+    "banana-consumption-one-line-906": {
+      "ui:widget": "oneLineWidget",
+      "classNames": "hidden-title"
+    }
+  }
+}

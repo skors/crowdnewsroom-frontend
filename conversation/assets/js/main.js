@@ -8,12 +8,14 @@ var vm = new Vue({
     messages: [],
     formschema: "",
     uischema: "",
+    instanceId: null,
     fields: [],
     fieldIndex: -1,
     formData: new FormData(),
     loading: true,
     errored: false,
-    errorMessage: "Sample error message"
+    errorMessage: "Sample error message",
+    submitURL: ""
   },
   mounted: function() {
     console.log("mounted");
@@ -21,25 +23,31 @@ var vm = new Vue({
     var uri = window.location.search.substring(1);
     var params = new URLSearchParams(uri);
     var investigation = params.get("investigation");
-    if (!investigation) {
-      investigation = "where-do-you-live-again";
-    }
     var interviewer = params.get("interviewer");
-    if (!interviewer) {
-      interviewer = "wo-stehst-du-bahn";
-    }
 
-    var useStaging = true;
+    var useStaging = false;
     var backendURL;
     if (window.location.href.indexOf("localhost") > -1 && !useStaging) {
       console.log("Running on localhost");
       backendURL = "http://localhost:8000";
+      if (!investigation) {
+        investigation = "food-investigation";
+      }
+      if (!interviewer) {
+        interviewer = "banana-consumption";
+      }
     } else if (
       window.location.href.indexOf("crowdnewsroom.org") > -1 ||
       useStaging
     ) {
       console.log("Running on staging");
       backendURL = "https://crowdnewsroom-staging.correctiv.org";
+      if (!investigation) {
+        investigation = "where-do-you-live-again";
+      }
+      if (!interviewer) {
+        interviewer = "wo-stehst-du-bahn";
+      }
     } else if (window.location.href.indexOf("crowdnewsroom.org") > -1) {
       console.log("Running on production");
       backendURL = "https://forms.crowdnewsroom.org";
@@ -54,7 +62,7 @@ var vm = new Vue({
       investigation +
       "/forms/" +
       interviewer;
-    var submitURL = formURL + "/responses";
+    this.submitURL = formURL + "/responses";
 
     var vm = this;
     axios
@@ -62,6 +70,7 @@ var vm = new Vue({
       .then(function(response) {
         vm.formschema = response.data.form_json;
         vm.uischema = response.data.ui_schema_json;
+        vm.instanceId = response.data.id;
       })
       .catch(error => {
         console.log(error);
@@ -74,7 +83,7 @@ var vm = new Vue({
   computed: {
     currentField: function() {
       if (!this.fields[this.fieldIndex]) {
-        console.log("Error: currentField returns nothing!");
+        return null;
       }
       return this.fields[this.fieldIndex];
     },
@@ -132,14 +141,49 @@ var vm = new Vue({
 
     showNextField: function() {
       this.fieldIndex += 1;
-      var field = this.fields[this.fieldIndex];
-      this.messages.push({
-        from: "bot",
-        content: field.title,
-        field: field
+      console.log(this.fields.length);
+      console.log(this.fieldIndex);
+      if (this.fields && this.fieldIndex > this.fields.length - 1) {
+        // no more fields
+        this.messages.push({
+          from: "bot",
+          content: "All done! Submit?",
+          final: true
+        });
+      } else {
+        // show next field
+        var field = this.fields[this.fieldIndex];
+        this.messages.push({
+          from: "bot",
+          content: field.title,
+          field: field
+        });
+        var objDiv = document.getElementById("chat-content");
+        objDiv.scrollTop = objDiv.scrollHeight;
+      }
+    },
+
+    submitForm: function() {
+      // first convert formData to JSON
+      var data = {};
+      data.form_instance = this.instanceId;
+      data.json = {};
+
+      this.formData.forEach((value, key) => {
+        data.json[key] = value;
       });
-      var objDiv = document.getElementById("chat-content");
-      objDiv.scrollTop = objDiv.scrollHeight;
+      axios
+        .post(this.submitURL, data)
+        .then(function(response) {
+          vm.messages.push({
+            from: "bot",
+            content: "Your responses were submitted. Thank you!"
+          });
+        })
+        .catch(error => {
+          console.log(error);
+          vm.errored = true;
+        });
     },
 
     sendMessage: function() {

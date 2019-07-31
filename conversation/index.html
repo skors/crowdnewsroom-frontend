@@ -40,6 +40,10 @@
 
             <div class="message">
               <p>${ message.content }</p>
+              <!-- Submit form button -->
+              <button v-if="message.final" class="button" name="submit" type="button" 
+                @click="submitForm()">Yes!</button>
+
               <div v-if="message.field && message.field.widget" class="widget">
                 <!-- Email field (string) -->
                 <!-- Long text field -->

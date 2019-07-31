@@ -29,11 +29,32 @@ var vm = new Vue({
       interviewer = "wo-stehst-du-bahn";
     }
 
+    var useStaging = true;
+    var backendURL;
+    if (window.location.href.indexOf("localhost") > -1 && !useStaging) {
+      console.log("Running on localhost");
+      backendURL = "http://localhost:8000";
+    } else if (
+      window.location.href.indexOf("crowdnewsroom.org") > -1 ||
+      useStaging
+    ) {
+      console.log("Running on staging");
+      backendURL = "https://crowdnewsroom-staging.correctiv.org";
+    } else if (window.location.href.indexOf("crowdnewsroom.org") > -1) {
+      console.log("Running on production");
+      backendURL = "https://forms.crowdnewsroom.org";
+    } else {
+      console.log("Could not determine the backend URL!! Using staging.");
+      backendURL = "https://crowdnewsroom-staging.correctiv.org";
+    }
+
     var formURL =
-      "https://crowdnewsroom-staging.correctiv.org/forms/investigations/" +
+      backendURL +
+      "/forms/investigations/" +
       investigation +
       "/forms/" +
       interviewer;
+    var submitURL = formURL + "/responses";
 
     var vm = this;
     axios

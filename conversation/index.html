@@ -47,6 +47,9 @@
                 <!-- Signature  -->
 
                 <!-- <p>Widget: ${ message.field.widget }</p> -->
+
+                <!-- Oneline -->
+                <p v-if="message.field.widget == 'oneline'">${ field.label }</p>
                 <!-- Date -->
                 <input v-if="message.field.widget == 'date'"
                        :name="message.field.slug" :value="message.field.default" :id="message.field.key" :label="message.field.title" 

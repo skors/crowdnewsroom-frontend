@@ -58,10 +58,14 @@ var vm = new Vue({
   methods: {
     initChat: function() {
       // called when all form data (form + ui) has been loaded
+
       for (idx in this.formschema) {
         var slide = this.formschema[idx];
-        for (i in slide.schema.properties) {
-          var field = slide.schema.properties[i];
+        // to get the proper field ordering, we have to get it from
+        // the UIschema
+        var fieldOrdering = this.uischema[slide.schema.slug]["ui:order"];
+        for (i in fieldOrdering) {
+          var field = slide.schema.properties[fieldOrdering[i]];
           field.slideSlug = slide.schema.slug;
           var widgetType = this.getFieldType(field);
           if (widgetType == "text") {
@@ -72,7 +76,6 @@ var vm = new Vue({
         }
       }
       this.loading = false;
-      console.log(this.fields);
       this.showNextField();
     },
 

@@ -102,7 +102,9 @@
         </div>
         <div id="user-input-bar">
           <input name="user-text-input" id="input-box" type="text"
-            autocomplete="off" placeholder="Type here..." title="Type here..." :autofocus="'autofocus'"
+            :disabled="!currentFieldWantsText"
+            :placeholder="currentFieldWantsText ? 'Type here...' : 'Select an option above'" 
+            autocomplete="off" title="Type here..." :autofocus="'autofocus'"
             @change="sendMessage()">
           <button id="send-user-message" class="button small" @click="sendMessage()">Send</button>
         </div>

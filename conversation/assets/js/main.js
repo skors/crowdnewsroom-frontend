@@ -52,24 +52,50 @@ var vm = new Vue({
   },
   computed: {
     currentField: function() {
+      if (!this.fields[this.fieldIndex]) {
+        console.log("Error: currentField returns nothing!");
+      }
       return this.fields[this.fieldIndex];
+    },
+    currentFieldWantsText: function() {
+      if (this.currentField) {
+        // returns true if the current field requires text input by user
+        if (
+          ["", "email", "number", "longtext"].includes(this.currentField.widget)
+        ) {
+          return true;
+        }
+        return false;
+      }
     }
   },
   methods: {
     initChat: function() {
       // called when all form data (form + ui) has been loaded
 
-      for (idx in this.formschema) {
+      for (var idx in this.formschema) {
         var slide = this.formschema[idx];
         // to get the proper field ordering, we have to get it from
         // the UIschema
         var fieldOrdering = this.uischema[slide.schema.slug]["ui:order"];
-        for (i in fieldOrdering) {
+        for (var i in fieldOrdering) {
           var field = slide.schema.properties[fieldOrdering[i]];
           field.slideSlug = slide.schema.slug;
           var widgetType = this.getFieldType(field);
           if (widgetType == "text") {
             widgetType = "";
+          }
+          if (widgetType == "location") {
+            console.log("Location field info:");
+            fieldUI = this.uischema[slide.schema.slug][field.slug];
+            if ("ui:location_button" in fieldUI) {
+              console.log("I have location data! Please check this.");
+              field.location_label = "Click here to send your location";
+            } else {
+              field.location_label = "Click here to send your location";
+            }
+            console.log();
+            //console.log(this.uischema[slide.schema.slug][field.slug]['ui:location_button']);
           }
           field.widget = widgetType;
           this.fields.push(field);

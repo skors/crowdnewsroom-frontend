@@ -107,7 +107,8 @@
             :placeholder="currentFieldWantsText ? 'Type here...' : 'Select an option above'" 
             autocomplete="off" title="Type here..." :autofocus="'autofocus'"
             @change="sendMessage()">
-          <button id="send-user-message" class="button small" @click="sendMessage()">Send</button>
+          <button id="send-user-message" class="button small" 
+                  :disabled="!currentFieldWantsText" @click="sendMessage()">Send</button>
         </div>
       </div><!-- /#message-bar -->
     </div><!-- /#chat -->

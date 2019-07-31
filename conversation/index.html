@@ -53,11 +53,11 @@
                        :placeholder="message.field.placeholder" type="date">
                 <!-- Yes/No (boolean) -->
                 <div v-if="message.field.widget == 'boolean'" class="yes-no-buttons" >
-                  <button class="button expanded" :name="message.field.slug" type="button" 
-                    @click="sendOption(message.field, message.field.enumNames[0])">
+                  <button class="button expanded" :name="message.field.slug" type="button" :disabled="message.field.answered"
+                    @click="sendOption($event, message.field, message.field.enumNames[0])">
                     ${ message.field.enumNames[0] }</button>
-                  <button class="button expanded" :name="message.field.slug" type="button" 
-                    @click="sendOption(message.field, message.field.enumNames[1])">
+                  <button class="button expanded" :name="message.field.slug" type="button" :disabled="message.field.answered"
+                    @click="sendOption($event, message.field, message.field.enumNames[1])">
                     ${ message.field.enumNames[1] }</button>
                 </div>
                 <!-- Checkboxes -->
@@ -71,7 +71,8 @@
                 <div v-if="message.field.widget == 'dropdown' || message.field.widget == 'radio'">
                   <button v-for="option in message.field.enum" 
                           class="button expanded" :name="message.field.slug" type="button"
-                          @click="sendOption(message.field, option)">
+                          :disabled="message.field.answered"
+                          @click="sendOption($event, message.field, option)">
                     ${ option }
                   </button>
                 </div>

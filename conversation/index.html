@@ -83,7 +83,7 @@
                 <div v-if="message.field.widget == 'location'" class="location">
                   <button class="button" :id="message.field.key" @click="setLocation($event, message.field)">
                     <i class="fi-marker"></i>
-                    <span>${ uischema[message.field.slideSlug][message.field.slug]['ui:location_button'] }</span>
+                    <span>${ message.field.location_label }</span>
                   </button>
                 </div>
                 <!-- File upload -->

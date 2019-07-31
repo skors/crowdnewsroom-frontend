@@ -5,7 +5,7 @@ var vm = new Vue({
   name: "chat",
   delimiters: ["${", "}"],
   data: {
-    messages: [{ from: "user", content: "Hello bot!" }],
+    messages: [],
     formschema: "",
     uischema: "",
     fields: [],
@@ -96,6 +96,10 @@ var vm = new Vue({
             }
             console.log();
             //console.log(this.uischema[slide.schema.slug][field.slug]['ui:location_button']);
+          } else if (
+            ["dropdown", "radio", "boolean", "checkboxes"].includes(widgetType)
+          ) {
+            field.answered = false;
           }
           field.widget = widgetType;
           this.fields.push(field);
@@ -113,6 +117,8 @@ var vm = new Vue({
         content: field.title,
         field: field
       });
+      var objDiv = document.getElementById("chat-content");
+      objDiv.scrollTop = objDiv.scrollHeight;
     },
 
     sendMessage: function() {
@@ -134,9 +140,13 @@ var vm = new Vue({
         this.showNextField();
       }
     },
-    sendOption: function(field, value) {
+    sendOption: function(ev, field, value) {
       // for multiple-choice fields
       this.formData.set(field.slug, value);
+      // mark selected option
+      ev.target.className += " selected";
+      // ensure we disable the buttons
+      field.answered = true;
       this.showNextField();
     },
     setFile: function(ev, field) {

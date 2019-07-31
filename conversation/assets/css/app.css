@@ -42,12 +42,18 @@
   line-height: 1.2;
 }
 
-/* Colours Crowd Newsroom
+/* Colours
 
 Dark blue: #204763 or rgba(32, 71, 99, 1)
 Text color: #152934 
 Light blue: #d4e0e8 or rgba(212, 224, 232, 1)
 Middle blue:  #4d7d9e or rgba(77, 125, 158, 1)
+
+Alert red: #c60f13 or rgba(198, 15, 19, 1)
+Alert light red: #fcecec or rgba(252, 236, 236, 1)
+Success green: #5da423 or rgba(93, 164, 35, 1)
+Success light green: #f1f7ec or rgba(241, 247, 236, 1)
+
 */
 
 /* Buttons and inputs
@@ -115,6 +121,38 @@ button.selected,
 .button[disabled]:focus {
   border: 1px solid rgba(32, 71, 99, 0.1);
   background-color: rgba(212, 224, 232, 0.2);
+}
+
+/* 
+Alert red: #c60f13 or rgba(198, 15, 19, 1)
+Alert light red: #fcecec or rgba(252, 236, 236, 1)
+Success green: #5da423 or rgba(93, 164, 35, 1)
+Success light green: #f1f7ec or rgba(241, 247, 236, 1)
+
+*/
+
+.button.alert {
+  background-color: #fcecec;
+  border-color: rgba(198, 15, 19, 0.4);
+  color: #c60f13;
+}
+
+.button.alert:hover,
+.button.alert:focus {
+  background-color: rgba(198, 15, 19, 0.2);
+  border-color: rgba(198, 15, 19, 0.4);
+}
+
+.button.success {
+  background-color: #f1f7ec;
+  border-color: rgba(93, 164, 35, 0.4);
+  color: #5da423;
+}
+
+.button.success:hover,
+.button.success:focus {
+  background-color: rgba(93, 164, 35, 0.2);
+  border-color: rgba(93, 164, 35, 0.4);
 }
 
 [type="text"],
@@ -326,6 +364,10 @@ body {
 
 .message .widget .button i {
   font-size: 1.125rem;
+}
+
+.message .widget .location-errors:empty {
+  display: none;
 }
 
 /* User message bar

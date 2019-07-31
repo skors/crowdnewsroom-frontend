@@ -5,7 +5,7 @@ var vm = new Vue({
   name: "chat",
   delimiters: ["${", "}"],
   data: {
-    messages: [{ from: "user", content: "Hello bot!" }],
+    messages: [],
     formschema: "",
     uischema: "",
     fields: [],

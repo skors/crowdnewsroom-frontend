@@ -9,6 +9,7 @@
     <meta name="description" content="">
 
     <link rel="stylesheet" href="assets/css/normalize.css">
+    <link rel="stylesheet" href="assets/fonts/foundation-icons/foundation-icons.css">
     <link rel="stylesheet" href="assets/css/app.css">
   </head>
   <body>
@@ -56,10 +57,10 @@
                        :placeholder="message.field.placeholder" type="date">
                 <!-- Yes/No (boolean) -->
                 <div v-if="message.field.widget == 'boolean'" class="yes-no-buttons" >
-                  <button class="button expanded" :name="message.field.slug" type="button" :disabled="message.field.answered"
+                  <button class="button" :name="message.field.slug" type="button" :disabled="message.field.answered"
                     @click="sendOption($event, message.field, message.field.enumNames[0])">
                     ${ message.field.enumNames[0] }</button>
-                  <button class="button expanded" :name="message.field.slug" type="button" :disabled="message.field.answered"
+                  <button class="button" :name="message.field.slug" type="button" :disabled="message.field.answered"
                     @click="sendOption($event, message.field, message.field.enumNames[1])">
                     ${ message.field.enumNames[1] }</button>
                 </div>
@@ -73,7 +74,7 @@
                 <!-- Dropdown / Radio -->
                 <div v-if="message.field.widget == 'dropdown' || message.field.widget == 'radio'">
                   <button v-for="option in message.field.enum" 
-                          class="button expanded" :name="message.field.slug" type="button"
+                          class="button" :name="message.field.slug" type="button"
                           :disabled="message.field.answered"
                           @click="sendOption($event, message.field, option)">
                     ${ option }
@@ -111,7 +112,7 @@
             autocomplete="off" title="Type here..." :autofocus="'autofocus'"
             @change="sendMessage()">
           <button id="send-user-message" class="button small" 
-                  :disabled="!currentFieldWantsText" @click="sendMessage()">Send</button>
+                  :disabled="!currentFieldWantsText" @click="sendMessage()">&#10140;</button>
         </div>
       </div><!-- /#message-bar -->
     </div><!-- /#chat -->

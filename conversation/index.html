@@ -110,7 +110,7 @@
           <p>${ errorMessage }</p>
         </div>
         <div id="user-input-bar">
-          <input name="user-text-input" id="input-box" type="text"
+          <input name="user-text-input" id="input-box" ref="inputBox" type="text"
             :disabled="!currentFieldWantsText"
             :placeholder="currentFieldWantsText ? 'Type here...' : 'Select an option above'" 
             autocomplete="off" title="Type here..." :autofocus="'autofocus'"

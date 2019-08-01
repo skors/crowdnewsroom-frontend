@@ -111,16 +111,16 @@ var vm = new Vue({
         for (var i in fieldOrdering) {
           var field = slide.schema.properties[fieldOrdering[i]];
           field.slideSlug = slide.schema.slug;
+          if (this.uischema[field.slideSlug][field.slug]) {
+            field.ui = this.uischema[field.slideSlug][field.slug];
+          }
           var widgetType = this.getFieldType(field);
           if (widgetType == "text") {
             widgetType = "";
           }
           if (widgetType == "location") {
-            console.log("Location field info:");
-            fieldUI = this.uischema[slide.schema.slug][field.slug];
-            if ("ui:location_button" in fieldUI) {
-              console.log("I have location data! Please check this.");
-              field.location_label = "Click here to send your location";
+            if ("ui:location_button" in field.ui) {
+              field.location_label = field.ui["ui:location_button"];
             } else {
               field.location_label = "Click here to send your location";
             }
@@ -246,15 +246,24 @@ var vm = new Vue({
     },
     setLocation: function(ev, field) {
       var vm = this;
+      var button = ev.target;
       navigator.geolocation.getCurrentPosition(
         function(position) {
           var value =
             position.coords.latitude + "," + position.coords.longitude;
           vm.formData.append(field.slug, value);
+          button.className = "button success";
+          button.childNodes[2].textContent = field.ui["ui:location_success"];
+          button.disabled = true;
           vm.showNextField();
         },
         function(error) {
           console.log(error);
+          console.log(field);
+          console.log(field.ui);
+
+          button.className = "button alert";
+          button.childNodes[2].textContent = field.ui["ui:location_error"];
           /*
           var errorMessage = error.message;
           if (error.message) {
@@ -281,7 +290,6 @@ var vm = new Vue({
             label: widget.props.options.location_error,
             stateclass: "button alert"
           });
-          return widget.props.onChange("");
           */
         }
       );

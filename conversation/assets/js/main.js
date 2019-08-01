@@ -152,9 +152,12 @@ var vm = new Vue({
       } else {
         // show next field
         var field = this.fields[this.fieldIndex];
+        var question = this.uischema[field.slideSlug][field.slug][
+          "ui:question"
+        ];
         this.messages.push({
           from: "bot",
-          content: field.title,
+          content: question ? question : field.title,
           field: field
         });
         if (["", "email", "number", "longtext"].includes(field.widget)) {
@@ -222,6 +225,8 @@ var vm = new Vue({
       var file = ev.target.files[0];
       var fileData;
       var vm = this;
+      // FileReader will convert the file to a base64 representation, as is
+      // required by the CNR backend
       var reader = new FileReader();
       reader.addEventListener(
         "load",
@@ -236,8 +241,7 @@ var vm = new Vue({
         },
         false
       );
-      // following line is unnecessary, but for some reason it breaks all the rest
-      // if we take it out!
+      // now read and save the uploaded file
       fileData = reader.readAsDataURL(file);
     },
     setLocation: function(ev, field) {

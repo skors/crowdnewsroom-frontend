@@ -158,9 +158,10 @@ var vm = new Vue({
       } else {
         // show next field
         var field = this.fields[this.fieldIndex];
-        var question = this.uischema[field.slideSlug][field.slug][
-          "ui:question"
-        ];
+        var question =
+          "ui" in field && "ui:question" in field.ui
+            ? field.ui["ui:question"]
+            : field.title;
         this.messages.push({
           from: "bot",
           content: question ? question : field.title,

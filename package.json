@@ -38,7 +38,7 @@
     "build": "npm-run-all build-css build-js build-conversation",
     "watch-conversation":
       "cp -r conversation public && chokidar 'conversation/**' -c \"cp {path} public/{path}\" ",
-    "build-conversation": "cp -r conversation public",
+    "build-conversation": "cp -r conversation build/",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "precommit": "pretty-quick --staged && CI=true yarn test",

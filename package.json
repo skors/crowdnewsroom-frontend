@@ -33,11 +33,12 @@
     "build-css": "node-sass-chokidar src/ -o src/",
     "watch-css": "npm run build-css && node-sass-chokidar src/ -o src/ --watch",
     "start-js": "react-scripts start",
-    "start": "npm-run-all -p watch-css start-js conversation-watch",
+    "start": "npm-run-all -p watch-css start-js watch-conversation",
     "build-js": "react-scripts build",
-    "build": "npm-run-all build-css build-js",
-    "conversation-watch":
+    "build": "npm-run-all build-css build-js build-conversation",
+    "watch-conversation":
       "cp -r conversation public && chokidar 'conversation/**' -c \"cp {path} public/{path}\" ",
+    "build-conversation": "cp -r conversation public",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "precommit": "pretty-quick --staged && CI=true yarn test",

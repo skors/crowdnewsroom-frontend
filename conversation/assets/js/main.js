@@ -136,13 +136,12 @@ var vm = new Vue({
         }
       }
       this.loading = false;
+      this.$refs.inputBox.focus();
       this.showNextField();
     },
 
     showNextField: function() {
       this.fieldIndex += 1;
-      console.log(this.fields.length);
-      console.log(this.fieldIndex);
       if (this.fields && this.fieldIndex > this.fields.length - 1) {
         // no more fields
         this.messages.push({
@@ -158,6 +157,10 @@ var vm = new Vue({
           content: field.title,
           field: field
         });
+        if (["", "email", "number", "longtext"].includes(field.widget)) {
+          var el = document.getElementById("input-box");
+          this.$refs.inputBox.focus();
+        }
         var objDiv = document.getElementById("chat-content");
         objDiv.scrollTop = objDiv.scrollHeight;
       }
@@ -193,8 +196,8 @@ var vm = new Vue({
         this.messages.push({ from: "user", content: msg });
         this.formData.set(this.currentField.slug, msg);
         // clear message box and return focus to it
-        el.value = "";
-        el.focus();
+        this.$refs.inputBox.value = "";
+        this.$refs.inputBox.focus();
         var objDiv = document.getElementById("chat-content");
         objDiv.scrollTop = objDiv.scrollHeight;
 
@@ -216,11 +219,26 @@ var vm = new Vue({
     },
     setFile: function(ev, field) {
       // for file upload fields
-      // var f = ev.target.files[0]
-      var f = "file";
-      console.log(f);
-      this.formData.append(field.slug, f);
-      this.showNextField();
+      var file = ev.target.files[0];
+      var fileData;
+      var vm = this;
+      var reader = new FileReader();
+      reader.addEventListener(
+        "load",
+        function() {
+          fileData = reader.result;
+          fileData = fileData.replace(
+            ";base64",
+            ";name=" + file.name + ";base64"
+          );
+          vm.formData.append(field.slug, fileData);
+          vm.showNextField();
+        },
+        false
+      );
+      // following line is unnecessary, but for some reason it breaks all the rest
+      // if we take it out!
+      fileData = reader.readAsDataURL(file);
     },
     setLocation: function(ev, field) {
       var vm = this;
@@ -229,7 +247,6 @@ var vm = new Vue({
           var value =
             position.coords.latitude + "," + position.coords.longitude;
           vm.formData.append(field.slug, value);
-          console.log(value);
           vm.showNextField();
         },
         function(error) {

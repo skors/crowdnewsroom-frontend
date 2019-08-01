@@ -1,0 +1,130 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Crowd Newsroom Conversational UI</title>
+    <meta name="description" content="">
+
+    <link rel="stylesheet" href="assets/css/normalize.css">
+    <link rel="stylesheet" href="assets/fonts/foundation-icons/foundation-icons.css">
+    <link rel="stylesheet" href="assets/css/app.css">
+  </head>
+  <body>
+
+    <div class="container" id="chat">
+      <div id="investigation-title">
+        <h1 v-if="loading">Loading conversational UI...</h1>
+        <h1 v-if="!loading">Investigation name</h1>
+      </div>
+
+      <div id="chat-content">
+        <div id="chat-wrapper">
+
+          <div 
+             v-for="message in messages"
+             v-bind:class="{ 'investigation-message': message.from === 'bot', 'user-message': message.from === 'user' }"
+             class="message-wrapper"
+             >
+
+            <div v-if="message.from === 'bot'" class="investigation-avatar avatar">
+              <span>&nbsp;</span>
+            </div>
+            
+
+            <div v-if="message.from === 'user'" class="user-avatar avatar">
+              <span>&nbsp;</span>
+            </div>
+
+            <div class="message">
+              <p>${ message.content }</p>
+              <!-- Submit form button -->
+              <button v-if="message.final" class="button" name="submit" type="button" 
+                @click="submitForm()">Yes!</button>
+
+              <div v-if="message.field && message.field.widget" class="widget">
+                <!-- Email field (string) -->
+                <!-- Long text field -->
+                <!-- Simple text field (string) -->
+                <!-- Numeric field (string) -->
+                <!-- Signature  -->
+
+                <!-- <p>Widget: ${ message.field.widget }</p> -->
+
+                <!-- Oneline -->
+                <p v-if="message.field.widget == 'oneline'">${ field.label }</p>
+                <!-- Date -->
+                <input v-if="message.field.widget == 'date'"
+                       :name="message.field.slug" :value="message.field.default" :id="message.field.key" :label="message.field.title" 
+                       :placeholder="message.field.placeholder" type="date">
+                <!-- Yes/No (boolean) -->
+                <div v-if="message.field.widget == 'boolean'" class="yes-no-buttons" >
+                  <button class="button" :name="message.field.slug" type="button" :disabled="message.field.answered"
+                    @click="sendOption($event, message.field, message.field.enumNames[0])">
+                    ${ message.field.enumNames[0] }</button>
+                  <button class="button" :name="message.field.slug" type="button" :disabled="message.field.answered"
+                    @click="sendOption($event, message.field, message.field.enumNames[1])">
+                    ${ message.field.enumNames[1] }</button>
+                </div>
+                <!-- Checkboxes -->
+                <div v-if="message.field.widget == 'checkboxes'" class="checkboxes">
+                  <div class="checkbox" v-for="option in message.field.items.enum">
+                    <input :name="message.field.slug" type="checkbox">
+                    <label>${ option }</label>
+                  </div>
+                </div>
+                <!-- Dropdown / Radio -->
+                <div v-if="message.field.widget == 'dropdown' || message.field.widget == 'radio'">
+                  <button v-for="option in message.field.enum" 
+                          class="button" :name="message.field.slug" type="button"
+                          :disabled="message.field.answered"
+                          @click="sendOption($event, message.field, option)">
+                    ${ option }
+                  </button>
+                </div>
+                <!-- Location -->
+                <div v-if="message.field.widget == 'location'" class="location">
+                  <button class="button" :id="message.field.key" @click="setLocation($event, message.field)">
+                    <i class="fi-marker"></i>
+                    <span>${ message.field.location_label }</span>
+                  </button>
+                </div>
+                <!-- File upload -->
+                <input v-if="message.field.widget == 'fileupload'" @change="setFile($event, message.field)"
+                       :name="message.field.slug" type="file">
+                <!-- Image upload -->
+                <input v-if="message.field.widget == 'imageupload'"  @change="setFile($event, message.field)"
+                       :name="message.field.slug" type="file" accept="image/*" capture="environment">
+
+              </div>
+            </div>
+
+          </div><!-- /.message-wrapper -->
+        </div><!-- /#chat-wrapper -->
+      </div><!-- /.chat-content -->
+
+      <div id="message-bar">
+        <div class="error-messages" v-if="errored">
+          <p>${ errorMessage }</p>
+        </div>
+        <div id="user-input-bar">
+          <input name="user-text-input" id="input-box" type="text"
+            :disabled="!currentFieldWantsText"
+            :placeholder="currentFieldWantsText ? 'Type here...' : 'Select an option above'" 
+            autocomplete="off" title="Type here..." :autofocus="'autofocus'"
+            @change="sendMessage()">
+          <button id="send-user-message" class="button small" 
+                  :disabled="!currentFieldWantsText" @click="sendMessage()">&#10140;</button>
+        </div>
+      </div><!-- /#message-bar -->
+    </div><!-- /#chat -->
+
+
+    <script src="assets/js/vendor/jquery-3.4.1.min.js"></script>
+    <script src="assets/js/vendor/vue-2.6.10.js"></script>
+    <script src="assets/js/vendor/axios-0.18.0.js"></script>
+    <script src="assets/js/main.js"></script>
+  </body>
+</html>

@@ -54,6 +54,12 @@ var vm = new Vue({
     } else {
       console.log("Could not determine the backend URL!! Using staging.");
       backendURL = "https://crowdnewsroom-staging.correctiv.org";
+      if (!investigation) {
+        investigation = "where-do-you-live-again";
+      }
+      if (!interviewer) {
+        interviewer = "wo-stehst-du-bahn";
+      }
     }
 
     var formURL =

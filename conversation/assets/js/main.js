@@ -231,6 +231,10 @@ var vm = new Vue({
     sendOption: function(ev, field, value) {
       // for multiple-choice fields
       this.formData.set(field.slug, value);
+      this.messages.push({
+        from: "user",
+        content: value
+      });
       // mark selected option
       ev.target.className += " selected";
       // ensure we disable the buttons

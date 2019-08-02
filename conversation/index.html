@@ -76,7 +76,7 @@
                   </div>
                 </div>
                 <!-- Dropdown / Radio -->
-                <div v-if="message.field.widget == 'dropdown' || message.field.widget == 'radio'">
+                <div v-if="message.field.widget == 'dropdown' || message.field.widget == 'radio' && !message.field.answered">
                   <button v-for="option in message.field.enum" 
                           class="button" :name="message.field.slug" type="button"
                           :disabled="message.field.answered"

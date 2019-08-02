@@ -181,7 +181,11 @@ var vm = new Vue({
       }
     },
 
-    submitForm: function() {
+    submitForm: function(ev) {
+      var button = ev.target;
+      button.textContent = "Sending...";
+      button.disabled = true;
+
       // first convert formData to JSON
       var data = {};
       data.form_instance = this.instanceId;
@@ -193,6 +197,7 @@ var vm = new Vue({
       axios
         .post(this.submitURL, data)
         .then(function(response) {
+          button.textContent = "Sent!";
           vm.messages.push({
             from: "bot",
             content: "Your responses were submitted. Thank you!"

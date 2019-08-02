@@ -138,7 +138,10 @@ var vm = new Vue({
           ) {
             field.answered = false;
           }
-          if (slide.schema.required.includes(field.slug)) {
+          if (
+            "required" in slide.schema &&
+            slide.schema.required.includes(field.slug)
+          ) {
             field.required = true;
           }
           this.fields.push(field);

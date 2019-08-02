@@ -29,16 +29,16 @@
              class="message-wrapper"
              >
 
-            <div v-if="message.from === 'bot'" class="investigation-avatar avatar">
+            <div v-if="message.from === 'bot'" class="investigation-avatar avatar cell">
               <span>&nbsp;</span>
             </div>
             
 
-            <div v-if="message.from === 'user'" class="user-avatar avatar">
+            <div v-if="message.from === 'user'" class="user-avatar avatar cell">
               <span>&nbsp;</span>
             </div>
 
-            <div class="message">
+            <div class="message cell">
               <p>${ message.content }</p>
               <!-- Submit form button -->
               <button v-if="message.final" class="button" name="submit" type="button" 
@@ -100,11 +100,10 @@
 
               </div>
             </div><!-- /.message -->
+            <div class="extra-actions cell">
+              <button class="button hollow"><i class="fi-fast-forward"></i> Skip question</button>
+            </div>
           </div><!-- /.message-wrapper -->
-          
-          <div class="extra-actions">
-            <p><button class="button hollow"><i class="fi-fast-forward"></i> Skip question</button></p>
-          </div>
           
         </div><!-- /#chat-wrapper -->
       </div><!-- /.chat-content -->

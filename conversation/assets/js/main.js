@@ -167,12 +167,17 @@ var vm = new Vue({
           content: question ? question : field.title,
           field: field
         });
+
         if (["", "email", "number", "longtext"].includes(field.widget)) {
           var el = document.getElementById("input-box");
           this.$refs.inputBox.focus();
         }
         var objDiv = document.getElementById("chat-content");
         objDiv.scrollTop = objDiv.scrollHeight;
+
+        if (field.widget == "oneline") {
+          this.showNextField();
+        }
       }
     },
 

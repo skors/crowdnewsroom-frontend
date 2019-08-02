@@ -124,6 +124,7 @@ var vm = new Vue({
           if (widgetType == "text") {
             widgetType = "";
           }
+          field.widget = widgetType;
           if (widgetType == "location") {
             if ("ui:location_button" in field.ui) {
               field.location_label = field.ui["ui:location_button"];
@@ -137,7 +138,12 @@ var vm = new Vue({
           ) {
             field.answered = false;
           }
-          field.widget = widgetType;
+          if (
+            "required" in slide.schema &&
+            slide.schema.required.includes(field.slug)
+          ) {
+            field.required = true;
+          }
           this.fields.push(field);
         }
       }
@@ -179,6 +185,9 @@ var vm = new Vue({
           this.showNextField();
         }
       }
+    },
+    skipQuestion: function() {
+      this.showNextField();
     },
 
     submitForm: function(ev) {

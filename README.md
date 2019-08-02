@@ -10,19 +10,39 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Installation
 
-```bash
-yarn install
-# or npm install
-```
-
-## Running
-
-You can start the app with `yarn start` but you will have to set the `REACT_APP_BACKEND_URL` environment
-variable to defined which backend to talk to (say your local one vs a publicly deployed instance).
+First, ensure you have `yarn` installed, and run:
 
 ```bash
-env REACT_APP_BACKEND_URL=https://mycrowdnewsroom.example.org yarn start
+make install
 ```
+
+If you don't have, or can't use `yarn`, you can also run `npm install`.
+
+## Running locally for development
+
+```bash
+make serve
+```
+
+## Building for deployment
+
+The app has a few run commands according to whether you're running locally, on the staging server or on production.
+
+```bash
+make build-local
+make build-staging
+make build-production
+```
+
+The output files will be in the `build/` directory.
+
+Currently, the backend URLs used for each command are:
+
+* **build-local**: https://localhost:8000
+* **build-staging**: https://crowdnewsroom-staging.correctiv.org
+* **build-production**: https://admin.crowdnewsroom.org
+
+If you need to change these, edit the `Makefile` and update them accordingly.
 
 ## Testing
 

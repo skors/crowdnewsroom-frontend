@@ -254,6 +254,8 @@ var vm = new Vue({
     setLocation: function(ev, field) {
       var vm = this;
       var button = ev.target;
+      button.className = "button loading";
+      button.childNodes[2].textContent = field.ui["ui:location_load"];
       navigator.geolocation.getCurrentPosition(
         function(position) {
           var value =

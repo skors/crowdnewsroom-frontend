@@ -108,8 +108,8 @@
 
               </div>
             </div><!-- /.message -->
-            <div class="extra-actions cell">
-              <button class="button hollow"><i class="fi-fast-forward"></i> Skip question</button>
+            <div class="extra-actions cell" v-if="message.field === currentField">
+              <button class="button hollow" @click="skipQuestion()"><i class="fi-fast-forward"></i> Skip question</button>
             </div>
           </div><!-- /.message-wrapper -->
           <div ref="skipButton"></div> <!-- This is for the scrolling -->

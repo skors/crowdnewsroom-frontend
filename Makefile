@@ -16,6 +16,8 @@ build-production:
 	env REACT_APP_BACKEND_URL=https://admin.crowdnewsroom.org yarn build
 	cp -rf conversation build
 
+deploy-staging: build-staging
+	rsync -arvu build/ dh:~/www/cnr.koizo.org/
 clean:
 	rm -fr build
 

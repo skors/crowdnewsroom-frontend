@@ -42,7 +42,7 @@
               <p>${ message.content }</p>
               <!-- Submit form button -->
               <button v-if="message.final" class="button" name="submit" type="button" 
-                @click="submitForm()">Yes!</button>
+                @click="submitForm($event)">Yes!</button>
 
               <div v-if="message.field && message.field.widget" class="widget">
                 <!-- Email field (string) -->
@@ -54,7 +54,7 @@
                 <!-- <p>Widget: ${ message.field.widget }</p> -->
 
                 <!-- Oneline -->
-                <p v-if="message.field.widget == 'oneline'">${ field.label }</p>
+                <p v-if="message.field.widget == 'oneline'">${ message.field.placeholder }</p>
                 <!-- Date -->
                 <input v-if="message.field.widget == 'date'"
                        :name="message.field.slug" :value="message.field.default" :id="message.field.key" :label="message.field.title" 
@@ -76,7 +76,7 @@
                   </div>
                 </div>
                 <!-- Dropdown / Radio -->
-                <div v-if="message.field.widget == 'dropdown' || message.field.widget == 'radio'">
+                <div v-if="message.field.widget == 'dropdown' || message.field.widget == 'radio' && !message.field.answered">
                   <button v-for="option in message.field.enum" 
                           class="button" :name="message.field.slug" type="button"
                           :disabled="message.field.answered"

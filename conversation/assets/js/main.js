@@ -54,6 +54,12 @@ var vm = new Vue({
     } else {
       console.log("Could not determine the backend URL!! Using staging.");
       backendURL = "https://crowdnewsroom-staging.correctiv.org";
+      if (!investigation) {
+        investigation = "where-do-you-live-again";
+      }
+      if (!interviewer) {
+        interviewer = "wo-stehst-du-bahn";
+      }
     }
 
     var formURL =
@@ -152,24 +158,34 @@ var vm = new Vue({
       } else {
         // show next field
         var field = this.fields[this.fieldIndex];
-        var question = this.uischema[field.slideSlug][field.slug][
-          "ui:question"
-        ];
+        var question =
+          "ui" in field && "ui:question" in field.ui
+            ? field.ui["ui:question"]
+            : field.title;
         this.messages.push({
           from: "bot",
           content: question ? question : field.title,
           field: field
         });
+
         if (["", "email", "number", "longtext"].includes(field.widget)) {
           var el = document.getElementById("input-box");
           this.$refs.inputBox.focus();
         }
         var objDiv = document.getElementById("chat-content");
         objDiv.scrollTop = objDiv.scrollHeight;
+
+        if (field.widget == "oneline") {
+          this.showNextField();
+        }
       }
     },
 
-    submitForm: function() {
+    submitForm: function(ev) {
+      var button = ev.target;
+      button.textContent = "Sending...";
+      button.disabled = true;
+
       // first convert formData to JSON
       var data = {};
       data.form_instance = this.instanceId;
@@ -181,6 +197,7 @@ var vm = new Vue({
       axios
         .post(this.submitURL, data)
         .then(function(response) {
+          button.textContent = "Sent!";
           vm.messages.push({
             from: "bot",
             content: "Your responses were submitted. Thank you!"
@@ -214,6 +231,10 @@ var vm = new Vue({
     sendOption: function(ev, field, value) {
       // for multiple-choice fields
       this.formData.set(field.slug, value);
+      this.messages.push({
+        from: "user",
+        content: value
+      });
       // mark selected option
       ev.target.className += " selected";
       // ensure we disable the buttons
@@ -247,6 +268,8 @@ var vm = new Vue({
     setLocation: function(ev, field) {
       var vm = this;
       var button = ev.target;
+      button.className = "button loading";
+      button.childNodes[2].textContent = field.ui["ui:location_load"];
       navigator.geolocation.getCurrentPosition(
         function(position) {
           var value =

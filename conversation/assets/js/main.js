@@ -152,6 +152,25 @@ var vm = new Vue({
       this.showNextField();
     },
 
+    scrollChatArea: function() {
+      // ensures chat area is always scrolled to bottom
+      var options = {
+        container: "#chat-content",
+        duration: 500,
+        easing: "ease",
+        offset: 0,
+        force: true,
+        cancelable: true,
+        onStart: false,
+        onDone: false,
+        onCancel: false,
+        x: false,
+        y: true
+      };
+      console.log(this.$refs.skipButton);
+      this.$scrollTo(this.$refs.skipButton, 100, options);
+    },
+
     showNextField: function() {
       this.fieldIndex += 1;
       if (this.fields && this.fieldIndex > this.fields.length - 1) {
@@ -178,12 +197,10 @@ var vm = new Vue({
           var el = document.getElementById("input-box");
           this.$refs.inputBox.focus();
         }
-        var objDiv = document.getElementById("chat-content");
-        objDiv.scrollTop = objDiv.scrollHeight;
-
         if (field.widget == "oneline") {
           this.showNextField();
         }
+        this.scrollChatArea();
       }
     },
     skipQuestion: function() {
@@ -211,6 +228,7 @@ var vm = new Vue({
             from: "bot",
             content: "Your responses were submitted. Thank you!"
           });
+          vm.scrollChatArea();
         })
         .catch(error => {
           console.log(error);
@@ -227,8 +245,7 @@ var vm = new Vue({
         // clear message box and return focus to it
         this.$refs.inputBox.value = "";
         this.$refs.inputBox.focus();
-        var objDiv = document.getElementById("chat-content");
-        objDiv.scrollTop = objDiv.scrollHeight;
+        this.scrollChatArea();
 
         for (var pair of this.formData.entries()) {
           console.log(pair[0] + ", " + pair[1]);

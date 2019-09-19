@@ -16,9 +16,11 @@
 
     <div class="container" id="chat">
       <div id="investigation-title">
-        <h1 v-if="loading">Loading conversational UI...</h1>
-        <h1 v-if="!loading">${ investigationTitle }</h1>
-      </div>
+        <div class="inner-wrapper">
+            <h1 v-if="loading">Loading conversational UI...</h1>
+            <h1 v-if="!loading">${ investigationTitle }</h1>
+        </div><!-- /.inner-wrapper -->
+      </div><!-- /#investigation-title -->
 
       <div id="chat-content">
         <div id="chat-wrapper">
@@ -30,7 +32,7 @@
              >
 
             <div v-if="message.from === 'bot'" class="investigation-avatar avatar cell">
-              <img :src="investigationLogo">
+              <span><img :src="investigationLogo"></span>
             </div>
             
 
@@ -118,18 +120,20 @@
       </div><!-- /.chat-content -->
 
       <div id="message-bar">
-        <div class="error-messages" v-if="errored">
-          <p>${ errorMessage }</p>
-        </div>
-        <div id="user-input-bar">
-          <input name="user-text-input" id="input-box" ref="inputBox" type="text"
-            :disabled="!currentFieldWantsText"
-            :placeholder="currentFieldWantsText ? 'Type here...' : 'Select an option above'" 
-            autocomplete="off" title="Type here..." :autofocus="'autofocus'"
-            @change="sendMessage()">
-          <button id="send-user-message" class="button small" 
-                  :disabled="!currentFieldWantsText" @click="sendMessage()">&#10140;</button>
-        </div>
+        <div class="inner-wrapper">
+            <div class="error-messages" v-if="errored">
+              <p>${ errorMessage }</p>
+            </div>
+            <div id="user-input-bar">
+              <input name="user-text-input" id="input-box" ref="inputBox" type="text"
+                :disabled="!currentFieldWantsText"
+                :placeholder="currentFieldWantsText ? 'Type here...' : 'Select an option above'" 
+                autocomplete="off" title="Type here..." :autofocus="'autofocus'"
+                @change="sendMessage()">
+              <button id="send-user-message" class="button small" 
+                      :disabled="!currentFieldWantsText" @click="sendMessage()">&#10140;</button>
+            </div>
+        </div><!-- /.inner-wrapper -->
       </div><!-- /#message-bar -->
     </div><!-- /#chat -->
 

@@ -9,6 +9,17 @@
 	Original author: J++ <http://jplusplus.org/>
 */
 
+/* Custom styles to override normalize
+*/
+
+img {
+  display: inline-block;
+  vertical-align: middle;
+  max-width: 100%;
+  height: auto;
+  -ms-interpolation-mode: bicubic;
+}
+
 /* Typography
 */
 
@@ -256,8 +267,7 @@ textarea[readonly] {
 */
 
 body {
-  width: 90%;
-  max-width: 60rem;
+  width: 100%;
   margin: 0 auto;
   color: #204763;
   font: 1em/1.2 "Roboto", DejaVu Sans, "Helvetica Neue", Helvetica, sans-serif;
@@ -276,15 +286,6 @@ body {
   ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 
-@media screen and (max-width: 39.9375em) {
-  /* Small only */
-  body {
-    width: calc(100% - 2em);
-    max-width: calc(100% - 2em);
-    margin: 0 1em;
-  }
-}
-
 .container {
   height: 100vh;
   display: grid;
@@ -297,9 +298,28 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.container .inner-wrapper,
+.container #chat-wrapper {
+  width: 90%;
+  max-width: 60rem;
+  margin: 0 auto;
+}
+
+@media screen and (max-width: 39.9375em) {
+  /* Small only */
+  .container .inner-wrapper,
+  .container #chat-wrapper {
+    width: calc(100% - 2em);
+    max-width: calc(100% - 2em);
+    padding: 0 1em;
+  }
+}
+
 .container #chat-content {
   overflow-y: auto;
   min-height: 100%;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .container #chat-wrapper {
@@ -337,7 +357,7 @@ html, body { height: 100%; overflow: hidden; }
 }*/
 
 .container #message-bar {
-  padding: 1em 0 2em;
+  padding: 1.5em 0;
 }
 
 .container #message-bar #user-input-bar {
@@ -406,13 +426,29 @@ html, body { height: 100%; overflow: hidden; }
 
 .container #chat-wrapper .message-wrapper .avatar span {
   display: block;
-  width: 30px;
-  height: 30px;
+  width: 100%;
+  height: 0;
+  padding-bottom: 100%;
   border-radius: 50%;
 }
 
 .container #chat-wrapper .message-wrapper .investigation-avatar span {
   background-color: #4d7d9e;
+  position: relative;
+}
+
+.container #chat-wrapper .message-wrapper .investigation-avatar span::after {
+  content: "";
+  display: block;
+  padding-bottom: 100%;
+}
+
+.container #chat-wrapper .message-wrapper .investigation-avatar span img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 .container #chat-wrapper .message-wrapper .user-avatar span {
@@ -462,7 +498,7 @@ html, body { height: 100%; overflow: hidden; }
   /* Large and up message layout: all left aligned */
   .container #chat-wrapper .message-wrapper.investigation-message,
   .container #chat-wrapper .message-wrapper.user-message {
-    grid-template-columns: 30px 1fr;
+    grid-template-columns: 50px 1fr;
     justify-content: start;
   }
   .container #chat-wrapper .message-wrapper.investigation-message .message,

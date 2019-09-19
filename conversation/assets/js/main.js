@@ -6,6 +6,8 @@ var vm = new Vue({
   delimiters: ["${", "}"],
   data: {
     messages: [],
+    investigationLogo: "",
+    investigationTitle: "",
     formschema: "",
     uischema: "",
     instanceId: null,
@@ -62,15 +64,30 @@ var vm = new Vue({
       }
     }
 
-    var formURL =
+    var investigationURL = 
       backendURL +
       "/forms/investigations/" +
-      investigation +
+      investigation;
+    var formURL =
+      investigationURL +
       "/forms/" +
       interviewer;
     this.submitURL = formURL + "/responses";
 
     var vm = this;
+
+    axios
+      .get(investigationURL)
+      .then(function(response) {
+        console.log(response);
+        vm.investigationLogo = response.data.logo;
+        vm.investigationTitle = response.data.name;
+      })
+      .catch(error => {
+        console.log(error);
+        vm.errored = true;
+      });
+
     axios
       .get(formURL)
       .then(function(response) {
@@ -85,6 +102,8 @@ var vm = new Vue({
       .finally(() => {
         vm.initChat();
       });
+
+
   },
   computed: {
     currentField: function() {
@@ -167,7 +186,6 @@ var vm = new Vue({
         x: false,
         y: true
       };
-      console.log(this.$refs.skipButton);
       this.$scrollTo(this.$refs.skipButton, 100, options);
     },
 

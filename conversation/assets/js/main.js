@@ -312,7 +312,7 @@ var vm = new Vue({
           vm.formData.append(field.slug, fileData);
           // show user message with thumbnail
           vm.sendMessage(reader.result, isImage = true);
-          vm.showNextField();
+          // vm.showNextField();
         },
         false
       );

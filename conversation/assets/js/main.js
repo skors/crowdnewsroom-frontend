@@ -79,7 +79,6 @@ var vm = new Vue({
     axios
       .get(investigationURL)
       .then(function(response) {
-        console.log(response);
         vm.investigationLogo = response.data.logo;
         vm.investigationTitle = response.data.name;
       })
@@ -254,11 +253,20 @@ var vm = new Vue({
         });
     },
 
-    sendMessage: function() {
+    sendMessage: function(content, isImage) {
       var el = document.getElementById("input-box");
       var msg = el.value;
+      if (content) {
+        msg = content;
+      } else {
+        msg = el.value;
+      }
       if (msg) {
-        this.messages.push({ from: "user", content: msg });
+        var msgobj = { from: "user", content: msg };
+        if (isImage) {
+          msgobj.type = 'image';
+        }
+        this.messages.push(msgobj);
         this.formData.set(this.currentField.slug, msg);
         // clear message box and return focus to it
         this.$refs.inputBox.value = "";
@@ -302,6 +310,8 @@ var vm = new Vue({
             ";name=" + file.name + ";base64"
           );
           vm.formData.append(field.slug, fileData);
+          // show user message with thumbnail
+          vm.sendMessage(reader.result, isImage = true);
           vm.showNextField();
         },
         false

@@ -41,7 +41,10 @@
             </div>
 
             <div class="message cell">
-              <p>${ message.content }</p>
+              <p v-if="!message.type">${ message.content }</p>
+              
+              <img v-if="message.type && message.type == 'image'" class="upload-thumbnail" :src="message.content">
+
               <!-- Submit form button -->
               <button v-if="message.final" class="button" name="submit" type="button" 
                 @click="submitForm($event)">Yes!</button>

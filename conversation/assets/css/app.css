@@ -631,3 +631,7 @@ html, body { height: 100%; overflow: hidden; }
     visibility: hidden;
   }
 }
+
+.upload-thumbnail {
+  height: 130px;
+}

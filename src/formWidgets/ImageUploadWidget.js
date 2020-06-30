@@ -105,7 +105,6 @@ class ImageFileWidget extends Component {
             autoFocus={autofocus}
             multiple={multiple}
             accept="image/*"
-            capture="environment"
           />
         </p>
         <FilesInfo filesInfo={filesInfo} />

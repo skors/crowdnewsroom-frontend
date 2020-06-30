@@ -107,7 +107,7 @@
                 <div v-if="message.field.widget == 'imageupload'" class="imageupload">
                   <label :for="message.field.slug" class="button"><i class="fi-camera"></i>  Upload or take a picture</label>
                   <input v-if="message.field.widget == 'imageupload'"  @change="setFile($event, message.field)"
-                         :name="message.field.slug" type="file" accept="image/*" capture="environment"
+                         :name="message.field.slug" type="file" accept="image/*"
                          :id="message.field.slug" class="show-for-sr" >
                 </div>
 

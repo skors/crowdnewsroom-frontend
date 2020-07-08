@@ -6,7 +6,7 @@ class PatternTypeTextInputWidget extends Component {
     return (
       <input
         placeholder={props.placeholder}
-        className="form-control test"
+        className="form-control"
         value={props.value}
         id={props.id}
         pattern={props.schema.pattern}

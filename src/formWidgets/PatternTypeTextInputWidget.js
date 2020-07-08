@@ -5,13 +5,11 @@ class PatternTypeTextInputWidget extends Component {
     const props = this.props;
     return (
       <input
-        placeholder={this.props.placeholder}
+        placeholder={props.placeholder}
         className="form-control"
         value=""
-        pattern={this.props.schema.pattern}
-        type={
-          this.props.schema.field_type ? this.props.schema.field_type : "text"
-        }
+        pattern={props.schema.pattern}
+        type={props.schema.field_type ? props.schema.field_type : "text"}
       />
     );
   }

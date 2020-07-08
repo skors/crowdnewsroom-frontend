@@ -8,6 +8,7 @@ class PatternTypeTextInputWidget extends Component {
         placeholder={props.placeholder}
         className="form-control"
         value=""
+        id={props.id}
         pattern={props.schema.pattern}
         type={props.schema.field_type ? props.schema.field_type : "text"}
       />

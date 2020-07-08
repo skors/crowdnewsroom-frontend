@@ -189,10 +189,6 @@ class FormWizard extends Component {
 
   render() {
     const uiSchema = _.get(this.props.uiSchema, this.state.schema.slug, {});
-    const customFormats = {
-      "phone-us": "[a-z]"
-    };
-    console.log(this.state.schema);
     return (
       <Card
         logo={this.props.investigation.logo}
@@ -211,7 +207,6 @@ class FormWizard extends Component {
             className="form-wizard__form"
             schema={this.state.schema}
             uiSchema={uiSchema}
-            customFormats={customFormats}
             onChange={this.maybeAutoAdvance}
             onSubmit={this.onSubmit}
             formData={this.state.formData}

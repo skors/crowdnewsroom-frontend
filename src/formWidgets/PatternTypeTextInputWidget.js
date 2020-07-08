@@ -11,13 +11,12 @@ class PatternTypeTextInputWidget extends Component {
   render() {
     const props = this.props;
     const own_this = this;
-
+    props.onChange(this.state.value === "" ? "" : this.state.value);
     return (
       <input
         placeholder={props.placeholder}
         className="form-control"
         value={own_this.state.value}
-        name={this.props.id}
         onChange={e => {
           own_this.setState({ value: e.target.value });
         }}

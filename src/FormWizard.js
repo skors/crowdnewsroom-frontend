@@ -11,6 +11,7 @@ import { t } from "./i18n";
 import Card from "./Card";
 import SignatureWidget from "./formWidgets/SignatureWidget";
 import ButtonWidget from "./formWidgets/ButtonWidget";
+import PatternTypeTextInputWidget from "./formWidgets/PatternTypeTextInputWidget";
 import OneLineWidget from "./formWidgets/OneLineWidget";
 import ImageUploadWidget from "./formWidgets/ImageUploadWidget";
 import LocationWidget from "./formWidgets/LocationWidget";
@@ -188,6 +189,10 @@ class FormWizard extends Component {
 
   render() {
     const uiSchema = _.get(this.props.uiSchema, this.state.schema.slug, {});
+    const customFormats = {
+      "phone-us": "[a-z]"
+    };
+    console.log(this.state.schema);
     return (
       <Card
         logo={this.props.investigation.logo}
@@ -206,12 +211,14 @@ class FormWizard extends Component {
             className="form-wizard__form"
             schema={this.state.schema}
             uiSchema={uiSchema}
+            customFormats={customFormats}
             onChange={this.maybeAutoAdvance}
             onSubmit={this.onSubmit}
             formData={this.state.formData}
             widgets={{
               signatureWidget: SignatureWidget,
               buttonWidget: ButtonWidget,
+              patternTypeTextInputWidget: PatternTypeTextInputWidget,
               oneLineWidget: OneLineWidget,
               imageUpload: ImageUploadWidget,
               locationWidget: LocationWidget

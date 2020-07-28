@@ -21,7 +21,7 @@ class PatternTypeTextInputWidget extends Component {
           own_this.setState({ value: e.target.value });
         }}
         id={props.id}
-        pattern={props.schema.pattern}
+        pattern={props.schema.pattern ? props.schema.pattern : false}
         type={props.schema.field_type ? props.schema.field_type : "text"}
       />
     );

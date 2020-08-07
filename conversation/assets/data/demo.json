@@ -1,0 +1,63 @@
+[
+  {
+    "rules": [
+      {
+        "event": "slide-157",
+        "conditions": {}
+      }
+    ],
+    "schema": {
+      "slug": "banana-consumptionaerm",
+      "type": "object",
+      "title": "Banana consumption",
+      "properties": {
+        "dropdown-357": {
+          "enum": ["Crowd", "News", "Room"],
+          "slug": "dropdown-357",
+          "type": "string",
+          "title": "Dropdown choice"
+        },
+        "text-input-447": {
+          "slug": "text-input-447",
+          "type": "string",
+          "title": "Text"
+        },
+        "email-input-512": {
+          "slug": "email-input-512",
+          "type": "string",
+          "title": "Email",
+          "format": "email"
+        },
+        "banana-consumption-location-956": {
+          "slug": "banana-consumption-location-956",
+          "type": "string",
+          "title": "Your location"
+        }
+      },
+      "nextButtonLabel": "Next me!"
+    }
+  },
+  {
+    "rules": [
+      {
+        "event": "summary",
+        "conditions": {}
+      }
+    ],
+    "schema": {
+      "slug": "slide-157adfrsa",
+      "type": "object",
+      "final": true,
+      "title": "New slide",
+      "properties": {
+        "slide-157-dummy": {
+          "slug": "slide-157-dummy",
+          "type": "string",
+          "title": "New field"
+        }
+      },
+      "description": "I'm a new slide, fill me!",
+      "nextButtonLabel": "This is the 'Next' button, click me to edit the text"
+    }
+  }
+]

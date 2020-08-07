@@ -22,7 +22,7 @@ class FormWizard extends Component {
     currentStep: PropTypes.string,
     steps: PropTypes.arrayOf(PropTypes.object),
     submitCallback: PropTypes.func,
-    formData: PropTypes.object
+    formData: PropTypes.object,
   };
 
   constructor(props) {
@@ -33,7 +33,7 @@ class FormWizard extends Component {
       formData,
       schema: steps[0].schema,
       step: steps[0],
-      stepsTaken: stepsTaken || new Set()
+      stepsTaken: stepsTaken || new Set(),
     };
     this.setNextStep = this.setNextStep.bind(this);
     this.transformErrors = this.transformErrors.bind(this);
@@ -47,17 +47,17 @@ class FormWizard extends Component {
 
   getNextStep(formData, rules = this.state.step.rules) {
     const engine = new Engine(rules);
-    return engine.run(formData).then(validSteps => {
+    return engine.run(formData).then((validSteps) => {
       return _.find(
         this.props.steps,
-        step => step.schema.slug === validSteps[0]
+        (step) => step.schema.slug === validSteps[0]
       );
     });
   }
 
   advance(formData) {
     this.setState({ formData });
-    this.getNextStep(formData).then(nextStep => {
+    this.getNextStep(formData).then((nextStep) => {
       this.setNextStep(nextStep);
       this.updateRoute(nextStep);
     });
@@ -66,7 +66,7 @@ class FormWizard extends Component {
   setNextStep(nextStep) {
     this.setState({
       step: nextStep,
-      stepsTaken: this.state.stepsTaken.add(nextStep.schema.slug)
+      stepsTaken: this.state.stepsTaken.add(nextStep.schema.slug),
     });
   }
 
@@ -82,7 +82,7 @@ class FormWizard extends Component {
       this.props.match.params.step
     );
     if (canGetToSelectedStep) {
-      const currentStep = _.find(this.props.steps, step => {
+      const currentStep = _.find(this.props.steps, (step) => {
         return step.schema.slug === this.props.match.params.step;
       });
       this.setState({ schema: currentStep.schema, step: currentStep });
@@ -95,7 +95,7 @@ class FormWizard extends Component {
     if (nextProps.match.params.currentStep === this.props.match.params.step)
       return;
 
-    const currentStep = _.find(nextProps.steps, step => {
+    const currentStep = _.find(nextProps.steps, (step) => {
       return step.schema.slug === nextProps.match.params.step;
     });
 
@@ -105,7 +105,7 @@ class FormWizard extends Component {
     this.setState({
       stepsTaken: new Set(stepsTaken.slice(0, currentIndex + 1)),
       schema: currentStep.schema,
-      step: currentStep
+      step: currentStep,
     });
   }
 
@@ -144,10 +144,10 @@ class FormWizard extends Component {
     const properties = event.schema.properties;
     const autoFields = new Set(["boolean", "enum"]);
     const propertyNames = _.keys(properties);
-    const types = _.uniq(_.map(properties, p => (p.enum ? "enum" : p.type)));
+    const types = _.uniq(_.map(properties, (p) => (p.enum ? "enum" : p.type)));
     const fields = new Set(_.keys(event.formData));
-    const allFilled = _.every(propertyNames, p => fields.has(p));
-    const allAuto = _.every(types, p => autoFields.has(p));
+    const allFilled = _.every(propertyNames, (p) => fields.has(p));
+    const allAuto = _.every(types, (p) => autoFields.has(p));
     if (allAuto && allFilled) {
       this.onSubmit(event);
     }
@@ -166,7 +166,7 @@ class FormWizard extends Component {
 
   transformErrors(errors) {
     const uiSchema = _.get(this.props.uiSchema, this.state.schema.slug, {});
-    return errors.map(error => {
+    return errors.map((error) => {
       // the errors always start with a dot we remove it to get
       // `property` from `.property`
       const propertyName = error.property.slice(1, error.property.length);
@@ -216,7 +216,8 @@ class FormWizard extends Component {
               patternTypeTextInputWidget: PatternTypeTextInputWidget,
               oneLineWidget: OneLineWidget,
               imageUpload: ImageUploadWidget,
-              locationWidget: LocationWidget
+              locationWidget: LocationWidget,
+              patternTypeTextInputWidget: PatternTypeTextInputWidget,
             }}
             transformErrors={this.transformErrors}
             showErrorList={false}

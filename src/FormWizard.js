@@ -213,6 +213,7 @@ class FormWizard extends Component {
             widgets={{
               signatureWidget: SignatureWidget,
               buttonWidget: ButtonWidget,
+              patternTypeTextInputWidget: PatternTypeTextInputWidget,
               oneLineWidget: OneLineWidget,
               imageUpload: ImageUploadWidget,
               locationWidget: LocationWidget,

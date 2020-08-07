@@ -17,9 +17,9 @@ var vm = new Vue({
     loading: true,
     errored: false,
     errorMessage: "Sample error message",
-    submitURL: ""
+    submitURL: "",
   },
-  mounted: function() {
+  mounted: function () {
     console.log("mounted");
 
     var uri = window.location.search.substring(1);
@@ -64,54 +64,47 @@ var vm = new Vue({
       }
     }
 
-    var investigationURL = 
-      backendURL +
-      "/forms/investigations/" +
-      investigation;
-    var formURL =
-      investigationURL +
-      "/forms/" +
-      interviewer;
+    var investigationURL =
+      backendURL + "/forms/investigations/" + investigation;
+    var formURL = investigationURL + "/forms/" + interviewer;
     this.submitURL = formURL + "/responses";
 
     var vm = this;
 
     axios
       .get(investigationURL)
-      .then(function(response) {
+      .then(function (response) {
         vm.investigationLogo = response.data.logo;
         vm.investigationTitle = response.data.name;
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
         vm.errored = true;
       });
 
     axios
       .get(formURL)
-      .then(function(response) {
+      .then(function (response) {
         vm.formschema = response.data.form_json;
         vm.uischema = response.data.ui_schema_json;
         vm.instanceId = response.data.id;
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
         vm.errored = true;
       })
       .finally(() => {
         vm.initChat();
       });
-
-
   },
   computed: {
-    currentField: function() {
+    currentField: function () {
       if (!this.fields[this.fieldIndex]) {
         return null;
       }
       return this.fields[this.fieldIndex];
     },
-    currentFieldWantsText: function() {
+    currentFieldWantsText: function () {
       if (this.currentField) {
         // returns true if the current field requires text input by user
         if (
@@ -121,10 +114,10 @@ var vm = new Vue({
         }
         return false;
       }
-    }
+    },
   },
   methods: {
-    initChat: function() {
+    initChat: function () {
       // called when all form data (form + ui) has been loaded
 
       for (var idx in this.formschema) {
@@ -170,7 +163,7 @@ var vm = new Vue({
       this.showNextField();
     },
 
-    scrollChatArea: function() {
+    scrollChatArea: function () {
       // ensures chat area is always scrolled to bottom
       var options = {
         container: "#chat-content",
@@ -183,19 +176,19 @@ var vm = new Vue({
         onDone: false,
         onCancel: false,
         x: false,
-        y: true
+        y: true,
       };
       this.$scrollTo(this.$refs.skipButton, 100, options);
     },
 
-    showNextField: function() {
+    showNextField: function () {
       this.fieldIndex += 1;
       if (this.fields && this.fieldIndex > this.fields.length - 1) {
         // no more fields
         this.messages.push({
           from: "bot",
           content: "All done! Submit?",
-          final: true
+          final: true,
         });
       } else {
         // show next field
@@ -207,7 +200,7 @@ var vm = new Vue({
         this.messages.push({
           from: "bot",
           content: question ? question : field.title,
-          field: field
+          field: field,
         });
 
         if (["", "email", "number", "longtext"].includes(field.widget)) {
@@ -220,11 +213,11 @@ var vm = new Vue({
         this.scrollChatArea();
       }
     },
-    skipQuestion: function() {
+    skipQuestion: function () {
       this.showNextField();
     },
 
-    submitForm: function(ev) {
+    submitForm: function (ev) {
       var button = ev.target;
       button.textContent = "Sending...";
       button.disabled = true;
@@ -239,21 +232,21 @@ var vm = new Vue({
       });
       axios
         .post(this.submitURL, data)
-        .then(function(response) {
+        .then(function (response) {
           button.textContent = "Sent!";
           vm.messages.push({
             from: "bot",
-            content: "Your responses were submitted. Thank you!"
+            content: "Your responses were submitted. Thank you!",
           });
           vm.scrollChatArea();
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
           vm.errored = true;
         });
     },
 
-    sendMessage: function(content, isImage) {
+    sendMessage: function (content, isImage) {
       var el = document.getElementById("input-box");
       var msg = el.value;
       if (content) {
@@ -264,7 +257,7 @@ var vm = new Vue({
       if (msg) {
         var msgobj = { from: "user", content: msg };
         if (isImage) {
-          msgobj.type = 'image';
+          msgobj.type = "image";
         }
         this.messages.push(msgobj);
         this.formData.set(this.currentField.slug, msg);
@@ -280,12 +273,12 @@ var vm = new Vue({
         this.showNextField();
       }
     },
-    sendOption: function(ev, field, value) {
+    sendOption: function (ev, field, value) {
       // for multiple-choice fields
       this.formData.set(field.slug, value);
       this.messages.push({
         from: "user",
-        content: value
+        content: value,
       });
       // mark selected option
       ev.target.className += " selected";
@@ -293,7 +286,7 @@ var vm = new Vue({
       field.answered = true;
       this.showNextField();
     },
-    setFile: function(ev, field) {
+    setFile: function (ev, field) {
       // for file upload fields
       var file = ev.target.files[0];
       var fileData;
@@ -303,7 +296,7 @@ var vm = new Vue({
       var reader = new FileReader();
       reader.addEventListener(
         "load",
-        function() {
+        function () {
           fileData = reader.result;
           fileData = fileData.replace(
             ";base64",
@@ -311,7 +304,7 @@ var vm = new Vue({
           );
           vm.formData.append(field.slug, fileData);
           // show user message with thumbnail
-          vm.sendMessage(reader.result, isImage = true);
+          vm.sendMessage(reader.result, (isImage = true));
           // vm.showNextField();
         },
         false
@@ -319,13 +312,13 @@ var vm = new Vue({
       // now read and save the uploaded file
       fileData = reader.readAsDataURL(file);
     },
-    setLocation: function(ev, field) {
+    setLocation: function (ev, field) {
       var vm = this;
       var button = ev.target;
       button.className = "button loading";
       button.childNodes[2].textContent = field.ui["ui:location_load"];
       navigator.geolocation.getCurrentPosition(
-        function(position) {
+        function (position) {
           var value =
             position.coords.latitude + "," + position.coords.longitude;
           vm.formData.append(field.slug, value);
@@ -334,7 +327,7 @@ var vm = new Vue({
           button.disabled = true;
           vm.showNextField();
         },
-        function(error) {
+        function (error) {
           console.log(error);
           console.log(field);
           console.log(field.ui);
@@ -372,7 +365,7 @@ var vm = new Vue({
       );
     },
 
-    getFieldType: function(field) {
+    getFieldType: function (field) {
       if (this.getFieldWidget(field) == "oneLineWidget") {
         return "oneline";
       }
@@ -402,6 +395,9 @@ var vm = new Vue({
         if (this.getFieldWidget(field) == "locationWidget") {
           return "location";
         }
+        if (this.getFieldWidget(field) == "patternTypeTextInputWidget") {
+          return "text";
+        }
         if (this.getFieldWidget(field) == "radio") {
           return "radio";
         }
@@ -420,7 +416,7 @@ var vm = new Vue({
       console.log(field);
       return "";
     },
-    getFieldWidget: function(field) {
+    getFieldWidget: function (field) {
       // if a specific widget is specified in the UI Schema, return its name
       if (!(field.slideSlug in this.uischema)) {
         return null;
@@ -432,6 +428,6 @@ var vm = new Vue({
         return null;
       }
       return this.uischema[field.slideSlug][field.slug]["ui:widget"];
-    }
-  }
+    },
+  },
 });

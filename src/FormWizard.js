@@ -11,6 +11,7 @@ import { t } from "./i18n";
 import Card from "./Card";
 import SignatureWidget from "./formWidgets/SignatureWidget";
 import ButtonWidget from "./formWidgets/ButtonWidget";
+import PatternTypeTextInputWidget from "./formWidgets/PatternTypeTextInputWidget";
 import OneLineWidget from "./formWidgets/OneLineWidget";
 import ImageUploadWidget from "./formWidgets/ImageUploadWidget";
 import LocationWidget from "./formWidgets/LocationWidget";
@@ -212,6 +213,7 @@ class FormWizard extends Component {
             widgets={{
               signatureWidget: SignatureWidget,
               buttonWidget: ButtonWidget,
+              patternTypeTextInputWidget: PatternTypeTextInputWidget,
               oneLineWidget: OneLineWidget,
               imageUpload: ImageUploadWidget,
               locationWidget: LocationWidget

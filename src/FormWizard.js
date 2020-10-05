@@ -77,6 +77,30 @@ class FormWizard extends Component {
     this.updateRoute(nextStep);
   }
 
+  changeDates() {
+    var inputs = document.getElementsByTagName("input");
+
+    for (var i = 0; i < inputs.length; i++) {
+      if (inputs[i].getAttribute("type") === "date") {
+        var value = inputs[i].value;
+        if (value) {
+          value = value.split(".");
+
+          if (value.length > 1) {
+            var day = value[0];
+            var month = value[1];
+            var year = value[2];
+
+            if (month.length === 1) {
+              month = "0" + month;
+            }
+            inputs[i].value = year + "-" + month + "-" + day;
+          }
+        }
+      }
+    }
+  }
+
   async componentDidMount() {
     const canGetToSelectedStep = await this.canWeGetHere(
       this.props.match.params.step
@@ -232,6 +256,7 @@ class FormWizard extends Component {
             <input
               className="btn btn-primary form-wizard__btn-next"
               type="submit"
+              onClick={this.changeDates}
               value={this.state.schema.nextButtonLabel || t("form.next")}
             />
           </Form>

@@ -114,7 +114,6 @@ class FormWizard extends Component {
   }
 
   onSubmit = ({ formData }) => {
-    console.log(formData);
     var inputs = document.getElementsByTagName("input");
     for (var i = 0; i < inputs.length; i++) {
       if (inputs[i].getAttribute("type") === "date") {
@@ -137,6 +136,9 @@ class FormWizard extends Component {
         }
       }
     }
+
+    console.log("yo");
+    console.log(formData);
 
     if (this.state.schema.final) {
       this.props.submitCallback(formData, this.state.stepsTaken);

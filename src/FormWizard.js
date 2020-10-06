@@ -114,32 +114,6 @@ class FormWizard extends Component {
   }
 
   onSubmit = ({ formData }) => {
-    var inputs = document.getElementsByTagName("input");
-    for (var i = 0; i < inputs.length; i++) {
-      if (inputs[i].getAttribute("type") === "date") {
-        var value = inputs[i].value;
-        if (value) {
-          value = value.split(".");
-
-          if (value.length > 1) {
-            var day = value[0];
-            var month = value[1];
-            var year = value[2];
-
-            if (month.length === 1) {
-              month = "0" + month;
-            }
-            var input_id = inputs[i].getAttribute("id").replace("root_", "");
-
-            formData[input_id] = year + "-" + month + "-" + day;
-          }
-        }
-      }
-    }
-
-    console.log("yo");
-    console.log(formData);
-
     if (this.state.schema.final) {
       this.props.submitCallback(formData, this.state.stepsTaken);
     } else {

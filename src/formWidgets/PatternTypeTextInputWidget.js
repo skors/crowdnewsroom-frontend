@@ -38,7 +38,7 @@ class PatternTypeTextInputWidget extends Component {
     const props = this.props;
     const own_this = this;
     props.onChange(this.state.value === "" ? "" : this.state.value);
-    if (this.state.showDatepicker == "date") {
+    if (this.state.showDatepicker === "date") {
       return (
         <div>
           <DatePicker
@@ -70,24 +70,3 @@ class PatternTypeTextInputWidget extends Component {
 }
 
 export default PatternTypeTextInputWidget;
-
-// return (
-//   <div>
-//     <div v-if="this.state.showDatepicker">
-//       <DatePicker className="form-control" dateFormat="dd.MM.yyyy" selected={this.state.startDate} onChange={date => this.setStartDate(date)} />
-//     </div>
-
-//     <input
-//     v-if="this.state.showDatepicker"
-//       placeholder={props.placeholder}
-//       className="form-control"
-//       value={own_this.state.value}
-//       onChange={e => {
-//         own_this.setState({ value: e.target.value });
-//       }}
-//       id={props.id}
-//       pattern={props.schema.pattern ? props.schema.pattern : false}
-//       type={props.schema.field_type ? props.schema.field_type : "text"}
-//     />
-//   </div>
-// );

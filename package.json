@@ -14,7 +14,7 @@
     "enzyme-adapter-react-16": "^1.1.1",
     "json-rules-engine-simplified":
       "correctiv/json-rules-engine-simplified#ship-lib",
-    "lodash": "^4.17.5",
+    "lodash": "^4.17.19",
     "node-polyglot": "^2.2.2",
     "node-sass-chokidar": "^1.2.0",
     "npm-run-all": "^4.1.2",

@@ -34,7 +34,7 @@
     "start-js": "react-scripts start",
     "start": "npm-run-all -p watch-css start-js",
     "build-js": "react-scripts build",
-    "build": "npm-run-all build-css build-js build-conversation",
+    "build": "npm-run-all build-css build-js",
     "watch-conversation": "cp -r conversation public && chokidar 'conversation/**' -c \"cp {path} public/{path}\" ",
     "build-conversation": "cp -r conversation build/",
     "test": "react-scripts test --env=jsdom",

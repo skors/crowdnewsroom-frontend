@@ -59,6 +59,13 @@
     text-align: left;
   }
 
+  .react-datepicker-wrapper {
+    width: 100%;
+    input {
+      border-radius: 0 !important;
+    }
+  }
+
   input[type="text"].form-control {
     display: block;
     width: 100%;

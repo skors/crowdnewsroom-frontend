@@ -32,7 +32,7 @@ class PatternTypeTextInputWidget extends Component {
     var yy = date.getFullYear();
     dd = dd.toString();
 
-    if (dd.length == 1) {
+    if (dd.length === 1) {
       dd = "0" + dd;
     }
 

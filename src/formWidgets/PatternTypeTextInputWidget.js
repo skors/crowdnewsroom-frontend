@@ -16,6 +16,12 @@ class PatternTypeTextInputWidget extends Component {
     };
   }
 
+  componentDidMount() {
+    if (this.state.showDatepicker === "date") {
+      this.setStartDate(new Date());
+    }
+  }
+
   setStartDate(date) {
     this.setState({
       startDate: date
@@ -24,6 +30,11 @@ class PatternTypeTextInputWidget extends Component {
     var mm = date.getMonth() + 1;
     var dd = date.getDate();
     var yy = date.getFullYear();
+    dd = dd.toString();
+
+    if (dd.length === 1) {
+      dd = "0" + dd;
+    }
 
     var date_value = yy + "-" + mm + "-" + dd;
 
@@ -46,6 +57,8 @@ class PatternTypeTextInputWidget extends Component {
             dateFormat="dd.MM.yyyy"
             selected={this.state.startDate}
             onChange={date => this.setStartDate(date)}
+            showMonthDropdown
+            showYearDropdown
           />
         </div>
       );
